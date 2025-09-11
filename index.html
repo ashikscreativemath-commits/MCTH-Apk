@@ -59,8 +59,10 @@
         .login-footer { margin-top: 25px; font-size: 0.75em; color: var(--text-secondary); }
 
         /* App Container Styles */
-        #app-container { display: flex; flex-direction: column; min-height: 100vh; }
+        #app-container { display: flex; flex-direction: column; min-height: 100vh; position: relative; }
         #app-container.hidden { display: none; }
+        #center-watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70vw; max-width: 300px; height: 100vh; background-image: url(images/image2.png); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: .05; z-index: -1; pointer-events: none; }
+        body[data-theme=dark] #center-watermark{ filter: invert(1) grayscale(1); opacity: 0.08; }
         
         /* ======== NEW MOBILE HEADER ======== */
         header {
@@ -187,7 +189,7 @@
         #btnBackupMenuToggle.open .arrow-icon { transform: rotate(90deg); }
 
         /* Main Content Area */
-        main { padding: 15px; flex-grow: 1; position: relative; }
+        main { padding: 15px; flex-grow: 1; position: relative; z-index: 1; }
         #breadcrumb-container { padding: 0 5px 10px 5px; font-size: 0.8em; color: var(--text-secondary); flex-wrap: wrap; }
         #breadcrumb-container a { color: var(--text-tab-active); text-decoration: none; }
         #banner-area-placeholder { width: 100%; text-align: center; margin-bottom: 15px; }
@@ -296,12 +298,18 @@
         footer { background-color: var(--bg-footer); color: var(--text-footer); text-align: center; padding: 15px; font-size: 0.85em; margin-top: 20px; }
         .developer-info { font-size: 0.8em; color: var(--text-footer-dev); margin-top: 5px; }
 
-        /* Payment Receipt Specific Styles for Mobile */
+        /* Payment Receipt Specific Styles */
         .receipt-controls { flex-direction: column; gap: 10px; align-items: stretch; }
-        .payment-receipt { flex-direction: column; border: none; }
+        .payment-receipt { flex-direction: column; border: 1px solid #ccc; background: #fff; color: #000; overflow: hidden; }
+        .receipt-content-wrapper { position: relative; } /* Added for watermark containment */
         .student-copy, .office-copy { width: 100% !important; border-left: none !important; }
-        .office-copy { display: none; } /* Hide office copy by default on mobile */
-        @media print { .office-copy { display: block; }}
+        .office-copy { display: none; } /* Hide by default on mobile */
+        .student-copy-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.08; z-index: 0; pointer-events: none; width: 80%; max-width: 250px; }
+        .student-copy-watermark img { width: 100%; height: auto; filter: grayscale(100%); }
+        .overlapping-fix { position: relative; z-index: 1; }
+        @media print { 
+            .office-copy { display: flex; border-top: 2px dashed #888; margin-top: 20px; padding-top: 20px; }
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -323,7 +331,7 @@
                         <input type="checkbox" id="remember-me"> Remember Me
                     </label>
                 </div>
-                <button type="submit" class="login-button">Software-এ প্রবেশ করুন</button>
+                <button type="submit" class="login-button">Login to Software</button>
                 <div id="login-error-msg"></div>
             </form>
             <div class="login-footer">
@@ -334,6 +342,7 @@
     </div>
     
     <div id="app-container" class="hidden">
+        <div id="center-watermark"></div>
         <div id="toast-container"></div>
         <div id="loader-overlay"><div class="loader"></div></div>
         
@@ -702,13 +711,14 @@ function initializeAppLogic() {
 
     let isAdminMode = sessionStorage.getItem('isAdminMode') === 'true';
     let currentPassword = '';
-    let viewedYear = new Date().getFullYear();
+    let viewedYear = 2026; // Default year
     let activeYear = new Date().getFullYear();
     let dbRef;
     const resetDefaultPassword = 'rafi@602';
     const THEME_KEY = 'gonitAppTheme';
     const RECEIPT_LAYOUT_KEY = 'receiptLayoutPreference';
     const YEAR_BAR_HIDDEN_KEY = 'mcth_year_bar_hidden';
+    const VIEWED_YEAR_KEY = 'mcth_viewed_year';
     let appData = {};
     let isSaving = false; 
     let dataLoaded = false; 
@@ -736,7 +746,7 @@ function initializeAppLogic() {
     async function getCombinedDataForAllYears() { const snapshot = await db.ref('academicYears').once('value'); if (!snapshot.exists()) return { students: [], activityLog: [], classes: [] }; const yearsData = snapshot.val(); const yearKeys = Object.keys(yearsData); const promises = yearKeys.map(year => getDbRefForYear(year).once('value')); const yearSnapshots = await Promise.all(promises); const combinedData = { students: [], activityLog: [], classes: [] }; yearSnapshots.forEach((yearSnap, index) => { const year = yearKeys[index]; const data = yearSnap.val(); if (data) { if (data.students) combinedData.students.push(...data.students.map(s => ({ ...s, academicYear: year }))); if (data.activityLog) combinedData.activityLog.push(...data.activityLog.map(log => ({ ...log, academicYear: year }))); if(data.mainClassCategories) combinedData.classes.push(...data.mainClassCategories); } }); combinedData.classes = Array.from(new Map(combinedData.classes.map(item => [item.id, item])).values()); return combinedData; }
     function getInitialDataStructure() { return { currentPassword: 'ashik@602', mainClassCategories: [ { id: 'c_1', name: 'ক্লাস ৬', defaultMonthlyFee: 300, defaultAdmissionFee: 500 }, { id: 'c_2', name: 'ক্লাস ৭', defaultMonthlyFee: 350, defaultAdmissionFee: 500 }, { id: 'c_3', name: 'ক্লাস ৮', defaultMonthlyFee: 400, defaultAdmissionFee: 500 }, { id: 'c_4', name: 'ক্লাস ৯', defaultMonthlyFee: 450, defaultAdmissionFee: 600 }, { id: 'c_5', name: 'ক্লাস ১০', defaultMonthlyFee: 500, defaultAdmissionFee: 600 }, ], students: [], batchSchedule: [ { id: 'd_1', dayName: 'শনিবার', classes: [{ id: 'cs_1', classId: 'c_1', batches: [{ id: 'b_1', time: 'বিকাল ৪:00 - ৫:00', capacity: 50, studentIds: [] }] }] }, { id: 'd_2', dayName: 'রবিবার', classes: [{ id: 'cs_2', classId: 'c_2', batches: [{ id: 'b_2', time: 'বিকাল ৪:00 - ৫:00', capacity: 50, studentIds: [] }] }] }, { id: 'd_3', dayName: 'সোমবার', classes: [{ id: 'cs_3', classId: 'c_3', batches: [{ id: 'b_3', time: 'বিকাল ৪:00 - ৫:00', capacity: 50, studentIds: [] }] }] }, { id: 'd_4', dayName: 'মঙ্গলবার', classes: [{ id: 'cs_4', classId: 'c_4', batches: [{ id: 'b_4', time: 'বিকাল ৫:00 - ৬:00', capacity: 40, studentIds: [] }] }] }, { id: 'd_5', dayName: 'বুধবার', classes: [{ id: 'cs_5', classId: 'c_5', batches: [{ id: 'b_5', time: 'বিকাল ৫:00 - ৬:00', capacity: 40, studentIds: [] }] }] } ], nextRollNumber: 1, activityLog: [], recycleBin: { students: [], mainClassCategories: [], batchSchedule: [] } }; }
     async function saveAppData() { if (!appData || !dataLoaded || isSaving) return; isSaving = true; try { appData.currentPassword = currentPassword; await dbRef.set(appData); } catch (e) { console.error("Error saving data:", e); showToast("ডেটা সংরক্ষণ করতে সমস্যা হয়েছে!", 'error'); } finally { isSaving = false; } }
-    function loadAppData(yearToLoad) { showLoader(); viewedYear = yearToLoad; localStorage.setItem('mcth_viewed_year', viewedYear); dbRef = getDbRefForYear(yearToLoad); if (dbRef.off) dbRef.off(); dbRef.on('value', (snapshot) => { if (isSaving) return; if (snapshot.exists()) { appData = snapshot.val(); appData.students = appData.students || []; appData.mainClassCategories = appData.mainClassCategories || []; appData.batchSchedule = appData.batchSchedule || []; appData.recycleBin = appData.recycleBin || { students: [], mainClassCategories: [], batchSchedule: [] }; appData.activityLog = Array.isArray(appData.activityLog) ? appData.activityLog : []; (appData.students || []).forEach(s => { if (s) { s.createdAt = s.createdAt || new Date(yearToLoad, 0, 1).toISOString(); s.monthlyPayments = s.monthlyPayments || {}; s.admissionFee = s.admissionFee || { amount: 0, status: 'due' }; } }); currentPassword = appData.currentPassword || 'ashik@602'; } else { appData = getInitialDataStructure(); currentPassword = appData.currentPassword; dbRef.set(appData); return; } updateYearSelectorUI(); if (!dataLoaded) { dataLoaded = true; const sessionState = sessionStorage.getItem('mcth_session_state'); if (sessionState) { try { const { page, context } = JSON.parse(sessionState); pageHistory = [{ page, context }]; historyIndex = 0; if(window[page]) { loadPage(window[page], context, true); } else { loadPage(showHomePage, {}); } } catch (e) { loadPage(showHomePage, {}); } } else { loadPage(showHomePage, {}); } } else { const currentState = pageHistory[historyIndex]; if (currentState && window[currentState.page]) { loadPage(window[currentState.page], currentState.context, true); } } if(dataLoaded) hideLoader(); }, (error) => { console.error("Firebase read failed:", error); showToast("ডাটাবেস কানেক্ট করা যায়নি।", "error"); hideLoader(); }); }
+    function loadAppData(yearToLoad) { showLoader(); viewedYear = yearToLoad; localStorage.setItem(VIEWED_YEAR_KEY, viewedYear); dbRef = getDbRefForYear(yearToLoad); if (dbRef.off) dbRef.off(); dbRef.on('value', (snapshot) => { if (isSaving) return; if (snapshot.exists()) { appData = snapshot.val(); appData.students = appData.students || []; appData.mainClassCategories = appData.mainClassCategories || []; appData.batchSchedule = appData.batchSchedule || []; appData.recycleBin = appData.recycleBin || { students: [], mainClassCategories: [], batchSchedule: [] }; appData.activityLog = Array.isArray(appData.activityLog) ? appData.activityLog : []; (appData.students || []).forEach(s => { if (s) { s.createdAt = s.createdAt || new Date(yearToLoad, 0, 1).toISOString(); s.monthlyPayments = s.monthlyPayments || {}; s.admissionFee = s.admissionFee || { amount: 0, status: 'due' }; } }); currentPassword = appData.currentPassword || 'ashik@602'; } else { appData = getInitialDataStructure(); currentPassword = appData.currentPassword; dbRef.set(appData); return; } updateYearSelectorUI(); if (!dataLoaded) { dataLoaded = true; const sessionState = sessionStorage.getItem('mcth_session_state'); if (sessionState) { try { const { page, context } = JSON.parse(sessionState); pageHistory = [{ page, context }]; historyIndex = 0; if(window[page]) { loadPage(window[page], context, true); } else { loadPage(showHomePage, {}); } } catch (e) { loadPage(showHomePage, {}); } } else { loadPage(showHomePage, {}); } } else { const currentState = pageHistory[historyIndex]; if (currentState && window[currentState.page]) { loadPage(window[currentState.page], currentState.context, true); } } if(dataLoaded) hideLoader(); }, (error) => { console.error("Firebase read failed:", error); showToast("ডাটাবেস কানেক্ট করা যায়নি।", "error"); hideLoader(); }); }
     function generateNextRollNumber(){ const roll = appData.nextRollNumber || 1; appData.nextRollNumber = roll + 1; return String(roll).padStart(2, '0'); }
     function generateToken() { return `MCTH-${Math.random().toString(36).substring(2, 7).toUpperCase()}`; }
     function logActivity(message, details = {}) { if (!appData.activityLog) appData.activityLog = []; appData.activityLog.unshift({ timestamp: new Date().toISOString(), message, ...details }); if (appData.activityLog.length > 200) appData.activityLog.pop(); }
@@ -792,7 +802,7 @@ function initializeAppLogic() {
     btnImportData?.addEventListener('click', () => closeDropdownAndRun(() => fileImporter.click()));
     btnChangePassword?.addEventListener('click', () => closeDropdownAndRun(() => { if (!isAdminMode) return; const oldPass = prompt("আপনার বর্তমান পাসওয়ার্ড দিন:"); if (oldPass !== currentPassword) { showToast("বর্তমান পাসওয়ার্ড সঠিক নয়!","error"); return; } const newPass = prompt("আপনার নতুন পাসওয়ার্ড দিন:"); if (!newPass) { showToast("নতুন পাসওয়ার্ড খালি রাখা যাবে না।","error"); return; } const confirmNewPass = prompt("নতুন পাসওয়ার্ডটি আবার দিন:"); if (newPass === confirmNewPass) { currentPassword = newPass; logActivity("Admin password changed."); saveAppData(); showToast("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে।","success"); } else { showToast("নতুন পাসওয়ার্ডগুলো মিলেনি।","error"); } }));
     btnForgotPassword?.addEventListener('click', () => closeDropdownAndRun(() => { if (confirm(`আপনি কি নিশ্চিতভাবে পাসওয়ার্ডটি রিসেট করতে চান?`)) { currentPassword = resetDefaultPassword; isAdminMode = false; logActivity("Password reset to default."); saveAppData(); showToast(`পাসওয়ার্ড রিসেট করা হয়েছে।`,`info`); updateAdminModeUI(); } }));
-    btnLogout?.addEventListener('click', () => closeDropdownAndRun(() => { if (confirm('আপনি কি লগআউট করতে চান?')) { sessionStorage.clear(); localStorage.removeItem('mcth_rem_creds'); firebase.auth().signOut().then(() => location.reload()); } }));
+    btnLogout?.addEventListener('click', () => closeDropdownAndRun(() => { if (confirm('আপনি কি লগআউট করতে চান?')) { sessionStorage.clear(); localStorage.removeItem(VIEWED_YEAR_KEY); firebase.auth().signOut().then(() => location.reload()); } }));
     btnNavBack.addEventListener('click', () => { if (historyIndex > 0) { historyIndex--; const state = pageHistory[historyIndex]; if (window[state.page]) loadPage(window[state.page], state.context, true); } });
     btnNavForward.addEventListener('click', () => { if (historyIndex < pageHistory.length - 1) { historyIndex++; const state = pageHistory[historyIndex]; if (window[state.page]) loadPage(window[state.page], state.context, true); } });
     btnNavRefresh.addEventListener('click', () => { const currentState = pageHistory[historyIndex]; if (currentState) loadPage(window[currentState.page], currentState.context, true); else location.reload(); });
@@ -815,13 +825,49 @@ function initializeAppLogic() {
     function updateYearSelectorUI() {
         yearSelector.innerHTML = '';
         const calendarYear = new Date().getFullYear();
-        const years = Array.from(new Set([activeYear, viewedYear, calendarYear, calendarYear - 1, calendarYear + 1])).sort((a,b) => b - a);
+        const years = Array.from(new Set([activeYear, viewedYear, 2026, calendarYear, calendarYear - 1, calendarYear + 1])).sort((a,b) => b - a);
         years.forEach(year => { const option = document.createElement('option'); option.value = year; option.textContent = `${year}${year == activeYear ? ' (Active)' : ''}`; if (year == viewedYear) option.selected = true; yearSelector.appendChild(option); });
         updateAdminModeUI();
     }
-    yearSelector.addEventListener('change', (e) => { const selectedYear = parseInt(e.target.value); if (selectedYear !== viewedYear) { if (isSaving) { showToast("ডেটা সেভ হচ্ছে, অপেক্ষা করুন।", "info"); e.target.value = viewedYear; return; } dataLoaded = false; pageHistory = []; historyIndex = -1; sessionStorage.removeItem('mcth_session_state'); loadAppData(selectedYear); } });
+    yearSelector.addEventListener('change', (e) => {
+        const selectedYear = parseInt(e.target.value);
+        if (selectedYear !== viewedYear) {
+            const pass = prompt("শিক্ষাবর্ষ পরিবর্তন করতে অ্যাডমিন পাসওয়ার্ড দিন:");
+            if (pass === currentPassword) {
+                if (isSaving) {
+                    showToast("ডেটা সেভ হচ্ছে, অপেক্ষা করুন।", "info");
+                    e.target.value = viewedYear; // Revert
+                    return;
+                }
+                dataLoaded = false;
+                pageHistory = [];
+                historyIndex = -1;
+                sessionStorage.removeItem('mcth_session_state');
+                localStorage.setItem(VIEWED_YEAR_KEY, selectedYear);
+                loadAppData(selectedYear);
+                showToast(`শিক্ষাবর্ষ ${selectedYear} তে পরিবর্তন করা হয়েছে।`, 'success');
+            } else if (pass !== null) {
+                showToast('ভুল পাসওয়ার্ড। পরিবর্তন করা সম্ভব নয়।', 'error');
+                e.target.value = viewedYear; // Revert selection
+            } else {
+                 e.target.value = viewedYear; // Revert if cancelled
+            }
+        }
+    });
     if(btnToggleYearBar) { btnToggleYearBar.addEventListener('click', () => { closeDropdownAndRun(() => { const yearControlsContainer = document.getElementById('year-management-controls'); const isHidden = yearControlsContainer.style.display === 'none'; yearControlsContainer.style.display = isHidden ? 'flex' : 'none'; localStorage.setItem(YEAR_BAR_HIDDEN_KEY, !isHidden); }); }); if (localStorage.getItem(YEAR_BAR_HIDDEN_KEY) === 'true') document.getElementById('year-management-controls').style.display = 'none'; }
-    firebase.database().ref('systemSettings/activeYear').once('value').then(snapshot => { activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear(); const lastViewedYear = localStorage.getItem('mcth_viewed_year'); viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear; loadAppData(viewedYear); }).catch(err => { console.error("Could not fetch active year:", err); activeYear = new Date().getFullYear(); viewedYear = activeYear; loadAppData(viewedYear); });
+    
+    firebase.database().ref('systemSettings/activeYear').once('value').then(snapshot => {
+        activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear();
+        const lastViewedYear = localStorage.getItem(VIEWED_YEAR_KEY);
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : 2026;
+        loadAppData(viewedYear);
+    }).catch(err => {
+        console.error("Could not fetch active year:", err);
+        activeYear = new Date().getFullYear();
+        const lastViewedYear = localStorage.getItem(VIEWED_YEAR_KEY);
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : 2026;
+        loadAppData(viewedYear);
+    });
 }
 </script>
 </body>
