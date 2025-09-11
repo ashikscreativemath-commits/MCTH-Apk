@@ -21,27 +21,26 @@
 
 
     <style>
-        /* ======== Mobile-Optimized Styles (from apk.html) ======== */
         @font-face {
-            font-family: 'Kalpurush';
-            src: url('fonts/kalpurush.ttf') format('truetype');
+          font-family: 'Kalpurush';
+          src: url('fonts/kalpurush.ttf') format('truetype');
         }   
         :root {
-            --bg-main: #f4f6f9; --bg-section: #ffffff; --bg-header: #1f2b38; --bg-tab-container: #e9ecef; --bg-tab: #f8f9fa; --bg-tab-active: #ffffff; --bg-input: #ffffff; --bg-input-disabled: #e9ecef; --bg-scrollable: #ffffff; --bg-hover: #eef2f7; --bg-footer: #1f2b38; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --text-tab: #495057; --text-tab-active: #0056b3; --text-input-disabled: #6c757d; --text-footer: #e9ecef; --text-footer-dev: #adb5bd; --border-color: #dee2e6; --border-accent: #007bff; --border-tab-active: #ffffff;
-            --danger-color: #fa383e; --success-color: #31a24c; --warning-color: #ffc107; --special-color: #6f42c1;
+            --bg-main: #f4f6f9; --bg-section: #ffffff; --bg-header: #1f2b38; --bg-tab-container: #e9ecef; --bg-tab: #f8f9fa; --bg-tab-active: #ffffff; --bg-input: #ffffff; --bg-input-disabled: #e9ecef; --bg-hover: #eef2f7; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --text-tab: #495057; --text-tab-active: #0056b3; --border-color: #dee2e6; --border-accent: #007bff;
+            --danger-color: #dc3545; --success-color: #28a745; --warning-color: #ffc107; --special-color: #6f42c1;
+            --footer-bg: #1d3557; --footer-text: #f1faee;
         }
         
         body[data-theme='dark'] {
-            --bg-main: #121212; --bg-section: #1e1e1e; --bg-header: #1f2b38; --bg-tab-container: #121212; --bg-tab: #2a2a2a; --bg-tab-active: #1e1e1e; --bg-input: #252525; --bg-input-disabled: #3a3a3a; --bg-scrollable: #1e1e1e; --bg-hover: #333333; --bg-footer: #1f2b38; --text-primary: #e8eaed; --text-secondary: #9aa0a6; --text-header: #e8eaed; --text-tab: #e8eaed; --text-tab-active: #8ab4f8; --text-input-disabled: #888888; --text-footer: #e8eaed; --text-footer-dev: #9aa0a6; --border-color: #3a3a34; --border-accent: #8ab4f8; --border-tab-active: #1e1e1e;
+            --bg-main: #121212; --bg-section: #1e1e1e; --bg-header: #1f2b38; --bg-tab: #2a2a2a; --bg-tab-active: #1e1e1e; --bg-input: #252525; --bg-input-disabled: #3a3a3a; --bg-hover: #333333; --text-primary: #e8eaed; --text-secondary: #9aa0a6; --text-header: #e8eaed; --text-tab: #e8eaed; --text-tab-active: #8ab4f8; --border-color: #3a3a34; --border-accent: #8ab4f8;
+            --footer-bg: #242526; --footer-text: #e4e6eb;
         }
         
         html { scroll-behavior: smooth; }
         body {
             margin: 0; padding: 0; font-family: 'Kalpurush', sans-serif; font-size: 16px; background-color: var(--bg-main); color: var(--text-primary); transition: background-color .3s, color .3s; line-height: 1.5;
         }
-        body.dark-theme { --bg-main: var(--bg-main-dark); --bg-section: var(--bg-section-dark); --text-primary: var(--text-primary-dark); --text-secondary: var(--text-secondary-dark); --border-color: var(--border-color-dark); }
-
-
+        
         /* Login Page Styles */
         #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
         .login-box { background-color: var(--bg-section); padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color); }
@@ -64,17 +63,15 @@
         .header-top-row, .header-mid-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
         .branding-info { display: flex; flex-direction: column; }
         .branding-info .institute-name { font-size: 1.1em; font-weight: bold; }
-        .branding-info .contact-info { font-size: 0.75em; opacity: 0.8; }
         .header-controls { display: flex; align-items: center; gap: 10px; }
         .mode-controls { display: flex; align-items: center; gap: 5px; background-color: rgba(255,255,255,0.1); padding: 3px 6px; border-radius: 15px; }
         .mode-display { font-size: 0.8em; font-weight: bold; padding: 2px 6px; border-radius: 10px; }
         .mode-display.admin-active { background-color: #c0392b; color: white; }
         .mode-display.assistant-active { background-color: #27ae60; color: white; }
         #btnToggleMode { background: none; border: none; color: white; font-size: 0.8em; cursor: pointer; opacity: 0.9; }
-        #btnToggleMode:hover { opacity: 1; }
         #year-management-controls { display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
         #yearSelector { padding: 4px 8px; border-radius: 15px; border: 1px solid #5a6a7e; background-color: #334257; color: #e8eaed; font-size: 0.9em; cursor: pointer; -webkit-appearance: none; appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat; background-position: right 5px top 50%; padding-right: 20px; }
         .global-nav-icons { display: flex; gap: 12px; }
         .nav-icon-svg { width: 22px; height: 22px; cursor: pointer; transition: opacity .2s; }
@@ -107,6 +104,11 @@
         .batch-card { position: relative; background-color: var(--bg-hover); padding: 12px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 8px; transition: all .2s ease; }
         .batch-card h4 { margin: 0 0 5px; font-size: 1.1em; }
         .batch-card p { margin: 2px 0; font-size: 0.9em; color: var(--text-secondary); }
+        .batch-menu-container { position: absolute; top: 5px; right: 5px; }
+        .menu-toggle-btn { background: none; border: none; font-size: 24px; line-height: 1; padding: 5px; cursor: pointer; color: var(--text-secondary); border-radius: 50%; width: 32px; height: 32px; transition: background-color 0.2s; }
+        .batch-menu-dropdown { display: none; position: absolute; background-color: var(--bg-section); min-width: 140px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 10; border: 1px solid var(--border-color); right: 0; top: 35px; border-radius: 8px; overflow: hidden; }
+        .batch-menu-dropdown.active { display: block; }
+        .batch-menu-dropdown button { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; background: none; border: none; cursor: pointer; font-size: 0.9em; }
 
         /* Attendance View Styles */
         .countdown-info, .holiday-info, .access-denied-message { font-size: 1em; font-weight: bold; padding: 12px; border-radius: 8px; margin-bottom: 10px; text-align: center; }
@@ -137,6 +139,14 @@
         .analysis-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .analysis-card { background-color: var(--bg-section); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .analysis-card h3 { margin-top: 0; border-bottom: 2px solid var(--border-accent); padding-bottom: 8px; font-size: 1.1em; }
+        .student-performance-list { list-style-type: none; padding-left: 0; }
+        .student-performance-list li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--bg-main); font-size: 0.9em;}
+        .student-performance-list li:last-child { border-bottom: none; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .calendar-day { padding: 8px 4px; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: auto; font-size: 0.8em;}
+        .day-name { font-weight: bold; color: var(--text-secondary); padding-bottom: 10px; font-size: 0.8em;}
+        .day-present { background-color: var(--success-color); color: white; }
+        .day-absent { background-color: var(--danger-color); color: white; }
         
         /* Holiday History Table */
         .history-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9em; }
@@ -153,12 +163,23 @@
         .btn-special { background-color: var(--special-color); color: #fff; }
         input[type="search"] { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-section); color: var(--text-primary); font-size: 1em; box-sizing: border-box; width: 100%; }
         
+        /* Modals & Loader */
+        .modal-overlay{display:none;position:fixed;z-index:10001;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;}.modal-overlay.visible{display:flex}.modal-content{background-color:var(--bg-section);margin:auto;padding:20px;border-radius:12px;width:95%;max-width:500px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 5px 15px rgba(0,0,0,.3)}.modal-header{padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:1.4em}.modal-close-btn{background:none;border:none;font-size:2em;cursor:pointer;color:var(--text-secondary);line-height:1;padding:0 5px;}.modal-body{flex-grow:1;overflow-y:auto;}.form-group{margin-bottom:15px}.form-group label{font-weight:600;color:var(--text-secondary);display:block;margin-bottom:8px;font-size:0.9em}.form-group input, .form-group select{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:6px;box-sizing:border-box;background-color:var(--bg-main);color:var(--text-primary);font-size:1em;}.modal-footer{padding-top:15px;margin-top:15px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;gap:10px}
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--border-accent);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        #toast-container{position:fixed;bottom:20px;right:20px;z-index:10005;display:flex;flex-direction:column;gap:10px}.toast{padding:12px 15px;border-radius:8px;color:#fff;font-size:1em;box-shadow:0 2px 8px rgba(0,0,0,.15);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;max-width:300px}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--success-color)}.toast.error{background-color:var(--danger-color)}.toast.info{background-color:#0dcaf0}
+        
         /* Footer */
-        .app-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 20px 15px; text-align: center; }
+        .app-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 20px 15px; text-align: center; margin-top: 20px; }
+        .footer-content { line-height: 1.7; }
         .footer-content p { margin: 5px 0; font-size: 0.9em; }
+        .footer-content a { color: var(--footer-text); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .footer-content a:hover { color: var(--border-accent); }
+        .footer-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 15px; margin-top: 10px; }
+        .footer-contact { margin-top: 10px; }
+        .footer-socials svg, .footer-contact svg { width: 16px; height: 16px; fill: currentColor; }
     </style>
 </head>
-<body>
+<body data-theme="light">
     <div id="login-container">
         <div class="login-box">
             <img src="images/image2.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
@@ -227,8 +248,8 @@
             </div>
             <div class="header-mid-row">
                  <div class="global-nav-icons">
-                    <button id="btnNavBack" class="nav-btn" title="Back"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"></path></svg></button>
-                    <button id="btnNavRefresh" class="nav-btn" title="Refresh"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"></path></svg></button>
+                    <button id="btnNavBack" class="nav-btn" title="Back" style="background: none; border: none;"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"></path></svg></button>
+                    <button id="btnNavRefresh" class="nav-btn" title="Refresh" style="background: none; border: none;"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"></path></svg></button>
                 </div>
                 <div id="year-management-controls">
                     <select id="yearSelector"></select>
@@ -246,6 +267,12 @@
             <div class="footer-content">
                 <p>&copy; Math Creative Teaching Home 2025</p>
                 <p>Developed by Abdullah Al Rafi</p>
+                <div class="footer-socials">
+                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg>
+                        <span>01745938158</span>
+                    </a>
+                    <a href="mailto:rafiofficialpc@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>rafiofficialpc@gmail.com</span></a>
+                </div>
             </div>
         </footer>
     </div>
@@ -708,6 +735,13 @@ function initializeAppLogic() {
             classCard.className = 'class-card';
             let batchHTML = classGroup.batches.map(batch => `
                 <div class="batch-card" data-batch-id="${batch.id}">
+                     <div class="batch-menu-container">
+                        <button class="menu-toggle-btn">&vellip;</button>
+                        <div class="batch-menu-dropdown">
+                            <button class="btn-schedule admin-only" data-batch-id="${batch.id}">📅 Schedule</button>
+                            <button class="btn-analysis" data-batch-id="${batch.id}">📊 Analysis</button>
+                        </div>
+                    </div>
                     <h4>${batch.time}</h4>
                     <p><strong>Day:</strong> ${batch.dayName}</p>
                 </div>`).join('');
@@ -716,24 +750,28 @@ function initializeAppLogic() {
         });
 
         classContainer.addEventListener('click', e => {
+            const menuToggle = e.target.closest('.menu-toggle-btn');
+            const scheduleBtn = e.target.closest('.btn-schedule');
+            const analysisBtn = e.target.closest('.btn-analysis');
             const batchCard = e.target.closest('.batch-card');
-            if (batchCard) {
+
+            if (menuToggle) { e.stopPropagation(); document.querySelectorAll('.batch-menu-dropdown.active').forEach(d => d.classList.remove('active')); menuToggle.nextElementSibling.classList.toggle('active'); } 
+            else if (scheduleBtn) { if(isAdminMode) showScheduleModal(scheduleBtn.dataset.batchId); else showToast('Only admins can set schedule.', 'error'); } 
+            else if (analysisBtn) { renderView(renderBatchAnalysisView, { batchId: analysisBtn.dataset.batchId }); } 
+            else if (batchCard) {
                 const batchId = batchCard.dataset.batchId;
                 currentBatchId = batchId;
                 const isHoliday = checkIsHoliday(getTodayDateString(), batchId);
                 const schedule = appData.attendance?.schedules?.[batchId];
                 const { status } = getScheduleStatus(schedule);
-
-                if (status === 'during' && !isHoliday) {
-                    renderView(renderBatchAttendanceView, { batchId: batchId });
-                } else {
-                    renderView(renderAccessDeniedView, { batchId: batchId });
-                }
+                if (status === 'during' && !isHoliday) renderView(renderBatchAttendanceView, { batchId: batchId });
+                else renderView(renderAccessDeniedView, { batchId: batchId });
             }
         });
         document.getElementById('btnStudentDashboard').addEventListener('click', () => renderView(renderStudentDashboardSelectorView));
         updateAdminModeUI();
     }
+    
     function findBatchById(batchId) { for (const day of (appData.batchSchedule || [])) { for (const cls of (day.classes || [])) { const batch = (cls.batches || []).find(b => b.id === batchId); if (batch) { const classInfo = (appData.mainClassCategories || []).find(c => c.id === cls.classId); return { ...batch, dayName: day.dayName, className: classInfo?.name || 'Unknown' }; } } } return null; }
     function checkIsHoliday(dateStr, batchIdToCheck) { const holidays = appData.attendance?.holidays || {}; return Object.values(holidays).some(h => { if (!h.batchIds || !h.batchIds.includes(batchIdToCheck)) return false; if (Array.isArray(h.dates)) return h.dates.includes(dateStr); if (typeof h.dates === 'string') return h.dates === dateStr; return false; }); }
     function getScheduleStatus(schedule) {
@@ -780,7 +818,7 @@ function initializeAppLogic() {
             item.innerHTML = `<div class="student-photo">${photoHtml}</div><div class="student-details-container"><div class="student-name">${student.name}</div><div class="student-school">${student.schoolName || 'N/A'}</div></div><div class="student-roll">${student.roll}</div><div class="attendance-action"></div>`;
             studentListDiv.appendChild(item);
         });
-        document.getElementById('studentSearchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); studentListDiv.querySelectorAll('.student-list-item').forEach(item => { item.style.display = item.querySelector('.student-roll').textContent.includes(term) ? '' : 'none'; }); });
+        document.getElementById('studentSearchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); studentListDiv.querySelectorAll('.student-list-item').forEach(item => { item.style.display = item.querySelector('.student-roll').textContent.includes(term) ? '' : 'grid'; }); });
         studentListDiv.addEventListener('click', handleAttendanceAction);
         setupAttendanceListener(batchId, students);
     }
@@ -851,23 +889,53 @@ function initializeAppLogic() {
             countdownInterval = setInterval(updateCountdown, 1000);
          } else { timerInfoDiv.textContent = 'পরবর্তী ক্লাসের কোনো তথ্য পাওয়া যায়নি।'; }
     }
-    
-    // Placeholder for other view functions
-    function renderStudentDashboardSelectorView() { mainContainer.innerHTML = '<h2>Student Dashboard Selector View</h2><p>Functionality to be implemented.</p>'; }
-    function renderStudentDashboardView({ studentId }) { mainContainer.innerHTML = `<h2>Student Dashboard for ${studentId}</h2><p>Functionality to be implemented.</p>`; }
-    function renderHolidayContent() { mainContainer.querySelector('#tab-content-holidays').innerHTML = '<h2>Holiday Management</h2><p>Functionality to be implemented.</p>'; }
-    function renderBatchAnalysisView({ batchId }) { mainContainer.innerHTML = `<h2>Analysis for Batch ${batchId}</h2><p>Functionality to be implemented.</p>`; }
-    
-    // --- Map functions to window for history ---
-    window.renderBatchListView = renderBatchListView;
-    window.renderBatchAttendanceView = renderBatchAttendanceView;
-    window.renderBatchAnalysisView = renderBatchAnalysisView;
-    window.renderStudentDashboardSelectorView = renderStudentDashboardSelectorView;
-    window.renderStudentDashboardView = renderStudentDashboardView;
-    window.renderHolidayView = renderHolidayContent;
-    window.renderAccessDeniedView = renderAccessDeniedView;
 
-    // --- Initial Load ---
+    function showScheduleModal(batchId) {
+        if(document.getElementById('scheduleModal')) document.getElementById('scheduleModal').remove();
+        const template = document.getElementById('template-schedule-modal');
+        document.body.appendChild(template.content.cloneNode(true));
+        
+        const modal = document.getElementById('scheduleModal');
+        const batchDetails = findBatchById(batchId);
+        modal.querySelector('#scheduleModalTitle').textContent = `Schedule for ${batchDetails.className} (${batchDetails.time})`;
+        
+        const schedule = appData.attendance?.schedules?.[batchId];
+        if (schedule) {
+            modal.querySelector('#startTime').value = schedule.startTime;
+            modal.querySelector('#endTime').value = schedule.endTime;
+            (schedule.days || []).forEach(dayIndex => { const checkbox = modal.querySelector(`input[name="classDay"][value="${dayIndex}"]`); if (checkbox) checkbox.checked = true; });
+        }
+        
+        if (!isAdminMode) {
+            modal.querySelectorAll('input, button[type="submit"]').forEach(el => el.disabled = true);
+            modal.querySelector('#btnSaveSchedule').style.display = 'none';
+        }
+
+        modal.querySelector('#scheduleForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const selectedDays = Array.from(modal.querySelectorAll('input[name="classDay"]:checked')).map(cb => parseInt(cb.value));
+            const startTime = modal.querySelector('#startTime').value;
+            const endTime = modal.querySelector('#endTime').value;
+            if (selectedDays.length === 0 || !startTime || !endTime) { showToast('Please select days and times.', 'error'); return; }
+            const newSchedule = { days: selectedDays, startTime, endTime };
+            dataRef.child(`attendance/schedules/${batchId}`).set(newSchedule)
+                .then(() => { logActivity('Updated schedule', { batchId }); showToast('Schedule saved!', 'success'); modal.remove(); });
+        });
+
+        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
+        modal.querySelector('#btnCancelSchedule').onclick = () => modal.remove();
+        modal.classList.add('visible');
+    }
+    
+    function processBatchData(batchId) { const records = appData.attendance?.records || {}; const studentDetails = appData.students || []; const batchInfo = findBatchById(batchId); const studentIdsInBatch = new Set(batchInfo.studentIds || []); const studentStats = {}; studentIdsInBatch.forEach(id => { const student = studentDetails.find(s => s.id === id); if(student) studentStats[id] = { name: student.name, roll: student.roll, present: 0, absent: 0 }; }); const dailyAttendance = {}; const dayWiseCounts = { 0: {p:0, t:0}, 1: {p:0, t:0}, 2: {p:0, t:0}, 3: {p:0, t:0}, 4: {p:0, t:0}, 5: {p:0, t:0}, 6: {p:0, t:0} }; let totalPresents = 0; let totalAbsents = 0; for (const date in records) { if (records[date][batchId]) { const dayRecord = records[date][batchId]; dailyAttendance[date] = { present: 0, total: 0 }; const dayOfWeek = new Date(date).getUTCDay(); for (const studentId in dayRecord) { if (studentIdsInBatch.has(studentId) && studentStats[studentId]) { dailyAttendance[date].total++; dayWiseCounts[dayOfWeek].t++; if (dayRecord[studentId].status === 'present') { studentStats[studentId].present++; totalPresents++; dailyAttendance[date].present++; dayWiseCounts[dayOfWeek].p++; } else if (dayRecord[studentId].status === 'absent') { studentStats[studentId].absent++; totalAbsents++; } } } } } const totalClassDays = Object.keys(dailyAttendance).length; if (totalClassDays === 0) return null; const overallPercentage = totalPresents + totalAbsents > 0 ? (totalPresents / (totalPresents + totalAbsents) * 100).toFixed(1) : 0; const avgStudents = (totalPresents / totalClassDays).toFixed(1); const sortedStudents = Object.values(studentStats).filter(s => s.present + s.absent > 0); const topPresenters = [...sortedStudents].sort((a, b) => b.present - a.present || a.absent - b.absent).slice(0, 5); const topAbsentees = [...sortedStudents].sort((a, b) => b.absent - a.absent || a.present - b.present).slice(0, 5); const trendData = Object.entries(dailyAttendance).sort().map(([date, data]) => ({ x: date, y: data.total > 0 ? (data.present / data.total * 100) : 0 })); const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; const dayData = dayLabels.map((_, i) => dayWiseCounts[i].t > 0 ? (dayWiseCounts[i].p / dayWiseCounts[i].t * 100) : 0); return { totalPresents, totalAbsents, totalClassDays, overallPercentage, avgStudents, topPresenters, topAbsentees, trendData, dayData, dayLabels }; }
+    function renderBatchAnalysisView({ batchId }) { const batchDetails = findBatchById(batchId); document.getElementById('analysisBatchName').textContent = `Analysis for: ${batchDetails.className} (${batchDetails.time})`; const analysisContent = document.getElementById('analysis-content'); showLoader(); setTimeout(() => { const data = processBatchData(batchId); hideLoader(); if (!data) { analysisContent.innerHTML = `<p style="text-align:center; padding: 40px; color: var(--text-secondary);">Not enough data for analysis.</p>`; return; } document.getElementById('stat-overall-percentage').textContent = `${data.overallPercentage}%`; document.getElementById('stat-total-classes').textContent = data.totalClassDays; document.getElementById('stat-avg-students').textContent = data.avgStudents; document.getElementById('topPresentersList').innerHTML = data.topPresenters.map(s => `<li><span class="name">${s.roll}. ${s.name}</span> <span class="stat stat-present">${s.present} days</span></li>`).join(''); document.getElementById('topAbsenteesList').innerHTML = data.topAbsentees.map(s => `<li><span class="name">${s.roll}. ${s.name}</span> <span class="stat stat-absent">${s.absent} days</span></li>`).join(''); const chartTextColor = getComputedStyle(document.body).getPropertyValue('--text-primary'); charts.overall = new Chart(document.getElementById('overallAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.totalPresents, data.totalAbsents], backgroundColor: [getComputedStyle(document.documentElement).getPropertyValue('--success-color'), getComputedStyle(document.documentElement).getPropertyValue('--danger-color')], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } }); charts.trend = new Chart(document.getElementById('attendanceTrendChart'), { type: 'line', data: { datasets: [{ label: 'Attendance %', data: data.trendData, borderColor: 'var(--special-color)', tension: 0.1, fill: false }]}, options: { responsive: true, scales: { x: { type: 'time', time: { unit: 'day' }, ticks: { color: chartTextColor } }, y: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } } }, plugins: { legend: { labels: { color: chartTextColor } } } } }); charts.dayWise = new Chart(document.getElementById('dayWiseChart'), { type: 'bar', data: { labels: data.dayLabels, datasets: [{ label: 'Avg. Attendance %', data: data.dayData, backgroundColor: 'var(--border-accent)' }] }, options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } }, x: { ticks: { color: chartTextColor } } }, plugins: { legend: { display: false } } } }); }, 10); }
+    function renderStudentDashboardSelectorView() { const listContainer = document.getElementById('student-dashboard-list'); const searchInput = document.getElementById('studentDashboardSearch'); const populateList = (searchTerm = '') => { listContainer.innerHTML = ''; const filtered = (appData.students || []).filter(s => s && !s.deletedAt && (s.name.toLowerCase().includes(searchTerm) || s.roll.includes(searchTerm))); filtered.sort((a,b) => parseInt(a.roll) - parseInt(b.roll)).forEach(student => { const item = document.createElement('div'); item.className = 'student-list-item'; item.innerHTML = `<div class="student-roll">${student.roll}</div><div><div class="student-name">${student.name}</div></div><button class="btn-primary">View</button>`; item.querySelector('button').addEventListener('click', () => renderView(renderStudentDashboardView, { studentId: student.id })); listContainer.appendChild(item); }); }; searchInput.addEventListener('input', () => populateList(searchInput.value.toLowerCase())); populateList(); }
+    function processStudentData(studentId) { const allRecords = appData.attendance?.records || {}; let presentCount = 0, absentCount = 0, totalClasses = 0; const studentAbsenceByDay = { 0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0 }; const batchAverages = {}; const studentBatches = new Set(); (appData.batchSchedule || []).forEach(day => (day.classes || []).forEach(cls => (cls.batches || []).forEach(batch => { if (batch.studentIds && batch.studentIds.includes(studentId)) studentBatches.add(batch.id); }))); for (const date in allRecords) { const dayOfWeek = new Date(date).getUTCDay(); for (const batchId of studentBatches) { if(allRecords[date][batchId]) { const batchRecord = allRecords[date][batchId]; if (!batchAverages[batchId]) batchAverages[batchId] = { totalPresents: 0, totalRecords: 0 }; Object.values(batchRecord).forEach(rec => { batchAverages[batchId].totalRecords++; if (rec.status === 'present') batchAverages[batchId].totalPresents++; }); if (batchRecord[studentId]) { totalClasses++; if (batchRecord[studentId].status === 'present') presentCount++; else if (batchRecord[studentId].status === 'absent') { absentCount++; studentAbsenceByDay[dayOfWeek]++; } } } } } const studentPercentage = totalClasses > 0 ? (presentCount / totalClasses * 100).toFixed(1) : 0; let overallBatchPresents = 0, overallBatchRecords = 0; Object.values(batchAverages).forEach(b => { overallBatchPresents += b.totalPresents; overallBatchRecords += b.totalRecords; }); const overallBatchAvg = overallBatchRecords > 0 ? (overallBatchPresents / overallBatchRecords * 100).toFixed(1) : 0; const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; const dayData = dayLabels.map((_, i) => studentAbsenceByDay[i]); return { presentCount, absentCount, totalClasses, studentPercentage, overallBatchAvg, dayData, dayLabels }; }
+    function renderStudentDashboardView({ studentId }) { const student = (appData.students || []).find(s => s.id === studentId); if (!student) return renderView(renderStudentDashboardSelectorView); document.getElementById('studentDashboardName').textContent = `Dashboard for: ${student.name} (Roll: ${student.roll})`; const data = processStudentData(studentId); document.getElementById('stat-student-percentage').textContent = `${data.studentPercentage}%`; document.getElementById('stat-student-total').textContent = data.totalClasses; document.getElementById('stat-student-present').textContent = data.presentCount; document.getElementById('stat-student-absent').textContent = data.absentCount; const chartTextColor = getComputedStyle(document.body).getPropertyValue('--text-primary'); const successColor = getComputedStyle(document.documentElement).getPropertyValue('--success-color'); const dangerColor = getComputedStyle(document.documentElement).getPropertyValue('--danger-color'); let currentDate = new Date(); const renderCalendar = (date) => { const month = date.getMonth(), year = date.getFullYear(); document.getElementById('calendarMonthYear').textContent = date.toLocaleDateString('bn-BD', { month: 'long', year: 'numeric' }); const calendarDays = document.getElementById('calendar-days'); calendarDays.innerHTML = ''; const firstDayOfMonth = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate(); for (let i = 0; i < firstDayOfMonth; i++) calendarDays.innerHTML += `<div></div>`; for (let day = 1; day <= daysInMonth; day++) { const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; let dayClass = new Date(dateStr) < new Date(getTodayDateString()) ? '' : 'day-future'; let status = null; const recordsForDay = appData.attendance?.records?.[dateStr]; if (recordsForDay) for (const batchId in recordsForDay) if (recordsForDay[batchId][studentId]) { status = recordsForDay[batchId][studentId].status; break; } if (status === 'present') dayClass = 'day-present'; else if (status === 'absent') dayClass = 'day-absent'; calendarDays.innerHTML += `<div class="calendar-day ${dayClass}">${day}</div>`; } }; document.getElementById('prevMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(currentDate); }; document.getElementById('nextMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(currentDate); }; renderCalendar(currentDate); charts.personal = new Chart(document.getElementById('personalAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.presentCount, data.absentCount], backgroundColor: [successColor, dangerColor], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } }); charts.comparison = new Chart(document.getElementById('comparisonChart'), { type: 'bar', data: { labels: ['Student', 'Batch Average'], datasets: [{ label: 'Attendance %', data: [data.studentPercentage, data.overallBatchAvg], backgroundColor: ['var(--special-color)', 'var(--border-accent)'] }] }, options: { responsive: true, indexAxis: 'y', scales: { x: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } }, y: { ticks: { color: chartTextColor }}}, plugins: { legend: { display: false } } } }); charts.absencePattern = new Chart(document.getElementById('studentDayAbsenceChart'), { type: 'bar', data: { labels: data.dayLabels, datasets: [{ label: 'Days Absent', data: data.dayData, backgroundColor: dangerColor }] }, options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: chartTextColor } }, x: { ticks: { color: chartTextColor }} }, plugins: { legend: { display: false } } } }); }
+    function renderHolidayContent() { const container = document.getElementById('tab-content-holidays'); container.innerHTML = ''; container.appendChild(document.getElementById('template-holiday-view').content.cloneNode(true)); const datePickerElem = document.getElementById('holiday-dates-picker'); const batchSelector = document.getElementById('holiday-batch-selector'); const selectAllCheckbox = document.getElementById('holiday-select-all-batches'); const declareBtn = document.getElementById('btn-declare-holiday'); const fp = flatpickr(datePickerElem, { mode: "multiple", dateFormat: "Y-m-d", inline: true }); const allBatches = (appData.batchSchedule || []).flatMap(day => (day.classes || []).flatMap(cls => (cls.batches || []).map(b => ({...b, dayName: day.dayName, className: (appData.mainClassCategories.find(c => c.id === cls.classId) || {}).name})))); batchSelector.innerHTML = ''; allBatches.forEach(b => { batchSelector.innerHTML += `<label style="display: block; margin-bottom: 5px;"><input type="checkbox" name="holiday-batches" value="${b.id}"> ${b.className} - ${b.dayName} (${b.time})</label>`; }); const allBatchCheckboxes = batchSelector.querySelectorAll('input[name="holiday-batches"]'); selectAllCheckbox.addEventListener('change', () => allBatchCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked)); allBatchCheckboxes.forEach(cb => cb.addEventListener('change', () => selectAllCheckbox.checked = [...allBatchCheckboxes].every(c => c.checked))); declareBtn.addEventListener('click', () => { const selectedDates = fp.selectedDates.map(date => date.toISOString().split('T')[0]); const batchIds = [...document.querySelectorAll('input[name="holiday-batches"]:checked')].map(cb => cb.value); if (selectedDates.length === 0 || batchIds.length === 0) return showToast('Please select dates and batches.', 'error'); showLoader(); const holidayId = `holiday_${Date.now()}`; const holidayData = { dates: selectedDates, batchIds }; dataRef.child(`attendance/holidays/${holidayId}`).set(holidayData).then(() => { hideLoader(); showToast('Holiday(s) declared!', 'success'); fp.clear(); allBatchCheckboxes.forEach(cb => cb.checked = false); selectAllCheckbox.checked = false; }).catch(err => { hideLoader(); showToast(`Error: ${err.message}`, 'error'); }); }); const historyTableBody = document.getElementById('holiday-history-table').querySelector('tbody'); historyTableBody.innerHTML = '<tr><td colspan="2">Loading history...</td></tr>'; const holidays = appData.attendance?.holidays || {}; const flattenedHolidays = []; for (const id in holidays) holidays[id].dates.forEach(date => flattenedHolidays.push({ date, batchIds: holidays[id].batchIds })); flattenedHolidays.sort((a,b) => new Date(b.date) - new Date(a.date)); if(flattenedHolidays.length > 0) historyTableBody.innerHTML = flattenedHolidays.map(holiday => `<tr><td>${new Date(holiday.date).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric'})}</td><td>${holiday.batchIds.map(bId => { const b = findBatchById(bId); return b ? `<span class="batch-tag">${b.className} (${b.time})</span>` : ''; }).join('') || 'N/A'}</td></tr>`).join(''); else historyTableBody.innerHTML = '<tr><td colspan="2">No holiday history.</td></tr>'; }
+    
+    window.renderBatchListView = renderBatchListView; window.renderBatchAttendanceView = renderBatchAttendanceView; window.renderBatchAnalysisView = renderBatchAnalysisView; window.renderStudentDashboardSelectorView = renderStudentDashboardSelectorView; window.renderStudentDashboardView = renderStudentDashboardView; window.renderHolidayContent = renderHolidayContent; window.renderAccessDeniedView = renderAccessDeniedView;
+
     initializeApp();
 }
 </script>
