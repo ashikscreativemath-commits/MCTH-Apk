@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCTH পরীক্ষা - Mobile</title>
+    <title>MCTH Exam - Mobile</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
     <!-- FIREBASE SDKs -->
@@ -20,18 +20,21 @@
         }   
 
         :root {
-            --bg-main: #f4f6f9; --bg-section: #ffffff; --bg-header: #1f2b38; --bg-tab-container: #e9ecef; --bg-tab: #f8f9fa; --bg-tab-active: #ffffff; --bg-input: #ffffff; --bg-input-disabled: #e9ecef; --bg-hover: #eef2f7; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --text-tab: #495057; --text-tab-active: #0056b3; --border-color: #dee2e6; --border-accent: #007bff;
-            --danger-color: #dc3545; --success-color: #28a745; --special-color: #6f42c1; --olympiad-color: #8833ff;
-            --footer-bg: #1d3557; --footer-text: #f1faee;
-        }
-        
-        body[data-theme='dark'] {
-            --bg-main: #121212; --bg-section: #1e1e1e; --bg-header: #1f2b38; --bg-tab: #2a2a2a; --bg-tab-active: #1e1e1e; --bg-input: #252525; --bg-input-disabled: #3a3a3a; --bg-hover: #333333; --text-primary: #e8eaed; --text-secondary: #9aa0a6; --text-header: #e8eaed; --text-tab: #e8eaed; --text-tab-active: #8ab4f8; --border-color: #3a3a34; --border-accent: #8ab4f8;
-            --footer-bg: #242526; --footer-text: #e4e6eb;
+            /* PC Version Green Theme */
+            --accent-color: #28a745; --accent-color-dark: #218838; --special-color: #6f42c1; --special-color-dark: #5a349b; --olympiad-color: #8833ff; --olympiad-color-dark: #7019e6; --footer-bg: #1d3557; --footer-text: #f1faee;
+            --bg-main-light: #f0f2f5; --bg-section-light: #ffffff; --text-primary-light: #1c1e21; --text-secondary-light: #606770; --border-color-light: #dddfe2; --danger-color: #fa383e; --success-color: #31a24c; --warning-color: #ffc107; --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1); --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+            --bg-main-dark: #18191a; --bg-section-dark: #242526; --text-primary-dark: #e4e6eb; --text-secondary-dark: #b0b3b8; --border-color-dark: #3a3b3c;
         }
         
         html { scroll-behavior: smooth; }
-        body { margin: 0; padding: 0; font-family: 'Kalpurush', sans-serif; font-size: 16px; background-color: var(--bg-main); color: var(--text-primary); transition: background-color .3s, color .3s; line-height: 1.5; }
+        body {
+            --bg-main: var(--bg-main-light); --bg-section: var(--bg-section-light); --bg-header: var(--bg-section-light); --text-primary: var(--text-primary-light); --text-secondary: var(--text-secondary-light); --border-color: var(--border-color-light);
+            font-family: 'Kalpurush', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; padding: 0; background-color: var(--bg-main); color: var(--text-primary); transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme {
+            --bg-main: var(--bg-main-dark); --bg-section: var(--bg-section-dark); --bg-header: var(--bg-section-dark); --text-primary: var(--text-primary-dark); --text-secondary: var(--text-secondary-dark); --border-color: var(--border-color-dark);
+            --footer-bg: #242526; --footer-text: #e4e6eb;
+        }
         
         /* Login Page Styles */
         #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
@@ -42,37 +45,40 @@
         .input-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input, #fff); color: var(--text-primary); box-sizing: border-box; }
         .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
         .login-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
-        .login-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--border-accent); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        .login-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--accent-color); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
         #login-error-msg { color: var(--danger-color); margin-top: 15px; min-height: 20px; font-weight: bold; }
         #app-container.hidden { display: none; }
         .login-footer { margin-top: 25px; font-size: 0.8em; color: var(--text-secondary); }
         
         /* Main App Header Styles */
-        #app-container { display: flex; flex-direction: column; min-height: 100vh; position: relative; }
+        #app-container { display: flex; flex-direction: column; min-height: 100vh; }
         #center-watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70vw; max-width: 300px; height: 100vh; background-image: url(images/image2.png); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: .05; z-index: -1; pointer-events: none; }
-        body[data-theme=dark] #center-watermark{ filter: invert(1) grayscale(1); opacity: 0.08; }
-        header { background-color: var(--bg-header); color: var(--text-header); padding: 8px 10px; position: sticky; top: 0; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 8px; }
-        .header-top-row, .header-mid-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .branding-info { display: flex; flex-direction: column; }
-        .branding-info .institute-name { font-size: 1.1em; font-weight: bold; }
-        #year-management-controls { display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
+        body.dark-theme #center-watermark{ filter: invert(1) grayscale(1); opacity: 0.08; }
+        header { background-color: var(--bg-header); color: var(--text-primary); padding: 8px 10px; position: sticky; top: 0; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); }
+        .header-left { display: flex; align-items: center; gap: 5px; }
+        .header-center { flex-grow: 1; text-align: center; font-weight: bold; font-size: 1.2em; }
+        .header-right { margin-left: auto; }
+        #year-management-controls { width: 100%; display: flex; justify-content: center; align-items: center; background-color: var(--bg-main); padding: 5px 10px; border-radius: 6px; font-size: 0.9em; border: 1px solid var(--border-color); visibility: hidden;}
         #yearSelector { padding: 4px 8px; border-radius: 15px; border: 1px solid #5a6a7e; background-color: #334257; color: #e8eaed; font-size: 0.9em; cursor: pointer; -webkit-appearance: none; appearance: none;
             background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat; background-position: right 5px top 50%; padding-right: 20px; }
-        .global-nav-icons { display: flex; gap: 12px; }
-        .nav-btn { background: none; border: none; padding: 0; color: white; cursor: pointer; }
-        .nav-icon-svg { width: 22px; height: 22px; }
+        #yearSelector:disabled { opacity: 0.7; cursor: not-allowed; }
+        .global-menu-btn, .nav-btn { background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 0; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s ease; }
+        .global-menu-btn:hover, .nav-btn:hover { background-color: var(--bg-main); }
+        .global-menu-btn:active, .nav-btn:active { background-color: var(--border-color); transform: scale(0.9); }
+        .nav-btn svg { width: 22px; height: 22px; fill: currentColor; }
         .global-menu-container { position: relative; }
-        .global-menu-btn { background: 0 0; border: none; color: var(--text-header); font-size: 1.6em; cursor: pointer; padding: 0 8px; line-height: 1; }
-        .global-menu-dropdown { display: none; position: absolute; top: 40px; right: 0; background-color: var(--bg-section); color: var(--text-primary); min-width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,.2); z-index: 10000; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .global-menu-btn { font-size: 24px; }
+        .global-menu-dropdown { display: none; position: absolute; top: 40px; right: 0; background-color: var(--bg-section); color: var(--text-primary); min-width: 220px; box-shadow: var(--shadow-md); z-index: 10000; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
         .global-menu-dropdown.active { display: block; }
         .global-menu-dropdown button { width: 100%; padding: 10px 15px; text-align: left; background: 0 0; border: none; cursor: pointer; font-size: 0.95em; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; }
-        .global-menu-dropdown button:hover { background-color: var(--bg-hover); }
+        #btnClearData { color: var(--danger-color); font-weight: bold; }
+        #btnOpenOlympiad { background: linear-gradient(45deg, var(--olympiad-color), #ff6b6b); color: white; font-weight: bold; }
         .global-menu-dropdown hr { margin: 5px 0; border: none; border-top: 1px solid var(--border-color); opacity: 0.5; }
-        .backup-submenu{display:none;background-color:var(--bg-hover);padding-left:15px}.backup-submenu.open{display:block}.backup-submenu button{padding-left:25px}.arrow-icon{display:inline-block;transition:transform .2s ease-in-out}#btnBackupMenuToggle.open .arrow-icon{transform:rotate(90deg)}
+        .backup-submenu{display:none;background-color:var(--bg-main);padding-left:15px}.backup-submenu.open{display:block}.backup-submenu button{padding-left:25px}.arrow-icon{display:inline-block;transition:transform .2s ease-in-out}#btnBackupMenuToggle.open .arrow-icon{transform:rotate(90deg)}
         
         main{padding:15px;flex-grow:1;position:relative;z-index:1;}
-        .page-section{background-color:var(--bg-section);padding:15px;border-radius:8px;margin-bottom:15px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--border-color);}
+        .page-section{background-color:var(--bg-section);padding:15px;border-radius:8px;margin-bottom:15px;box-shadow:var(--shadow-sm);border:1px solid var(--border-color);}
         .d-none { display: none !important; }
         .page-header { display: flex; flex-direction: column; align-items: stretch; text-align: center; margin-bottom: 20px; gap: 10px; }
         .page-header h2 { margin: 0; font-size: 1.3em; }
@@ -80,9 +86,9 @@
 
         /* Button & Tab Styles */
         button, .btn { border: none; cursor: pointer; border-radius: 6px; padding: 10px 15px; font-weight: 600; transition: all 0.2s ease-out; }
-        .btn-primary { background-color: var(--border-accent); color: #fff; }
+        .btn-primary { background-color: var(--accent-color); color: #fff; }
         .btn-secondary { background-color: #e4e6eb; color: #1c1e21; }
-        body[data-theme='dark'] .btn-secondary { background-color: #3a3b3c; color: #e4e6eb; }
+        body.dark-theme .btn-secondary { background-color: #3a3b3c; color: #e4e6eb; }
         .btn-danger { background-color: var(--danger-color); color: #fff; }
         .btn-special { background-color: var(--special-color); color: #fff; }
         .btn-olympiad { background-color: var(--olympiad-color); color: #fff; }
@@ -90,7 +96,7 @@
         .tab-container{display:flex;border-bottom:1px solid var(--border-color);margin-bottom:20px;flex-wrap:nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;}
         .tab-container::-webkit-scrollbar { display: none; }
         .tab-button{padding:12px 18px;cursor:pointer;border:none;background-color:transparent;border-bottom:3px solid transparent;font-size:1em;color:var(--text-secondary); font-weight: 600; transition: all 0.2s ease; flex-shrink: 0;}
-        .tab-button.active{color:var(--border-accent);border-bottom-color:var(--border-accent);}
+        .tab-button.active{color:var(--accent-color);border-bottom-color:var(--accent-color);}
 
         /* Exam List & Cards */
         #exam-list-container, #olympiad-list-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
@@ -110,38 +116,57 @@
         /* Marks Entry & Result */
         #quick-entry-panel, .search-and-add-panel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;}
         #quick-entry-panel input, #result-sheet-filter-container select, #resultSheetSearchInput, .search-and-add-panel input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-section); color: var(--text-primary); font-size: 1em; box-sizing: border-box; width: 100%; }
+        #exam-stats { display: flex; justify-content: space-around; background: var(--bg-main); padding: 8px; border-radius: 6px; font-size: 0.9em; }
+        .stat-entered { color: var(--success-color); font-weight: bold; }
+        .stat-pending { color: var(--danger-color); font-weight: bold; }
         .marks-table-container, #result-preview-container { overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.9em;}
         td, th { padding: 10px 8px; border: 1px solid var(--border-color); text-align: left; white-space: nowrap; }
         th { background-color:var(--bg-main); }
         #student-marks-tbody tr, #olympiad-participant-tbody tr, #olympiad-marks-tbody tr { cursor: pointer; transition: background-color 0.2s; }
-        #student-marks-tbody tr.selected-row { background-color: var(--border-accent) !important; color: #fff; }
+        #student-marks-tbody tr.selected-row { background-color: var(--accent-color) !important; color: #fff; }
         #olympiad-marks-tbody tr.selected-row { background-color: var(--olympiad-color) !important; color: #fff; }
         #student-marks-tbody tr.selected-row td, #olympiad-marks-tbody tr.selected-row td { color: #fff; }
+        .student-photo-cell { width: 45px; padding: 5px !important; } .student-photo-cell img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; } .hide-images .student-photo-cell { display: none; }
         
         /* Modals */
         .modal-overlay{display:none;position:fixed;z-index:10001;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;}.modal-overlay.visible{display:flex}.modal-content{background-color:var(--bg-section);margin:auto;padding:20px;border-radius:12px;width:95%;max-width:500px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 5px 15px rgba(0,0,0,.3)}.modal-header{padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:1.4em}.modal-close-btn{background:none;border:none;font-size:2em;cursor:pointer;color:var(--text-secondary);line-height:1;padding:0 5px;}.modal-body{flex-grow:1;overflow-y:auto;}.form-grid{display:grid;grid-template-columns:1fr;gap:15px;}.form-group{margin-bottom:15px}.form-group label{font-weight:600;color:var(--text-secondary);display:block;margin-bottom:8px;font-size:0.9em}.form-group input, .form-group select{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:6px;box-sizing:border-box;background-color:var(--bg-main);color:var(--text-primary);font-size:1em;}.modal-footer{padding-top:15px;margin-top:15px;border-top:1px solid var(--border-color);display:flex;flex-direction:column;gap:10px}.modal-footer button{width:100%; margin:0;}
         .class-batch-selector { display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; height: 350px; flex-direction: column; }
         .class-list { width: 100%; border-bottom: 1px solid var(--border-color); overflow-y: auto; background: var(--bg-main); height: 40%; }
         .class-list-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.95em; }
-        .class-list-item.active { background-color: var(--border-accent); color: #fff; font-weight: bold; }
+        .class-list-item.active { background-color: var(--accent-color); color: #fff; font-weight: bold; }
         .batch-list { width: 100%; padding: 10px; overflow-y: auto; height: 60%; box-sizing: border-box; }
         .exam-checkbox-label { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.9em;}
         
-        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--border-accent);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--accent-color);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
         #toast-container{position:fixed;bottom:20px;right:20px;z-index:10005;display:flex;flex-direction:column;gap:10px}.toast{padding:12px 15px;border-radius:8px;color:#fff;font-size:1em;box-shadow:0 2px 8px rgba(0,0,0,.15);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;max-width:300px}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--success-color)}.toast.error{background-color:var(--danger-color)}.toast.info{background-color:#0dcaf0}
         
         /* Footer */
-        .app-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 20px 15px; text-align: center; margin-top: 20px; }
+        .app-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 20px 15px; text-align: center; margin-top: auto; }
         .footer-content p { margin: 5px 0; font-size: 0.9em; }
         .footer-content a { color: var(--footer-text); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-        .footer-content a:hover { color: var(--border-accent); }
+        .footer-content a:hover { color: var(--accent-color); }
         .footer-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 15px; margin-top: 10px; }
         .footer-contact { margin-top: 10px; }
         .footer-socials svg, .footer-contact svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* Print Styles */
+        #print-area { display: none; }
+        @media print {
+            body, html { margin: 0; padding: 0; background-color: #fff; -webkit-print-color-adjust: exact; }
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 10mm; box-sizing: border-box; }
+            .admit-card-container { width: 210mm; height: 297mm; padding: 5mm; box-sizing: border-box; display: flex; flex-direction: column; page-break-inside: avoid; }
+            .admit-card-copy { height: 140mm; box-sizing: border-box; position: relative; }
+            .admit-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; z-index: -1; width: 60%; }
+            .print-footer { position: fixed; bottom: 10mm; width: calc(100% - 20mm); display: flex; justify-content: space-between; font-size: 8pt; color: #555; }
+            table { font-size: 10pt; }
+            header, footer, .no-print { display: none !important; }
+        }
     </style>
 </head>
-<body>
+<body data-theme="light">
     <div id="login-container">
         <div class="login-box">
             <img src="images/image2.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
@@ -176,40 +201,35 @@
         <input type="file" id="fileImporter" accept=".json" style="display:none">
         
         <header>
-            <div class="header-top-row">
-                <div class="branding-info">
-                    <span class="institute-name">MCTH Exam</span>
-                </div>
-                <div class="header-controls">
-                    <div class="global-menu-container">
-                        <button id="globalMenuBtn" class="global-menu-btn" title="Options">&#9776;</button>
-                        <div id="globalMenuDropdown" class="global-menu-dropdown">
-                            <button id="btnOpenOlympiad"><span>🏆 Open Olympiad</span></button>
-                            <hr>
-                            <button id="btnToggleTheme"><span>Change Theme</span><span id="themeIcon"></span></button>
-                            <button id="btnRecycleBin"><span>Recycle Bin</span></button>
-                            <div class="backup-menu-container">
-                                <button id="btnBackupMenuToggle"><span>Backup</span><span class="arrow-icon">▶</span></button>
-                                <div id="backupSubMenu" class="backup-submenu">
-                                    <button id="btnExportData">💾 Export JSON</button>
-                                    <button id="btnImportData">📤 Import JSON</button>
-                                </div>
+            <div class="header-left">
+                <button id="btnNavBack" class="nav-btn" title="Back"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></button>
+                <button id="btnNavRefresh" class="nav-btn" title="Refresh"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg></button>
+            </div>
+            <div class="header-center">MCTH Exam</div>
+            <div class="header-right">
+                <div class="global-menu-container">
+                    <button id="globalMenuBtn" class="nav-btn global-menu-btn" title="Options">&#9776;</button>
+                    <div id="globalMenuDropdown" class="global-menu-dropdown">
+                        <button id="btnOpenOlympiad"><span>🏆 Open Olympiad</span></button>
+                        <hr>
+                        <button id="btnToggleTheme"><span>Change Theme</span><span id="themeIcon"></span></button>
+                        <button id="btnRecycleBin"><span>Recycle Bin</span></button>
+                        <div class="backup-menu-container">
+                            <button id="btnBackupMenuToggle"><span>Backup</span><span class="arrow-icon">▶</span></button>
+                            <div id="backupSubMenu" class="backup-submenu">
+                                <button id="btnExportData">💾 Export JSON</button>
+                                <button id="btnImportData">📤 Import JSON</button>
                             </div>
-                            <button id="btnAboutDev"><span>About Developer</span></button>
-                            <hr>
-                            <button id="btnLogout"><span>Logout</span></button>
                         </div>
+                        <button id="btnClearData" class="admin-only"><span>⚠️ Clear Exam Data</span></button>
+                        <button id="btnAboutDev"><span>About Developer</span></button>
+                        <hr>
+                        <button id="btnLogout"><span>Logout</span></button>
                     </div>
                 </div>
             </div>
-            <div class="header-mid-row">
-                 <div class="global-nav-icons">
-                    <button id="btnNavBack" class="nav-btn" title="Back" style="background: none; border: none;"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"></path></svg></button>
-                    <button id="btnNavRefresh" class="nav-btn" title="Refresh" style="background: none; border: none;"><svg class="nav-icon-svg" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="currentColor"></path></svg></button>
-                </div>
-                <div id="year-management-controls">
-                    <select id="yearSelector"></select>
-                </div>
+            <div id="year-management-controls">
+                <select id="yearSelector"></select>
             </div>
         </header>
 
@@ -230,14 +250,16 @@
         </footer>
     </div>
     
-    <!-- TEMPLATES -->
+    <!-- ================================================================== -->
+    <!--                            TEMPLATES                             -->
+    <!-- ================================================================== -->
     <template id="template-about-dev-modal">
         <div id="aboutDeveloperModal" class="modal-overlay"> <div class="modal-content" style="max-width: 95%; padding: 15px;"> <div class="modal-header"> <h2>About the Developer</h2> <button class="modal-close-btn">&times;</button> </div> <div class="modal-body" style="padding:0;"> <img src="images/Abdullah-Al-Rafi-Digital-Card.png" alt="Developer Digital Card" style="width: 100%; height: auto; border-radius: 8px; display: block;" onerror="this.alt='Image not found.';"> </div> </div> </div>
     </template>
     <template id="template-main-view">
         <div id="exam-list-view"> <div class="page-header"> <h2>পরীক্ষা ব্যবস্থাপনা</h2> <div> <button id="btnCreateSeriesExam" class="btn-special">📝 Create Series Exam</button> <button id="btnCreateExam" class="btn-primary">✨ নতুন পরীক্ষা তৈরি করুন</button> </div> </div> <div class="page-section" style="padding: 15px;"> <div id="exam-class-tabs" class="tab-container"></div> <div id="exam-filters" class="d-none" style="display: flex; gap: 15px; align-items: center; margin-top: 15px; flex-direction:column;"> <select id="classFilter"><option value="all">সকল ক্লাস</option></select> <select id="batchFilter"><option value="all">সকল ব্যাচ</option></select> </div> <div id="exam-list-container" style="margin-top:20px;"><p>লোড হচ্ছে...</p></div> </div> </div>
-        <div id="exam-details-view" class="d-none"> <div class="page-section"> <div style="display: flex; flex-direction: column; gap: 15px;" class="exam-details-container"> <div id="exam-details-header"><h2 id="detailsExamName"></h2><div id="detailsExamInfo"></div><div id="exam-stats"></div></div> <div id="quick-entry-panel"><input type="search" id="studentSearchInput" placeholder="রোল দিয়ে সার্চ করুন..."><span id="quickEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span><input type="number" id="quickEntryMarksInput" placeholder="নম্বর দিন" disabled></div> </div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"><div><button id="btnBackToList" class="btn-secondary">তালিকায় ফেরত যান</button><button id="btnViewResultSheet" class="btn-primary">View Result Sheet</button></div></div> <div class="marks-table-container"> <table> <thead><tr><th>ক্রমিক</th><th>নাম</th><th>রোল</th><th>স্কুল</th><th>প্রাপ্ত নম্বর</th></tr></thead> <tbody id="student-marks-tbody"></tbody> </table> </div> </div> </div>
-        <div id="result-sheet-view" class="d-none"> <div class="page-section"> <div id="result-sheet-header" class="page-header"> <h2 id="resultSheetExamName"></h2> <div style="display: flex; gap: 15px; align-items: stretch; flex-direction: column;"> <input type="search" id="resultSheetSearchInput" placeholder="নাম বা রোল দিয়ে সার্চ করুন..."> <div id="result-sheet-filter-container"> <select id="resultBatchFilter"></select> </div> </div> </div> <div id="result-preview-container"><p style="text-align:center; color: var(--text-secondary);">ফলাফল লোড হচ্ছে...</p></div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"> <div><button id="btnBackToView" class="btn-secondary">ফেরত যান</button><button id="btnPrintResult" class="btn-primary" disabled>🖨️ Print</button></div> </div> </div> </div>
+        <div id="exam-details-view" class="d-none"> <div class="page-section"> <div style="display: flex; flex-direction: column; gap: 15px;" class="exam-details-container"> <div id="exam-details-header"><h2 id="detailsExamName"></h2><div id="detailsExamInfo"></div><div id="exam-stats"></div></div> <div id="quick-entry-panel"><input type="search" id="studentSearchInput" placeholder="রোল দিয়ে সার্চ করুন..."><span id="quickEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span><input type="number" id="quickEntryMarksInput" placeholder="নম্বর দিন" disabled></div> </div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"><div><button id="btnBackToList" class="btn-secondary">তালিকায় ফেরত যান</button><button id="btnViewResultSheet" class="btn-primary">View Result Sheet</button></div></div> <div class="marks-table-container"> <table> <thead><tr><th class="student-photo-cell">Photo</th><th class="col-serial">ক্রমিক</th><th class="col-name">নাম</th><th class="col-roll">রোল</th><th class="col-school">স্কুল</th><th class="col-marks">প্রাপ্ত নম্বর</th></tr></thead> <tbody id="student-marks-tbody"></tbody> </table> </div> </div> </div>
+        <div id="result-sheet-view" class="d-none"> <div class="page-section"> <div id="result-sheet-header" class="page-header"> <h2 id="resultSheetExamName"></h2> <div style="display: flex; gap: 15px; align-items: stretch; flex-direction: column; width:100%;"> <button id="btnToggleResultImages" class="btn-secondary">Hide Images</button> <input type="search" id="resultSheetSearchInput" placeholder="নাম বা রোল দিয়ে সার্চ করুন..."> <div id="result-sheet-filter-container"> <select id="resultBatchFilter"></select> </div> </div> </div> <div id="result-preview-container"><p style="text-align:center; color: var(--text-secondary);">ফলাফল লোড হচ্ছে...</p></div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"> <div><button id="btnBackToView" class="btn-secondary">ফেরত যান</button><button id="btnPrintResult" class="btn-primary" disabled>🖨️ Print</button></div> </div> </div> </div>
         <div id="createExamModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2 id="examModalTitle">নতুন পরীক্ষা তৈরি করুন</h2><button class="modal-close-btn">&times;</button></div> <form id="createExamForm"> <div class="modal-body"> <input type="hidden" id="examIdInput"> <div class="form-grid"> <div class="form-group"><label for="examNameInput">পরীক্ষার বিষয়/নাম (আবশ্যক)</label><input type="text" id="examNameInput" required></div> <div class="form-group"><label for="examDateInput">পরীক্ষার তারিখ (আবশ্যক)</label><input type="date" id="examDateInput" required></div> <div class="form-group"><label for="examTotalMarksInput">মোট নম্বর (আবশ্যক)</label><input type="number" id="examTotalMarksInput" required></div> </div> <div class="form-group" id="batchSelectorGroup"> <label>ক্লাস ও ব্যাচ নির্বাচন করুন (আবশ্যক)</label> <div class="class-batch-selector" id="class-batch-selector-container"> <div class="class-list"><p style="padding:10px; color:var(--text-secondary)">লোড হচ্ছে...</p></div> <div class="batch-list"><p style="padding:10px; color:var(--text-secondary)">প্রথমে উপর থেকে একটি ক্লাস সিলেক্ট করুন।</p></div> </div> </div> </div> <div class="modal-footer"><button type="button" class="btn-secondary" id="btnCancelCreateExam">বাতিল</button><button type="submit" class="btn-primary" id="examModalSubmitBtn">পরীক্ষা তৈরি করুন</button></div> </form> </div> </div>
         <div id="seriesExamModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2>সিরিজ পরীক্ষা তৈরি করুন</h2><button class="modal-close-btn">&times;</button></div> <form id="createSeriesExamForm"> <div class="modal-body"> <div class="form-grid"> <div class="form-group"><label for="seriesNameInput">সিরিজের নাম (আবশ্যক)</label><input type="text" id="seriesNameInput" required></div> <div class="form-group"><label for="seriesClassSelect">ক্লাস নির্বাচন করুন</label><select id="seriesClassSelect"><option value="">-- ক্লাস সিলেক্ট --</option></select></div> </div> <div class="form-group"><label>পরীক্ষাগুলো নির্বাচন করুন (আবশ্যক)</label><div id="series-exam-selector-container" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; background-color: var(--bg-main);"><p>ফলাফল ফিল্টার করতে ক্লাস নির্বাচন করুন।</p></div></div> </div> <div class="modal-footer"><button type="button" class="btn-secondary" id="btnCancelSeriesExam">বাতিল</button><button type="submit" class="btn-primary">সিরিজ ফলাফল তৈরি করুন</button></div> </form> </div> </div>
     </template>
@@ -248,10 +270,10 @@
         <div id="olympiad-details-view" class="page-section"> <div id="olympiad-details-header" class="page-header"> <div> <h2 id="olympiadDetailsName" style="color: var(--olympiad-color);">Olympiad Name</h2> <p id="olympiadDetailsInfo" style="color: var(--text-secondary); margin: 5px 0;"></p> </div> <div> <button id="btnBackToOlympiadList" class="btn-secondary">Back to List</button> <button id="btnOlympiadMarksEntry" class="btn-primary">📝 নম্বর ইনপুট</button> <button id="btnOlympiadResult" class="btn-olympiad">📊 View Result</button> </div> </div> <div class="management-panel" style="background:var(--bg-main); padding: 15px; border-radius: 8px;"> <h3>Add Participants</h3> <div class="search-and-add-panel"> <label><b>Add Internal Student (Search by Roll)</b></label> <input type="search" id="olympiadInternalStudentSearch" placeholder="Enter roll number and press Enter..."> <div id="internal-student-search-results"></div> </div> <hr style="margin: 20px 0;"> <button id="btnAddExternalStudent" class="btn-primary" style="width: 100%;">👤 Add External Student</button> </div> <div class="marks-table-container" style="margin-top: 20px;"> <h3>Registered Participants <span id="participant-count" style="color: var(--olympiad-color); font-weight: bold;"></span></h3> <table> <thead> <tr><th>Reg. No</th><th>Name</th><th>School</th><th>Contact</th><th class="no-print">Action</th></tr> </thead> <tbody id="olympiad-participant-tbody"></tbody> </table> </div> </div>
     </template>
     <template id="template-olympiad-marks-entry-view">
-         <div id="olympiad-marks-entry-view" class="page-section"> <div class="page-header"> <div> <h2 id="marksOlympiadName" style="color: var(--olympiad-color);">Marks Entry</h2> <div id="olympiad-stats" class="stat-group"></div> </div> <button id="btnBackToOlympiadDetails" class="btn-secondary">Back to Details</button> </div> <div id="quick-entry-panel"> <input type="search" id="marksEntrySearchInput" placeholder="Reg. No দিয়ে সার্চ করুন..."> <span id="marksEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span> <input type="number" id="marksEntryMarksInput" placeholder="নম্বর দিন" disabled> </div> <div class="marks-table-container"> <table> <thead> <tr><th>Reg. No</th><th>Name</th><th>School</th><th>Marks Obtained</th></tr> </thead> <tbody id="olympiad-marks-tbody"></tbody> </table> </div> </div>
+         <div id="olympiad-marks-entry-view" class="page-section"> <div class="page-header"> <div> <h2 id="marksOlympiadName" style="color: var(--olympiad-color);">Marks Entry</h2> <div id="olympiad-stats" class="stat-group" style="font-size: 0.85em; padding: 6px; gap: 10px;"></div> </div> <button id="btnBackToOlympiadDetails" class="btn-secondary">Back to Details</button> </div> <div id="quick-entry-panel"> <input type="search" id="marksEntrySearchInput" placeholder="Reg. No দিয়ে সার্চ করুন..."> <span id="marksEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span> <input type="number" id="marksEntryMarksInput" placeholder="নম্বর দিন" disabled> </div> <div class="marks-table-container"> <table> <thead> <tr><th>Reg. No</th><th>Name</th><th>School</th><th>Marks Obtained</th></tr> </thead> <tbody id="olympiad-marks-tbody"></tbody> </table> </div> </div>
     </template>
     <template id="template-recycle-bin-view">
-        <div id="recycle-bin-view" class="page-section"> <div class="page-header"> <h2>Recycle Bin</h2> <button id="btnBackFromRecycleBin" class="btn-secondary">Back</button> </div> <h3>Deleted Exams</h3> <div id="recycle-bin-exams-container"> <p>No deleted exams.</p> </div> <hr style="margin: 25px 0;"> <h3>Deleted Olympiads</h3> <div id="recycle-bin-olympiads-container"> <p>No deleted olympiads.</p> </div> </div>
+        <div id="recycle-bin-view" class="page-section"> <div class="page-header"> <h2>Recycle Bin</h2> <button id="btnBackFromRecycleBin" class="btn-secondary">Back</button> </div> <div class="recycle-bin-item"> <h3>Deleted Exams</h3> <div id="recycle-bin-exams-container"> <p>No deleted exams.</p> </div> </div> <hr style="margin: 25px 0;"> <div class="recycle-bin-item"> <h3>Deleted Olympiads</h3> <div id="recycle-bin-olympiads-container"> <p>No deleted olympiads.</p> </div> </div> </div>
     </template>
     <template id="template-create-olympiad-modal">
         <div id="createOlympiadModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2 style="color: var(--olympiad-color);" id="olympiadModalTitle">Create New Olympiad</h2><button class="modal-close-btn">&times;</button></div> <form id="createOlympiadForm"> <div class="modal-body"> <input type="hidden" id="olympiadIdInput"> <div class="form-grid"> <div class="form-group"><label for="olympiadNameInput">Olympiad Name</label><input type="text" id="olympiadNameInput" required></div> <div class="form-group"><label for="olympiadDateInput">Date</label><input type="date" id="olympiadDateInput" required></div> <div class="form-group"><label for="olympiadTotalMarksInput">Total Marks</label><input type="number" id="olympiadTotalMarksInput" required></div><div class="form-group"><label for="olympiadVenueInput">Venue</label><input type="text" id="olympiadVenueInput" placeholder="e.g., MCTH Campus" required></div></div></div> <div class="modal-footer"><button type="button" class="btn-secondary modal-cancel-btn">Cancel</button><button type="submit" class="btn-olympiad" id="olympiadModalSubmitBtn">Create Olympiad</button></div> </form> </div> </div>
@@ -423,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ================================================================== //
 function initializeAppLogic() {
     let appData = {}, currentExamId = null, currentSeriesExamId = null, currentOlympiadId = null, fullResultData = [];
-    let viewedYear = 2026;
+    let viewedYear = new Date().getFullYear();
     let activeYear = new Date().getFullYear();
     let dataRef; 
     let dataLoaded = false;
@@ -462,7 +484,7 @@ function initializeAppLogic() {
         const yearSelector = document.getElementById('yearSelector');
         yearSelector.innerHTML = '';
         const calendarYear = new Date().getFullYear();
-        const years = Array.from(new Set([activeYear, viewedYear, 2026, calendarYear, calendarYear - 1, calendarYear + 1])).sort((a,b) => b-a);
+        const years = Array.from(new Set([activeYear, viewedYear, calendarYear, calendarYear - 1, calendarYear + 1])).sort((a,b) => b-a);
         years.forEach(year => {
             const option = document.createElement('option');
             option.value = year;
@@ -478,23 +500,21 @@ function initializeAppLogic() {
     // --- Navigation & Global Menu ---
     function handleNavBack() {
         if(olympiadParticipantListener) {
-            dataRef.child(`openOlympiads/${currentOlympiadId}`).off('value', olympiadParticipantListener);
+            db.ref(`data/openOlympiads/${currentOlympiadId}`).off('value', olympiadParticipantListener);
             olympiadParticipantListener = null;
         }
         const currentView = document.querySelector('#app-main-content > div:not(.d-none)');
         if (!currentView) { renderMainView(); return; }
         
         const viewId = currentView.id;
-        if (viewId === 'olympiad-list-view' || viewId === 'recycle-bin-view' || viewId === 'exam-details-view') {
-            renderMainView();
-        } else if (viewId === 'olympiad-details-view' || viewId === 'result-sheet-view') {
-            if (currentOlympiadId) {
-                showOlympiadListView();
-            } else {
-                renderMainView();
-            }
-        } else if (viewId === 'olympiad-marks-entry-view') {
+        if (viewId === 'olympiad-marks-entry-view' || (viewId === 'result-sheet-view' && currentOlympiadId)) {
             renderOlympiadDetailsView(currentOlympiadId);
+        } else if (viewId === 'olympiad-details-view') {
+            showOlympiadListView();
+        } else if (viewId === 'exam-details-view' || (viewId === 'result-sheet-view' && (currentExamId || currentSeriesExamId))) {
+            renderMainView();
+        } else if (viewId === 'olympiad-list-view' || viewId === 'recycle-bin-view') {
+            renderMainView();
         } else {
             renderMainView();
         }
@@ -538,7 +558,7 @@ function initializeAppLogic() {
             if (!button) return;
             const id = button.dataset.id;
             const type = button.dataset.type;
-            const path = type === 'exam' ? `academicYears/${viewedYear}/data/exams/${id}` : `openOlympiads/${id}`;
+            const path = type === 'exam' ? `academicYears/${viewedYear}/data/exams/${id}` : `data/openOlympiads/${id}`;
 
             if (button.classList.contains('btn-restore')) {
                 db.ref(path).child('deletedAt').remove().then(() => showToast('Item restored.', 'success'));
@@ -662,7 +682,6 @@ function initializeAppLogic() {
         dbOperation.then(() => {
             showToast(examId ? "Exam updated successfully." : "Exam created successfully.", 'success');
             modal.classList.remove('visible');
-            // The realtime listener will automatically update the UI.
         }).catch(err => {
             showToast(`Error: ${err.message}`, 'error');
         }).finally(() => {
@@ -674,503 +693,157 @@ function initializeAppLogic() {
     function handleSaveSeriesExam(e) { e.preventDefault(); const modal = document.getElementById('seriesExamModal'); const name = modal.querySelector('#seriesNameInput').value.trim(), classId = modal.querySelector('#seriesClassSelect').value, selectedExamIds = [...modal.querySelectorAll('input[name="selectedSeriesExams"]:checked')].map(cb => cb.value); if (!name || !classId || selectedExamIds.length < 2) return showToast("Please provide a name, class, and select at least two exams.", "error"); showLoader(); let totalMarks = 0; const allStudentIds = new Set(); selectedExamIds.forEach(examId => { const exam = appData.exams[examId]; if (exam) { totalMarks += Number(exam.totalMarks) || 0; Object.keys(exam.results || {}).forEach(studentId => allStudentIds.add(studentId)); } }); const finalResults = {}; allStudentIds.forEach(studentId => { let totalScore = 0; selectedExamIds.forEach(examId => totalScore += appData.exams[examId]?.results?.[studentId] || 0); finalResults[studentId] = totalScore; }); const seriesExamId = `series_${Date.now()}`; dataRef.child(`seriesExams/${seriesExamId}`).set({ id: seriesExamId, name, classId, createdAt: new Date().toISOString(), sourceExamIds: selectedExamIds, totalMarks, results: finalResults }).then(() => { showToast("Series exam created!", 'success'); modal.classList.remove('visible'); hideLoader(); }).catch(err => { showToast("Failed to create series exam.", "error"); hideLoader(); }); }
     
     // --- Exam Details & Result Sheet ---
-    function renderExamDetails(examId){ currentSeriesExamId = null; currentExamId = examId; const exam=appData.exams[examId];if(!exam){showToast("Exam not found.","error");showView('exam-list-view');return;} showView('exam-details-view'); document.getElementById('detailsExamName').textContent=exam.name; const studentIdsInExam=new Set,batchDetailsMap=new Map;exam.selectedBatches.forEach(batchId=>{for(const day of appData.batchSchedule||[])for(const cls of day.classes||[]){const foundBatch=(cls.batches||[]).find(b=>b.id===batchId);if(foundBatch){(foundBatch.studentIds||[]).forEach(sid=>studentIdsInExam.add(sid));const classInfo=(appData.mainClassCategories||[]).find(c=>c.id===cls.classId);if(!batchDetailsMap.has(classInfo?.name))batchDetailsMap.set(classInfo?.name,[]);batchDetailsMap.get(classInfo?.name).push(`${day.dayName} (${foundBatch.time})`)}}}); const allStudents=[...studentIdsInExam].map(id=>(appData.students||[]).find(s=>s.id===id)).filter(Boolean).sort((a,b)=>(parseInt(a.roll)||0)-(parseInt(b.roll)||0)); document.getElementById('detailsExamInfo').innerHTML=`<p><strong>Date:</strong> ${new Date(exam.date).toLocaleDateString('bn-BD',{year:'numeric',month:'long',day:'numeric'})} | <strong>Total Marks:</strong> ${exam.totalMarks}</p>${[...batchDetailsMap.entries()].map(([className,batches])=>`<p><strong>Class & Batch:</strong> ${className} (${batches.join(', ')})</p>`).join('')}`; document.getElementById('exam-stats').innerHTML=`<span>Total: ${allStudents.length}</span><span class="stat-entered">Entered: ${Object.keys(exam.results||{}).length}</span><span class="stat-pending">Pending: ${allStudents.length - Object.keys(exam.results||{}).length}</span>`; const tableBody=document.getElementById('student-marks-tbody'); tableBody.innerHTML=''; const fragment = document.createDocumentFragment(); allStudents.forEach((student,index)=>{const tr=document.createElement('tr'); tr.dataset.studentId=student.id; const savedMark=exam.results?.[student.id]??''; tr.innerHTML=`<td>${index+1}</td><td>${student.name}</td><td>${student.roll}</td><td>${student.schoolName||'N/A'}</td><td>${savedMark}</td>`; tr.addEventListener('click',()=>handleRowClick(student.id,tr,savedMark)); fragment.appendChild(tr);}); tableBody.appendChild(fragment); }
+    function renderExamDetails(examId){ currentSeriesExamId = null; currentExamId = examId; const exam=appData.exams[examId];if(!exam){showToast("Exam not found.","error");showView('exam-list-view');return;} showView('exam-details-view'); document.getElementById('detailsExamName').textContent=exam.name; const studentIdsInExam=new Set,batchDetailsMap=new Map;exam.selectedBatches.forEach(batchId=>{for(const day of appData.batchSchedule||[])for(const cls of day.classes||[]){const foundBatch=(cls.batches||[]).find(b=>b.id===batchId);if(foundBatch){(foundBatch.studentIds||[]).forEach(sid=>studentIdsInExam.add(sid));const classInfo=(appData.mainClassCategories||[]).find(c=>c.id===cls.classId);if(!batchDetailsMap.has(classInfo?.name))batchDetailsMap.set(classInfo?.name,[]);batchDetailsMap.get(classInfo?.name).push(`${day.dayName} (${foundBatch.time})`)}}}); const allStudents=[...studentIdsInExam].map(id=>(appData.students||[]).find(s=>s.id===id)).filter(Boolean).sort((a,b)=>(parseInt(a.roll)||0)-(parseInt(b.roll)||0)); document.getElementById('detailsExamInfo').innerHTML=`<p><strong>Date:</strong> ${new Date(exam.date).toLocaleDateString('bn-BD',{year:'numeric',month:'long',day:'numeric'})} | <strong>Total Marks:</strong> ${exam.totalMarks}</p>${[...batchDetailsMap.entries()].map(([className,batches])=>`<p><strong>Class & Batch:</strong> ${className} (${batches.join(', ')})</p>`).join('')}`; document.getElementById('exam-stats').innerHTML=`<span>Total: ${allStudents.length}</span><span class="stat-entered">Entered: ${Object.keys(exam.results||{}).length}</span><span class="stat-pending">Pending: ${allStudents.length - Object.keys(exam.results||{}).length}</span>`; const tableBody=document.getElementById('student-marks-tbody'); tableBody.innerHTML=''; const fragment = document.createDocumentFragment(); allStudents.forEach((student,index)=>{const tr=document.createElement('tr'); tr.dataset.studentId=student.id; const savedMark=exam.results?.[student.id]??''; tr.innerHTML=`<td class="student-photo-cell">${student.photoURL ? `<img src="${student.photoURL}" alt="${student.name}" onerror="this.onerror=null; this.src='images/default_avatar.png';">` : `<img src="images/default_avatar.png" alt="Default">`}</td><td>${index+1}</td><td>${student.name}</td><td>${student.roll}</td><td>${student.schoolName||'N/A'}</td><td>${savedMark}</td>`; tr.addEventListener('click',()=>handleRowClick(student.id,tr,savedMark)); fragment.appendChild(tr);}); tableBody.appendChild(fragment); }
     function handleRowClick(studentId,rowElement,currentMark){document.querySelectorAll('#student-marks-tbody tr.selected-row').forEach(row=>row.classList.remove('selected-row'));rowElement.classList.add('selected-row');const student=(appData.students||[]).find(s=>s.id===studentId);if(student){document.getElementById('quickEntryStudentInfo').textContent=`${student.name} (Roll: ${student.roll})`;const marksInput=document.getElementById('quickEntryMarksInput');marksInput.value=currentMark;marksInput.disabled=false;marksInput.focus()}}
-    async function saveQuickEntryMark() { if (!currentExamId) return; const selectedRow = document.querySelector('#student-marks-tbody tr.selected-row'); const studentId = selectedRow?.dataset.studentId; if (!studentId) return; const marksInput = document.getElementById('quickEntryMarksInput'); const marksStr = marksInput.value, totalMarks = appData.exams[currentExamId].totalMarks; let marksToSave = null; if (marksStr.trim() !== '') { const marksNum = parseFloat(marksStr); if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error'); marksToSave = marksNum; } const studentRef = dataRef.child(`exams/${currentExamId}/results/${studentId}`); if (marksToSave !== null) await studentRef.set(marksToSave); else await studentRef.remove(); selectedRow.cells[4].textContent = marksToSave ?? ''; showToast('Marks saved.', 'success', 1500); }
+    async function saveQuickEntryMark() { if (!currentExamId) return; const selectedRow = document.querySelector('#student-marks-tbody tr.selected-row'); const studentId = selectedRow?.dataset.studentId; if (!studentId) return; const marksInput = document.getElementById('quickEntryMarksInput'); const marksStr = marksInput.value, totalMarks = appData.exams[currentExamId].totalMarks; let marksToSave = null; if (marksStr.trim() !== '') { const marksNum = parseFloat(marksStr); if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error'); marksToSave = marksNum; } const studentRef = dataRef.child(`exams/${currentExamId}/results/${studentId}`); if (marksToSave !== null) await studentRef.set(marksToSave); else await studentRef.remove(); selectedRow.cells[5].textContent = marksToSave ?? ''; showToast('Marks saved.', 'success', 1500); }
     
-    // --- Result Sheet (Shared for both Regular and Olympiad) ---
-    function renderResultSheet(isOlympiad, id, isSeries = false) {
-        currentExamId = !isOlympiad && !isSeries ? id : null;
-        currentOlympiadId = isOlympiad ? id : null;
-        currentSeriesExamId = isSeries ? id : null;
-        
-        const exam = isOlympiad ? appData.openOlympiads[id] : (isSeries ? appData.seriesExams[id] : appData.exams[id]);
-        if (!exam) return showToast('Exam data not found.', 'error');
-        
-        let participantsData;
-        if(isOlympiad) {
-            participantsData = Object.values(exam.participants || {}).map(p => ({
-                student: { id: p.regNo, name: p.isInternal && p.internalStudentRoll ? `${p.name} (Roll: ${p.internalStudentRoll})` : p.name, roll: p.regNo, schoolName: p.school }, marks: p.marks
-            }));
-        } else if (isSeries) {
-            participantsData = Object.keys(exam.results || {}).map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results[studentId] })).filter(item => item.student);
-        } else { // Regular Exam
-            const studentIdsForExam = new Set();
-            (exam.selectedBatches || []).forEach(batchId => {
-                const batch = findBatchById(batchId);
-                (batch?.studentIds || []).forEach(sId => studentIdsForExam.add(sId));
-            });
-            participantsData = [...studentIdsForExam].map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results?.[studentId] })).filter(item => item.student);
-        }
+    function renderResultSheet(isOlympiad, id, isSeries = false) { currentExamId = !isOlympiad && !isSeries ? id : null; currentOlympiadId = isOlympiad ? id : null; currentSeriesExamId = isSeries ? id : null; const exam = isOlympiad ? appData.openOlympiads[id] : (isSeries ? appData.seriesExams[id] : appData.exams[id]); if (!exam) return showToast('Exam data not found.', 'error'); let participantsData; if(isOlympiad) { participantsData = Object.values(exam.participants || {}).map(p => ({ student: { id: p.regNo, name: p.isInternal && p.internalStudentRoll ? `${p.name} (Roll: ${p.internalStudentRoll})` : p.name, roll: p.regNo, schoolName: p.school, photoURL: p.isInternal ? (appData.students.find(s=>s.id===p.internalStudentId)?.photoURL) : null }, marks: p.marks })); } else if (isSeries) { participantsData = Object.keys(exam.results || {}).map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results[studentId] })).filter(item => item.student); } else { const studentIdsForExam = new Set(); (exam.selectedBatches || []).forEach(batchId => { const batch = findBatchById(batchId); (batch?.studentIds || []).forEach(sId => studentIdsForExam.add(sId)); }); participantsData = [...studentIdsForExam].map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results?.[studentId] })).filter(item => item.student); } fullResultData = participantsData.sort((a, b) => (b.marks ?? -1) - (a.marks ?? -1)); mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-main-view').content.cloneNode(true)); showView('result-sheet-view'); document.getElementById('resultSheetExamName').textContent = `Result: ${exam.name}`; const filterContainer = document.getElementById('result-sheet-filter-container'); filterContainer.classList.toggle('d-none', isOlympiad || isSeries); if (!isOlympiad && !isSeries) { const batchFilterSelect = document.getElementById('resultBatchFilter'); batchFilterSelect.innerHTML = '<option value="all">All Batches</option>'; const batchMap = new Map(); (appData.batchSchedule||[]).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if ((exam.selectedBatches || []).includes(b.id)) batchMap.set(b.id, `${day.dayName} (${b.time})`); }))); batchMap.forEach((text, id) => batchFilterSelect.add(new Option(text, id))); document.getElementById('btnToggleResultImages').addEventListener('click', toggleResultSheetImages); } else { document.getElementById('btnToggleResultImages').style.display = 'none'; } displayFilteredResults(); }
+    function toggleResultSheetImages(e) { const container = document.getElementById('result-preview-container'); container.classList.toggle('hide-images'); e.target.textContent = container.classList.contains('hide-images') ? 'Show Images' : 'Hide Images'; }
+    function displayFilteredResults() { const isOlympiad = currentOlympiadId != null; const isSeries = currentSeriesExamId != null; const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]); if (!exam) return; let filteredData = [...fullResultData]; if (!isOlympiad && !isSeries) { const batchId = document.getElementById('resultBatchFilter').value; if (batchId !== 'all') { let studentIdsInBatch = new Set(); (appData.batchSchedule || []).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if (b.id === batchId) (b.studentIds || []).forEach(sid => studentIdsInBatch.add(sid)); }))); filteredData = fullResultData.filter(item => studentIdsInBatch.has(item.student.id)); } } const searchTerm = document.getElementById('resultSheetSearchInput').value.toLowerCase(); if (searchTerm) { filteredData = filteredData.filter(item => item.student.name.toLowerCase().includes(searchTerm) || String(item.student.roll).toLowerCase().includes(searchTerm)); } let rank = 1, lastMark = -Infinity, rankCounter = 0; const processedData = filteredData.map(item => { const currentMark = item.marks; if (currentMark === undefined || currentMark === null) return { ...item, rank: null }; rankCounter++; if (currentMark !== lastMark) { rank = rankCounter; lastMark = currentMark; } return { ...item, rank: rank }; }); let tableHeader = isOlympiad ? `<th>SL</th><th>Name</th><th>Reg. No</th><th>School</th><th>Marks</th><th>Place</th>` : `<th class="student-photo-cell">Photo</th><th>SL</th><th>Name</th><th>Roll</th><th>School</th><th>Marks</th><th>Place</th>`; let tableHTML = `<table><thead><tr>${tableHeader}</tr></thead><tbody>`; if (processedData.length === 0) { tableHTML += `<tr><td colspan="${isOlympiad ? 6 : 7}" style="text-align:center;">No results found.</td></tr>`; } else { processedData.forEach((item, index) => { const place = item.rank === null ? `<span style="color:var(--danger-color); font-weight:bold;">Absent</span>` : getOrdinal(item.rank); const photoCell = isOlympiad ? '' : `<td class="student-photo-cell">${item.student.photoURL ? `<img src="${item.student.photoURL}" alt="${item.student.name}" onerror="this.parentElement.innerHTML = '❓'">` : '❓'}</td>`; tableHTML += `<tr>${photoCell}<td>${index + 1}</td><td>${item.student.name}</td><td>${item.student.roll}</td><td>${item.student.schoolName || ''}</td><td>${item.marks ?? 'N/A'} / ${exam.totalMarks}</td><td>${place}</td></tr>`; }); } tableHTML += '</tbody></table>'; document.getElementById('result-preview-container').innerHTML = tableHTML; document.getElementById('btnPrintResult').disabled = processedData.length === 0; }
+    function handlePrint() { const printArea = document.getElementById('print-area'); const resultContainer = document.getElementById('result-preview-container'); const isOlympiad = currentOlympiadId != null; const isSeries = currentSeriesExamId != null; const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]); if (!exam) return showToast('Cannot find exam data to print.', 'error'); let headerHTML = `<div style="text-align: center; margin-bottom: 20px;"><h2 style="margin:0; font-size: 16pt;">Math Creative Teaching Home</h2><h1 style="margin:5px 0; font-size: 20pt; font-weight: bold;">${exam.name}</h1>`; if (isOlympiad) { headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`; } else if (isSeries) { headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Total Marks: ${exam.totalMarks}</p>`; } else { let selectedBatchText = ''; const filterSelect = document.getElementById('resultBatchFilter'); const isFiltered = filterSelect && filterSelect.value !== 'all'; if (isFiltered) selectedBatchText = filterSelect.options[filterSelect.selectedIndex].text; const className = getClassNameForExam(currentExamId); headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Class: ${className}</p>`; if (isFiltered) headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Batch: ${selectedBatchText}</p>`; headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`; } headerHTML += '</div>'; const footerHTML = `<div class="print-footer"><span>© All Rights Reserved by MCTH</span><span>Software by: Abdullah Al Rafi (BZS26)</span></div>`; const tempContainer = document.createElement('div'); tempContainer.innerHTML = resultContainer.innerHTML; if(resultContainer.classList.contains('hide-images')) { tempContainer.querySelectorAll('.student-photo-cell').forEach(cell => cell.style.display = 'none'); } printArea.innerHTML = headerHTML + tempContainer.innerHTML + footerHTML; window.print(); printArea.innerHTML = ''; }
 
-        fullResultData = participantsData.sort((a, b) => (b.marks ?? -1) - (a.marks ?? -1));
-        
-        mainContainer.innerHTML = '';
-        mainContainer.appendChild(document.getElementById('template-main-view').content.cloneNode(true));
-        showView('result-sheet-view');
-        
-        document.getElementById('resultSheetExamName').textContent = `Result: ${exam.name}`;
-        const filterContainer = document.getElementById('result-sheet-filter-container');
-        filterContainer.classList.toggle('d-none', isOlympiad || isSeries);
-        if (!isOlympiad && !isSeries) { // Regular Exam
-            const batchFilterSelect = document.getElementById('resultBatchFilter');
-            batchFilterSelect.innerHTML = '<option value="all">All Batches</option>';
-            const batchMap = new Map();
-            (appData.batchSchedule||[]).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if ((exam.selectedBatches || []).includes(b.id)) batchMap.set(b.id, `${day.dayName} (${b.time})`); })));
-            batchMap.forEach((text, id) => batchFilterSelect.add(new Option(text, id)));
-        }
-        displayFilteredResults();
-    }
-
-    function displayFilteredResults() {
-        const isOlympiad = currentOlympiadId != null;
-        const isSeries = currentSeriesExamId != null;
-        const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]);
-        if (!exam) return;
-
-        let filteredData = [...fullResultData];
-
-        if (!isOlympiad && !isSeries) {
-            const batchId = document.getElementById('resultBatchFilter').value;
-            if (batchId !== 'all') {
-                let studentIdsInBatch = new Set();
-                (appData.batchSchedule || []).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if (b.id === batchId) (b.studentIds || []).forEach(sid => studentIdsInBatch.add(sid)); })));
-                filteredData = fullResultData.filter(item => studentIdsInBatch.has(item.student.id));
-            }
-        }
-        
-        const searchTerm = document.getElementById('resultSheetSearchInput').value.toLowerCase();
-        if (searchTerm) {
-            filteredData = filteredData.filter(item => item.student.name.toLowerCase().includes(searchTerm) || String(item.student.roll).toLowerCase().includes(searchTerm));
-        }
-
-        let rank = 1, lastMark = -Infinity, rankCounter = 0;
-        const processedData = filteredData.map(item => {
-            const currentMark = item.marks;
-            if (currentMark === undefined || currentMark === null) {
-                return { ...item, rank: null }; // Mark as absent
-            }
-            rankCounter++;
-            if (currentMark !== lastMark) {
-                rank = rankCounter;
-                lastMark = currentMark;
-            }
-            return { ...item, rank: rank };
-        });
-
-        let tableHTML = `<table><thead><tr><th>SL</th><th>Name</th><th>${isOlympiad ? 'Reg. No' : 'Roll'}</th><th>School</th><th>Marks Obtained</th><th>Place</th></tr></thead><tbody>`;
-        if (processedData.length === 0) {
-            tableHTML += '<tr><td colspan="6" style="text-align:center;">No results found.</td></tr>';
-        } else {
-            processedData.forEach((item, index) => {
-                const place = item.rank === null ? `<span style="color:var(--danger-color); font-weight:bold;">Absent</span>` : getOrdinal(item.rank);
-                tableHTML += `<tr><td>${index + 1}</td><td>${item.student.name}</td><td>${item.student.roll}</td><td>${item.student.schoolName || ''}</td><td>${item.marks ?? 'N/A'} / ${exam.totalMarks}</td><td>${place}</td></tr>`;
-            });
-        }
-        tableHTML += '</tbody></table>';
-        document.getElementById('result-preview-container').innerHTML = tableHTML;
-        document.getElementById('btnPrintResult').disabled = processedData.length === 0;
-    }
-
-    function handlePrint() {
-        const printArea = document.getElementById('print-area');
-        const resultContainer = document.getElementById('result-preview-container');
-        const isOlympiad = currentOlympiadId != null;
-        const isSeries = currentSeriesExamId != null;
-        const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]);
-        
-        if (!exam) return showToast('Cannot find exam data to print.', 'error');
-        
-        let headerHTML = `<div style="text-align: center; margin-bottom: 20px;"><h2 style="margin:0; font-size: 16pt;">Math Creative Teaching Home</h2><h1 style="margin:5px 0; font-size: 20pt; font-weight: bold;">${exam.name}</h1>`;
-        
-        if (isOlympiad) {
-            headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`;
-        } else if (isSeries) {
-            headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Total Marks: ${exam.totalMarks}</p>`;
-        } else { // Regular Exam
-            let selectedBatchText = '';
-            const filterSelect = document.getElementById('resultBatchFilter');
-            const isFiltered = filterSelect && filterSelect.value !== 'all';
-            if (isFiltered) selectedBatchText = filterSelect.options[filterSelect.selectedIndex].text;
-            
-            const className = getClassNameForExam(currentExamId);
-            headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Class: ${className}</p>`;
-            if (isFiltered) headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Batch: ${selectedBatchText}</p>`;
-            headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`;
-        }
-        
-        headerHTML += '</div>';
-        const footerHTML = `<div class="print-footer"><span>© All Rights Reserved by MCTH</span><span>Software by: Abdullah Al Rafi (BZS26)</span></div>`;
-        printArea.innerHTML = headerHTML + resultContainer.innerHTML + footerHTML;
-        window.print();
-        printArea.innerHTML = '';
-    }
-
-    // --- NEW: Open Olympiad Functions ---
-    function showOlympiadListView() {
-        currentOlympiadId = null;
-        mainContainer.innerHTML = '';
-        mainContainer.appendChild(document.getElementById('template-olympiad-main-view').content.cloneNode(true));
-        document.getElementById('btnCreateOlympiad').addEventListener('click', () => openCreateOlympiadModal());
-        renderOlympiadList();
-    }
+    // --- Open Olympiad Functions ---
+    function showOlympiadListView() { currentOlympiadId = null; mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-olympiad-main-view').content.cloneNode(true)); document.getElementById('btnCreateOlympiad').addEventListener('click', () => openCreateOlympiadModal()); renderOlympiadList(); }
+    function renderOlympiadList() { const container = document.getElementById('olympiad-list-container'); if (!container) return; container.innerHTML = ''; const olympiads = Object.entries(appData.openOlympiads || {}).filter(([,o]) => !o.deletedAt).sort(([,a],[,b]) => new Date(b.date) - new Date(a.date)); if (olympiads.length === 0) { container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No Olympiads found. Create one to get started!</p>'; return; } const fragment = document.createDocumentFragment(); olympiads.forEach(([id, data]) => { const card = document.createElement('div'); card.className = 'exam-card olympiad-card'; card.dataset.olympiadId = id; const participantCount = Object.keys(data.participants || {}).length; card.innerHTML = `<div class="exam-menu-container"><button class="menu-toggle-btn">&vellip;</button><div class="exam-menu-dropdown"><button class="btn-secondary btn-edit-olympiad" data-id="${id}">Edit</button><button class="btn-danger btn-delete-olympiad" data-id="${id}">Delete</button></div></div><h4>${data.name}</h4><p><strong>Date:</strong> ${new Date(data.date).toLocaleDateString('bn-BD')}</p><p><strong>Venue:</strong> ${data.venue || 'N/A'}</p><p><strong>Participants:</strong> ${participantCount}</p>`; card.addEventListener('click', e => { if (!e.target.closest('.exam-menu-container')) renderOlympiadDetailsView(id) }); card.querySelector('.menu-toggle-btn').addEventListener('click', e => { e.stopPropagation(); document.querySelectorAll('.exam-menu-dropdown.active').forEach(d => d.classList.remove('active')); card.querySelector('.exam-menu-dropdown').classList.toggle('active'); }); card.querySelector('.btn-edit-olympiad').addEventListener('click', e => { e.stopPropagation(); openCreateOlympiadModal(id); }); card.querySelector('.btn-delete-olympiad').addEventListener('click', e => { e.stopPropagation(); if (confirm(`Move '${data.name}' to recycle bin?`)) { db.ref(`data/openOlympiads/${id}/deletedAt`).set(new Date().toISOString()).then(() => showToast('Olympiad moved to recycle bin.', 'success')); } }); fragment.appendChild(card); }); container.appendChild(fragment); }
+    function openCreateOlympiadModal(olympiadId = null) { if (!document.getElementById('createOlympiadModal')) document.body.appendChild(document.getElementById('template-create-olympiad-modal').content.cloneNode(true)); const modal = document.getElementById('createOlympiadModal'); const form = modal.querySelector('form'); form.reset(); const title = modal.querySelector('#olympiadModalTitle'), submitBtn = modal.querySelector('#olympiadModalSubmitBtn'), idInput = modal.querySelector('#olympiadIdInput'); if (olympiadId) { const olympiad = appData.openOlympiads[olympiadId]; title.textContent = 'Edit Olympiad'; submitBtn.textContent = 'Save Changes'; idInput.value = olympiadId; modal.querySelector('#olympiadNameInput').value = olympiad.name; modal.querySelector('#olympiadDateInput').value = olympiad.date; modal.querySelector('#olympiadTotalMarksInput').value = olympiad.totalMarks; modal.querySelector('#olympiadVenueInput').value = olympiad.venue; } else { title.textContent = 'Create New Olympiad'; submitBtn.textContent = 'Create Olympiad'; idInput.value = ''; } form.onsubmit = handleSaveOlympiad; modal.querySelector('.modal-close-btn').onclick = () => modal.classList.remove('visible'); modal.querySelector('.modal-cancel-btn').onclick = () => modal.classList.remove('visible'); modal.classList.add('visible'); }
+    function handleSaveOlympiad(e) { e.preventDefault(); const modal = document.getElementById('createOlympiadModal'); const olympiadId = modal.querySelector('#olympiadIdInput').value; const name = modal.querySelector('#olympiadNameInput').value.trim(); const date = modal.querySelector('#olympiadDateInput').value; const totalMarks = modal.querySelector('#olympiadTotalMarksInput').value; const venue = modal.querySelector('#olympiadVenueInput').value.trim(); if (!name || !date || !totalMarks || !venue) return showToast('Please fill all fields.', 'error'); const olympiadData = { name, date, venue, totalMarks: parseInt(totalMarks) }; const ref = db.ref('data/openOlympiads'); if (olympiadId) { ref.child(olympiadId).update(olympiadData).then(() => { showToast('Olympiad updated!', 'success'); modal.classList.remove('visible'); }); } else { olympiadData.participants = {}; const newOlympiadId = `olymp_${Date.now()}`; ref.child(newOlympiadId).set(olympiadData).then(() => { showToast('Olympiad created!', 'success'); modal.classList.remove('visible'); }); } }
+    function renderOlympiadDetailsView(olympiadId) { currentOlympiadId = olympiadId; mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-olympiad-details-view').content.cloneNode(true)); if (olympiadParticipantListener) db.ref(`data/openOlympiads/${olympiadId}`).off('value', olympiadParticipantListener); olympiadParticipantListener = db.ref(`data/openOlympiads/${olympiadId}`).on('value', snapshot => { const olympiad = snapshot.val(); if (!olympiad) { showToast('Olympiad not found.', 'error'); showOlympiadListView(); return; } appData.openOlympiads[olympiadId] = olympiad; document.getElementById('olympiadDetailsName').textContent = olympiad.name; document.getElementById('olympiadDetailsInfo').textContent = `Date: ${new Date(olympiad.date).toLocaleDateString('en-GB')} | Venue: ${olympiad.venue} | Total Marks: ${olympiad.totalMarks}`; renderOlympiadParticipantList(olympiad.participants || {}); }); document.getElementById('btnBackToOlympiadList').addEventListener('click', showOlympiadListView); document.getElementById('btnAddExternalStudent').addEventListener('click', openAddExternalStudentModal); document.getElementById('btnOlympiadResult').addEventListener('click', () => renderResultSheet(true, currentOlympiadId)); document.getElementById('btnOlympiadMarksEntry').addEventListener('click', () => renderOlympiadMarksEntryView(currentOlympiadId)); const searchInput = document.getElementById('olympiadInternalStudentSearch'); searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const roll = e.target.value.trim(); if (!roll) return; const student = (appData.students || []).find(s => s.roll === roll && !s.deletedAt); const resultsDiv = document.getElementById('internal-student-search-results'); resultsDiv.innerHTML = ''; if (student) { const alreadyAdded = Object.values(appData.openOlympiads[currentOlympiadId].participants || {}).some(p => p.internalStudentId === student.id); resultsDiv.innerHTML = `<div class="search-result-item"><span>${student.name} - ${student.schoolName || 'N/A'}</span><button class="btn-primary" data-student-id="${student.id}" ${alreadyAdded ? 'disabled' : ''}>${alreadyAdded ? 'Added' : 'Add'}</button></div>`; resultsDiv.querySelector('button').addEventListener('click', (ev) => { ev.currentTarget.disabled = true; ev.currentTarget.textContent = 'Adding...'; handleAddInternalParticipant(ev.currentTarget.dataset.studentId); }); } else { resultsDiv.innerHTML = `<p style="color: var(--danger-color);">No student found with roll: ${roll}</p>`; } } }); }
+    function renderOlympiadParticipantList(participants) { if (!currentOlympiadId) return; const tbody = document.getElementById('olympiad-participant-tbody'); const participantCount = Object.keys(participants).length; document.getElementById('participant-count').textContent = `(${participantCount})`; tbody.innerHTML = ''; if (participantCount === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No participants registered yet.</td></tr>`; return; } const fragment = document.createDocumentFragment(); Object.values(participants).sort((a,b) => a.regNo - b.regNo).forEach(p => { const tr = document.createElement('tr'); const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name; tr.innerHTML = `<td><b>${p.regNo}</b></td><td>${displayName}</td><td>${p.school}</td><td>${p.contact || 'N/A'}</td><td class="no-print"><button class="btn-secondary" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Admit</button><button class="btn-danger" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Del</button></td>`; tr.querySelector('.btn-secondary').addEventListener('click', (e) => handlePrintAdmitCard(e.currentTarget.dataset.regNo)); tr.querySelector('.btn-danger').addEventListener('click', (e) => { if(confirm(`Remove ${p.name} from this olympiad?`)) { db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${p.regNo}`).remove().then(() => showToast('Participant removed.', 'info')); } }); fragment.appendChild(tr); }); tbody.appendChild(fragment); }
+    async function generateNewRegNo() { const yearPrefix = new Date().getFullYear().toString().substring(2); let maxReg = 0; const snapshot = await db.ref(`data/openOlympiads/${currentOlympiadId}/participants`).once('value'); const participants = snapshot.val() || {}; for (const regNo in participants) { if (regNo.startsWith(yearPrefix)) { const numPart = parseInt(regNo.substring(2)); if (numPart > maxReg) maxReg = numPart; } } return `${yearPrefix}${(maxReg + 1).toString().padStart(3, '0')}`; }
+    async function handleAddInternalParticipant(studentId) { const student = (appData.students || []).find(s => s.id === studentId); if (!student) return showToast('Student not found!', 'error'); const regNo = await generateNewRegNo(); const participantData = { regNo, name: student.name, school: student.schoolName || 'N/A', contact: student.contactNumber || 'N/A', isInternal: true, internalStudentId: student.id, internalStudentRoll: student.roll }; db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData).then(() => { showToast(`${student.name} added with Reg. No: ${regNo}`, 'success'); document.getElementById('internal-student-search-results').innerHTML = ''; document.getElementById('olympiadInternalStudentSearch').value = ''; }); }
+    function openAddExternalStudentModal() { if(document.getElementById('addExternalStudentModal')) document.getElementById('addExternalStudentModal').remove(); const template = document.getElementById('template-add-external-student-modal'); document.body.appendChild(template.content.cloneNode(true)); const modal = document.getElementById('addExternalStudentModal'); modal.querySelector('form').addEventListener('submit', handleSaveExternalStudent); modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove()); modal.querySelector('.modal-cancel-btn').addEventListener('click', () => modal.remove()); modal.classList.add('visible'); }
+    async function handleSaveExternalStudent(e) { e.preventDefault(); const modal = document.getElementById('addExternalStudentModal'); const name = modal.querySelector('#externalStudentName').value.trim(); const school = modal.querySelector('#externalStudentSchool').value.trim(); const contact = modal.querySelector('#externalStudentContact').value.trim(); if (!name || !school || !contact) return showToast('Please fill all fields.', 'error'); const regNo = await generateNewRegNo(); const participantData = { regNo, name, school, contact, isInternal: false }; db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData).then(() => { showToast(`External student added with Reg. No: ${regNo}`, 'success'); modal.remove(); }); }
+    function handlePrintAdmitCard(regNo) { const olympiad = appData.openOlympiads[currentOlympiadId]; const participant = olympiad.participants[regNo]; if (!participant) return showToast('Participant not found', 'error'); const printArea = document.getElementById('print-area'); let admitCardHTML = document.getElementById('template-admit-card').innerHTML; const displayName = participant.isInternal && participant.internalStudentRoll ? `${participant.name} (Roll: ${participant.internalStudentRoll})` : participant.name; admitCardHTML = admitCardHTML.replaceAll('##EXAM_NAME##', olympiad.name).replaceAll('##REG_NO##', participant.regNo).replaceAll('##STUDENT_NAME##', displayName).replaceAll('##SCHOOL_NAME##', participant.school).replaceAll('##EXAM_DATE##', new Date(olympiad.date).toLocaleDateString('en-GB')).replaceAll('##VENUE##', olympiad.venue).replaceAll('##TOTAL_MARKS##', olympiad.totalMarks); printArea.innerHTML = admitCardHTML; window.print(); printArea.innerHTML = ''; }
+    function renderOlympiadMarksEntryView(olympiadId) { mainContainer.innerHTML = ''; const template = document.getElementById('template-olympiad-marks-entry-view'); if (!template) return; mainContainer.appendChild(template.content.cloneNode(true)); const olympiad = appData.openOlympiads[olympiadId]; document.getElementById('marksOlympiadName').textContent = `Marks Entry: ${olympiad.name}`; document.getElementById('btnBackToOlympiadDetails').addEventListener('click', () => renderOlympiadDetailsView(olympiadId)); const participants = Object.values(olympiad.participants || {}); const total = participants.length; const entered = participants.filter(p => p.marks !== undefined && p.marks !== null).length; const pending = total - entered; document.getElementById('olympiad-stats').innerHTML = `<div class="stat-item"><div class="count total">${total}</div><div class="label">Total</div></div><div class="stat-item"><div class="count entered">${entered}</div><div class="label">Entered</div></div><div class="stat-item"><div class="count pending">${pending}</div><div class="label">Pending</div></div>`; const tbody = document.getElementById('olympiad-marks-tbody'); tbody.innerHTML = ''; const fragment = document.createDocumentFragment(); participants.sort((a,b) => a.regNo - b.regNo).forEach(p => { const tr = document.createElement('tr'); tr.dataset.regNo = p.regNo; const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name; tr.innerHTML = `<td>${p.regNo}</td><td>${displayName}</td><td>${p.school}</td><td>${p.marks ?? ''}</td>`; tr.addEventListener('click', () => { document.querySelectorAll('#olympiad-marks-tbody tr.selected-row').forEach(r => r.classList.remove('selected-row')); tr.classList.add('selected-row'); document.getElementById('marksEntryStudentInfo').textContent = `${p.name} (Reg: ${p.regNo})`; const marksInput = document.getElementById('marksEntryMarksInput'); marksInput.value = p.marks ?? ''; marksInput.disabled = false; marksInput.focus(); }); fragment.appendChild(tr); }); tbody.appendChild(fragment); const searchInput = document.getElementById('marksEntrySearchInput'); const marksInput = document.getElementById('marksEntryMarksInput'); searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const regNo = e.target.value.trim(); const row = tbody.querySelector(`tr[data-reg-no="${regNo}"]`); if(row) { row.click(); row.scrollIntoView({behavior: 'smooth', block: 'center'}); } else { showToast(`Participant with Reg. No ${regNo} not found.`, 'error'); } } }); marksInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); saveOlympiadMark(); } }); }
+    async function saveOlympiadMark() { const selectedRow = document.querySelector('#olympiad-marks-tbody tr.selected-row'); if (!selectedRow) return showToast('Please select a student first.', 'error'); const regNo = selectedRow.dataset.regNo; const marksInput = document.getElementById('marksEntryMarksInput'); const marksStr = marksInput.value; const totalMarks = appData.openOlympiads[currentOlympiadId].totalMarks; let marksToSave = null; if (marksStr.trim() !== '') { const marksNum = parseFloat(marksStr); if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error'); marksToSave = marksNum; } const markRef = db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}/marks`); if (marksToSave !== null) { await markRef.set(marksToSave); } else { await markRef.remove(); } selectedRow.cells[3].textContent = marksToSave ?? ''; showToast('Marks saved!', 'success', 1500); const nextRow = selectedRow.nextElementSibling; if (nextRow) { nextRow.click(); nextRow.scrollIntoView({behavior: 'smooth', block: 'center'}); } else { marksInput.disabled = true; document.getElementById('marksEntryStudentInfo').textContent = "Select a student from the list"; } }
     
-    function renderOlympiadList() {
-        const container = document.getElementById('olympiad-list-container');
-        if (!container) return;
-        container.innerHTML = '';
-        const olympiads = Object.entries(appData.openOlympiads || {}).filter(([,o]) => !o.deletedAt).sort(([,a],[,b]) => new Date(b.date) - new Date(a.date));
-        if (olympiads.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No Olympiads found. Create one to get started!</p>';
-            return;
-        }
-        const fragment = document.createDocumentFragment();
-        olympiads.forEach(([id, data]) => {
-            const card = document.createElement('div');
-            card.className = 'exam-card olympiad-card';
-            card.dataset.olympiadId = id;
-            const participantCount = Object.keys(data.participants || {}).length;
-            card.innerHTML = `
-                <div class="exam-menu-container">
-                    <button class="menu-toggle-btn">&vellip;</button>
-                    <div class="exam-menu-dropdown">
-                        <button class="btn-secondary btn-edit-olympiad" data-id="${id}">Edit</button>
-                        <button class="btn-danger btn-delete-olympiad" data-id="${id}">Delete</button>
-                    </div>
-                </div>
-                <h4>${data.name}</h4>
-                <p><strong>Date:</strong> ${new Date(data.date).toLocaleDateString('bn-BD')}</p>
-                <p><strong>Venue:</strong> ${data.venue || 'N/A'}</p>
-                <p><strong>Participants:</strong> ${participantCount}</p>`;
-            card.addEventListener('click', e => { if (!e.target.closest('.exam-menu-container')) renderOlympiadDetailsView(id) });
-            card.querySelector('.menu-toggle-btn').addEventListener('click', e => { e.stopPropagation(); document.querySelectorAll('.exam-menu-dropdown.active').forEach(d => d.classList.remove('active')); card.querySelector('.exam-menu-dropdown').classList.toggle('active'); });
-            card.querySelector('.btn-edit-olympiad').addEventListener('click', e => { e.stopPropagation(); openCreateOlympiadModal(id); });
-            card.querySelector('.btn-delete-olympiad').addEventListener('click', e => { e.stopPropagation(); if (confirm(`Move '${data.name}' to recycle bin?`)) { db.ref(`openOlympiads/${id}/deletedAt`).set(new Date().toISOString()).then(() => showToast('Olympiad moved to recycle bin.', 'success')); } });
-            fragment.appendChild(card);
-        });
-        container.appendChild(fragment);
-    }
+    // --- Data Loading ---
+    function loadAppData(yearToLoad) { 
+        showLoader(); 
+        viewedYear = yearToLoad;
+        localStorage.setItem(VIEWED_YEAR_KEY, viewedYear);
+        dataRef = getDbRefForYear(yearToLoad);
 
-    function openCreateOlympiadModal(olympiadId = null) {
-        if (!document.getElementById('createOlympiadModal')) {
-            document.body.appendChild(document.getElementById('template-create-olympiad-modal').content.cloneNode(true));
-        }
-        const modal = document.getElementById('createOlympiadModal');
-        const form = modal.querySelector('form');
-        form.reset();
+        if (dataRef.off) dataRef.off();
 
-        const title = modal.querySelector('#olympiadModalTitle');
-        const submitBtn = modal.querySelector('#olympiadModalSubmitBtn');
-        const idInput = modal.querySelector('#olympiadIdInput');
-
-        if (olympiadId) { // Edit Mode
-            const olympiad = appData.openOlympiads[olympiadId];
-            title.textContent = 'Edit Olympiad';
-            submitBtn.textContent = 'Save Changes';
-            idInput.value = olympiadId;
-            modal.querySelector('#olympiadNameInput').value = olympiad.name;
-            modal.querySelector('#olympiadDateInput').value = olympiad.date;
-            modal.querySelector('#olympiadTotalMarksInput').value = olympiad.totalMarks;
-            modal.querySelector('#olympiadVenueInput').value = olympiad.venue;
-        } else { // Create Mode
-            title.textContent = 'Create New Olympiad';
-            submitBtn.textContent = 'Create Olympiad';
-            idInput.value = '';
-        }
-        
-        form.onsubmit = handleSaveOlympiad;
-        modal.querySelector('.modal-close-btn').onclick = () => modal.classList.remove('visible');
-        modal.querySelector('.modal-cancel-btn').onclick = () => modal.classList.remove('visible');
-        modal.classList.add('visible');
-    }
-
-    function handleSaveOlympiad(e) {
-        e.preventDefault();
-        const modal = document.getElementById('createOlympiadModal');
-        const olympiadId = modal.querySelector('#olympiadIdInput').value;
-        const name = modal.querySelector('#olympiadNameInput').value.trim();
-        const date = modal.querySelector('#olympiadDateInput').value;
-        const totalMarks = modal.querySelector('#olympiadTotalMarksInput').value;
-        const venue = modal.querySelector('#olympiadVenueInput').value.trim();
-        if (!name || !date || !totalMarks || !venue) return showToast('Please fill all fields.', 'error');
-
-        const olympiadData = { name, date, venue, totalMarks: parseInt(totalMarks) };
-
-        if (olympiadId) { // Update
-            db.ref(`openOlympiads/${olympiadId}`).update(olympiadData)
-            .then(() => { showToast('Olympiad updated successfully!', 'success'); modal.classList.remove('visible'); })
-            .catch(err => showToast(`Error: ${err.message}`, 'error'));
-        } else { // Create
-            olympiadData.participants = {};
-            const newOlympiadId = `olymp_${Date.now()}`;
-            db.ref(`openOlympiads/${newOlympiadId}`).set(olympiadData)
-            .then(() => { showToast('Olympiad created successfully!', 'success'); modal.classList.remove('visible'); })
-            .catch(err => showToast(`Error: ${err.message}`, 'error'));
-        }
-    }
-
-    function renderOlympiadDetailsView(olympiadId) {
-        currentOlympiadId = olympiadId;
-        
-        mainContainer.innerHTML = '';
-        mainContainer.appendChild(document.getElementById('template-olympiad-details-view').content.cloneNode(true));
-        
-        if (olympiadParticipantListener) db.ref(`openOlympiads/${olympiadId}`).off('value', olympiadParticipantListener);
-        olympiadParticipantListener = db.ref(`openOlympiads/${olympiadId}`).on('value', snapshot => {
-            const olympiad = snapshot.val();
-            if (!olympiad) { showToast('Olympiad not found.', 'error'); showOlympiadListView(); return; }
+        dataRef.on('value', (snapshot) => { 
+            appData = snapshot.exists() ? snapshot.val() : {}; 
             
-            appData.openOlympiads[olympiadId] = olympiad;
-            
-            document.getElementById('olympiadDetailsName').textContent = olympiad.name;
-            document.getElementById('olympiadDetailsInfo').textContent = `Date: ${new Date(olympiad.date).toLocaleDateString('en-GB')} | Venue: ${olympiad.venue} | Total Marks: ${olympiad.totalMarks}`;
-            renderOlympiadParticipantList(olympiad.participants || {});
-        });
-        
-        document.getElementById('btnBackToOlympiadList').addEventListener('click', showOlympiadListView);
-        document.getElementById('btnAddExternalStudent').addEventListener('click', openAddExternalStudentModal);
-        document.getElementById('btnOlympiadResult').addEventListener('click', () => renderResultSheet(true, currentOlympiadId));
-        document.getElementById('btnOlympiadMarksEntry').addEventListener('click', () => renderOlympiadMarksEntryView(currentOlympiadId));
-        
-        const searchInput = document.getElementById('olympiadInternalStudentSearch');
-        searchInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const roll = e.target.value.trim();
-                if (!roll) return;
-                const student = (appData.students || []).find(s => s.roll === roll && !s.deletedAt);
-                const resultsDiv = document.getElementById('internal-student-search-results');
-                resultsDiv.innerHTML = '';
-                if (student) {
-                    const alreadyAdded = Object.values(appData.openOlympiads[currentOlympiadId].participants || {}).some(p => p.internalStudentId === student.id);
-                    resultsDiv.innerHTML = `<div class="search-result-item">
-                        <span>${student.name} - ${student.schoolName || 'N/A'}</span>
-                        <button class="btn-primary" data-student-id="${student.id}" ${alreadyAdded ? 'disabled' : ''}>${alreadyAdded ? 'Added' : 'Add'}</button>
-                    </div>`;
-                    resultsDiv.querySelector('button').addEventListener('click', (ev) => {
-                        ev.currentTarget.disabled = true;
-                        ev.currentTarget.textContent = 'Adding...';
-                        handleAddInternalParticipant(ev.currentTarget.dataset.studentId);
-                    });
+            db.ref('data/openOlympiads').once('value', (olympSnap) => {
+                appData.openOlympiads = olympSnap.val() || {};
+                if (!appData.exams) appData.exams = {}; 
+                if (!appData.seriesExams) appData.seriesExams = {};
+                currentPassword = appData.currentPassword || 'ashik@602';
+                
+                if (!dataLoaded) {
+                    dataLoaded = true;
+                    renderMainView();
                 } else {
-                    resultsDiv.innerHTML = `<p style="color: var(--danger-color);">No student found with roll: ${roll}</p>`;
+                    const currentView = mainContainer.querySelector('div:not(.d-none)');
+                    if(!currentView || currentView.id === 'exam-list-view') renderMainView();
+                    // other views will be refreshed by their respective listeners or nav actions
                 }
-            }
-        });
-    }
-    
-    function renderOlympiadParticipantList(participants) {
-        if (!currentOlympiadId) return;
-        const tbody = document.getElementById('olympiad-participant-tbody');
-        const participantCount = Object.keys(participants).length;
-        document.getElementById('participant-count').textContent = `(${participantCount})`;
-        tbody.innerHTML = '';
-        if (participantCount === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No participants registered yet.</td></tr>`;
-            return;
-        }
-        
-        const fragment = document.createDocumentFragment();
-        Object.values(participants).sort((a,b) => a.regNo - b.regNo).forEach(p => {
-            const tr = document.createElement('tr');
-            const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name;
-            tr.innerHTML = `
-                <td><b>${p.regNo}</b></td>
-                <td>${displayName}</td>
-                <td>${p.school}</td>
-                <td>${p.contact || 'N/A'}</td>
-                <td class="no-print">
-                    <button class="btn-secondary" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Admit</button>
-                    <button class="btn-danger" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Del</button>
-                </td>`;
-            tr.querySelector('.btn-secondary').addEventListener('click', (e) => handlePrintAdmitCard(e.currentTarget.dataset.regNo));
-            tr.querySelector('.btn-danger').addEventListener('click', (e) => {
-                if(confirm(`Remove ${p.name} from this olympiad?`)) {
-                    db.ref(`openOlympiads/${currentOlympiadId}/participants/${p.regNo}`).remove()
-                    .then(() => showToast('Participant removed.', 'info'));
-                }
+                updateYearSelectorUI();
+                hideLoader();
             });
-            fragment.appendChild(tr);
-        });
-        tbody.appendChild(fragment);
-    }
-
-    async function generateNewRegNo() {
-        const yearPrefix = new Date().getFullYear().toString().substring(2);
-        let maxReg = 0;
-        const snapshot = await db.ref(`openOlympiads/${currentOlympiadId}/participants`).once('value');
-        const participants = snapshot.val() || {};
-        for (const regNo in participants) {
-            if (regNo.startsWith(yearPrefix)) {
-                const numPart = parseInt(regNo.substring(2));
-                if (numPart > maxReg) maxReg = numPart;
-            }
-        }
-        return `${yearPrefix}${(maxReg + 1).toString().padStart(3, '0')}`;
-    }
-
-    async function handleAddInternalParticipant(studentId) {
-        const student = (appData.students || []).find(s => s.id === studentId);
-        if (!student) return showToast('Student not found!', 'error');
-        const regNo = await generateNewRegNo();
-        
-        const participantData = { regNo, name: student.name, school: student.schoolName || 'N/A', contact: student.contactNumber || 'N/A', isInternal: true, internalStudentId: student.id, internalStudentRoll: student.roll };
-
-        db.ref(`openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData)
-        .then(() => {
-            showToast(`${student.name} added with Reg. No: ${regNo}`, 'success');
-            document.getElementById('internal-student-search-results').innerHTML = '';
-            document.getElementById('olympiadInternalStudentSearch').value = '';
-        });
+        }, (error) => { 
+            console.error("Firebase read failed: ", error); 
+            showToast("Cannot connect to database.", "error"); 
+            hideLoader(); 
+        }); 
     }
     
-    function openAddExternalStudentModal() {
-        if(document.getElementById('addExternalStudentModal')) document.getElementById('addExternalStudentModal').remove();
-        const template = document.getElementById('template-add-external-student-modal');
-        document.body.appendChild(template.content.cloneNode(true));
-        const modal = document.getElementById('addExternalStudentModal');
-        modal.querySelector('form').addEventListener('submit', handleSaveExternalStudent);
-        modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove());
-        modal.querySelector('.modal-cancel-btn').addEventListener('click', () => modal.remove());
-        modal.classList.add('visible');
-    }
+    // --- Event Listeners Setup ---
+    function setupHeaderEventListeners() {
+        const yearSelector = document.getElementById('yearSelector');
+        document.getElementById('btnOpenOlympiad').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); showOlympiadListView(); });
+        document.getElementById('btnToggleTheme').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); toggleTheme(); });
+        document.getElementById('btnRecycleBin').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); showRecycleBin(); });
+        document.getElementById('btnAboutDev').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); const template = document.getElementById('template-about-dev-modal'); if (template) { const modal = template.content.cloneNode(true); document.body.appendChild(modal); const modalElement = document.getElementById('aboutDeveloperModal'); const closeBtn = modalElement.querySelector('.modal-close-btn'); const closeModal = () => modalElement.remove(); closeBtn.onclick = closeModal; modalElement.onclick = (e) => { if (e.target === modalElement) closeModal(); }; setTimeout(() => modalElement.classList.add('visible'), 10); } });
+        document.getElementById('btnNavBack').addEventListener('click', handleNavBack);
+        document.getElementById('btnNavRefresh').addEventListener('click', () => location.reload());
+        document.getElementById('btnLogout').addEventListener('click', () => { if (confirm('আপনি কি লগআউট করতে চান?')) { sessionStorage.clear(); localStorage.removeItem('mcth_exam_rem_creds'); localStorage.removeItem(VIEWED_YEAR_KEY); location.reload(); } });
+        document.getElementById('btnBackupMenuToggle')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('backupSubMenu').classList.toggle('open'); e.currentTarget.classList.toggle('open'); });
+        document.getElementById('btnExportData')?.addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); handleExport(); });
+        document.getElementById('btnImportData')?.addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); const pin = prompt("ডেটা ইম্পোর্ট করতে, অনুগ্রহ করে আপনার পিন দিন:"); if (pin === '13913') { setTimeout(() => { fileImporter.click(); }, 100); } else if (pin !== null) { showToast('ভুল পিন!', 'error'); } });
+        fileImporter.addEventListener('change', handleImport);
+        document.getElementById('btnClearData')?.addEventListener('click', handleClearExamData);
 
-    async function handleSaveExternalStudent(e) {
-        e.preventDefault();
-        const modal = document.getElementById('addExternalStudentModal');
-        const name = modal.querySelector('#externalStudentName').value.trim();
-        const school = modal.querySelector('#externalStudentSchool').value.trim();
-        const contact = modal.querySelector('#externalStudentContact').value.trim();
-        if (!name || !school || !contact) return showToast('Please fill all fields.', 'error');
-        
-        const regNo = await generateNewRegNo();
-        const participantData = { regNo, name, school, contact, isInternal: false };
-        
-        db.ref(`openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData)
-        .then(() => {
-            showToast(`External student added with Reg. No: ${regNo}`, 'success');
-            modal.remove();
+        yearSelector.addEventListener('change', (e) => {
+            const selectedYear = parseInt(e.target.value);
+            if (selectedYear !== viewedYear) {
+                // No password prompt for mobile version to simplify UX, assuming trusted use
+                dataLoaded = false;
+                loadAppData(selectedYear);
+            }
         });
+        setupGlobalMenu();
     }
 
-    function handlePrintAdmitCard(regNo) {
-        const olympiad = appData.openOlympiads[currentOlympiadId];
-        const participant = olympiad.participants[regNo];
-        if (!participant) return showToast('Participant not found', 'error');
-
-        const printArea = document.getElementById('print-area');
-        let admitCardHTML = document.getElementById('template-admit-card').innerHTML;
+    function handleClearExamData() {
+        if (!confirm(`WARNING!\n\nAre you sure you want to permanently delete ALL exam data for the year ${viewedYear}?\n\nTHIS ACTION CANNOT BE UNDONE.`)) return;
         
-        const displayName = participant.isInternal && participant.internalStudentRoll ? `${participant.name} (Roll: ${participant.internalStudentRoll})` : participant.name;
-
-        admitCardHTML = admitCardHTML
-            .replaceAll('##EXAM_NAME##', olympiad.name)
-            .replaceAll('##REG_NO##', participant.regNo)
-            .replaceAll('##STUDENT_NAME##', displayName)
-            .replaceAll('##SCHOOL_NAME##', participant.school)
-            .replaceAll('##EXAM_DATE##', new Date(olympiad.date).toLocaleDateString('en-GB'))
-            .replaceAll('##VENUE##', olympiad.venue)
-            .replaceAll('##TOTAL_MARKS##', olympiad.totalMarks);
-            
-        printArea.innerHTML = admitCardHTML;
-        window.print();
-        printArea.innerHTML = '';
-    }
-
-    function renderOlympiadMarksEntryView(olympiadId) {
-        mainContainer.innerHTML = '';
-        const template = document.getElementById('template-olympiad-marks-entry-view');
-        if (!template) { console.error("Marks entry template not found!"); return; }
-        mainContainer.appendChild(template.content.cloneNode(true));
-        
-        const olympiad = appData.openOlympiads[olympiadId];
-        document.getElementById('marksOlympiadName').textContent = `Marks Entry: ${olympiad.name}`;
-        document.getElementById('btnBackToOlympiadDetails').addEventListener('click', () => renderOlympiadDetailsView(olympiadId));
-        
-        const participants = Object.values(olympiad.participants || {});
-        const total = participants.length;
-        const entered = participants.filter(p => p.marks !== undefined && p.marks !== null).length;
-        const pending = total - entered;
-
-        document.getElementById('olympiad-stats').innerHTML = `<div class="stat-item"><div class="count total">${total}</div><div class="label">Total</div></div><div class="stat-item"><div class="count entered">${entered}</div><div class="label">Entered</div></div><div class="stat-item"><div class="count pending">${pending}</div><div class="label">Pending</div></div>`;
-
-        const tbody = document.getElementById('olympiad-marks-tbody');
-        tbody.innerHTML = '';
-        const fragment = document.createDocumentFragment();
-        participants.sort((a,b) => a.regNo - b.regNo).forEach(p => {
-            const tr = document.createElement('tr');
-            tr.dataset.regNo = p.regNo;
-            const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name;
-            tr.innerHTML = `<td>${p.regNo}</td><td>${displayName}</td><td>${p.school}</td><td>${p.marks ?? ''}</td>`;
-            tr.addEventListener('click', () => {
-                document.querySelectorAll('#olympiad-marks-tbody tr.selected-row').forEach(r => r.classList.remove('selected-row'));
-                tr.classList.add('selected-row');
-                document.getElementById('marksEntryStudentInfo').textContent = `${p.name} (Reg: ${p.regNo})`;
-                const marksInput = document.getElementById('marksEntryMarksInput');
-                marksInput.value = p.marks ?? '';
-                marksInput.disabled = false;
-                marksInput.focus();
+        const pass = prompt('To confirm, please enter the admin password:');
+        if (pass === currentPassword) {
+            showLoader();
+            Promise.all([
+                dataRef.child('exams').remove(),
+                dataRef.child('seriesExams').remove()
+            ]).then(() => {
+                showToast(`All exam data for ${viewedYear} has been deleted.`, 'success');
+                setTimeout(() => location.reload(), 1500);
+            }).catch(err => {
+                showToast(`Error clearing data: ${err.message}`, 'error');
+                hideLoader();
             });
-            fragment.appendChild(tr);
-        });
-        tbody.appendChild(fragment);
-
-        const searchInput = document.getElementById('marksEntrySearchInput');
-        const marksInput = document.getElementById('marksEntryMarksInput');
-        
-        searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const regNo = e.target.value.trim(); const row = tbody.querySelector(`tr[data-reg-no="${regNo}"]`); if(row) { row.click(); row.scrollIntoView({behavior: 'smooth', block: 'center'}); } else { showToast(`Participant with Reg. No ${regNo} not found.`, 'error'); } } });
-        marksInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); saveOlympiadMark(); } });
+        } else if (pass) {
+            showToast('Incorrect password. Data was not deleted.', 'error');
+        }
     }
 
-    async function saveOlympiadMark() {
-        const selectedRow = document.querySelector('#olympiad-marks-tbody tr.selected-row');
-        if (!selectedRow) return showToast('Please select a student first.', 'error');
-        
-        const regNo = selectedRow.dataset.regNo;
-        const marksInput = document.getElementById('marksEntryMarksInput');
-        const marksStr = marksInput.value;
-        const totalMarks = appData.openOlympiads[currentOlympiadId].totalMarks;
-        
-        let marksToSave = null;
-        if (marksStr.trim() !== '') {
-            const marksNum = parseFloat(marksStr);
-            if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) {
-                return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error');
+    function setupAppEventListeners() {
+        mainContainer.addEventListener('click', e => {
+            const button = e.target.closest('button');
+            if (!button) return;
+            if (button.id === 'btnCreateExam') openCreateExamModal();
+            else if (button.id === 'btnCreateSeriesExam') openSeriesExamModal();
+            else if (button.id === 'btnBackToList' || button.id === 'btnBackToView') handleNavBack();
+            else if (button.id === 'btnViewResultSheet') renderResultSheet(false, currentExamId);
+            else if (button.id === 'btnPrintResult') handlePrint();
+            else if (button.classList.contains('modal-close-btn') || button.id === 'btnCancelCreateExam' || button.id === 'btnCancelSeriesExam') {
+                button.closest('.modal-overlay').classList.remove('visible');
             }
-            marksToSave = marksNum;
-        }
-
-        const markRef = db.ref(`openOlympiads/${currentOlympiadId}/participants/${regNo}/marks`);
-        if (marksToSave !== null) { await markRef.set(marksToSave); } 
-        else { await markRef.remove(); }
-        
-        selectedRow.cells[3].textContent = marksToSave ?? '';
-        showToast('Marks saved!', 'success', 1500);
-
-        const nextRow = selectedRow.nextElementSibling;
-        if (nextRow) {
-            nextRow.click();
-            nextRow.scrollIntoView({behavior: 'smooth', block: 'center'});
-        } else {
-             marksInput.disabled = true;
-             document.getElementById('marksEntryStudentInfo').textContent = "Select a student from the list";
-        }
+        });
+        mainContainer.addEventListener('submit', e => {
+            e.preventDefault();
+            if (e.target.id === 'createExamForm') handleSaveExam(e);
+            if (e.target.id === 'createSeriesExamForm') handleSaveSeriesExam(e);
+        });
+        mainContainer.addEventListener('input', e => {
+            if (e.target.id === 'resultSheetSearchInput' || e.target.id === 'resultBatchFilter') {
+                displayFilteredResults();
+            }
+        });
+        mainContainer.addEventListener('keydown', e => {
+            if (e.target.id === 'studentSearchInput' && e.key === 'Enter') { e.preventDefault(); const t=e.target.value.trim(); if(!t)return; let a=null; document.querySelectorAll('#student-marks-tbody tr').forEach(row=>{if(row.style.display!=='none'&&row.cells[3].textContent.trim()===t){a=row}}); a?a.click():showToast(`Student with roll '${t}' not found.`,'error'); }
+            if (e.target.id === 'quickEntryMarksInput' && e.key === 'Enter') { e.preventDefault(); saveQuickEntryMark(); }
+        });
     }
-    
+
     // --- Initial Load ---
     applyTheme(localStorage.getItem('examAppTheme') || 'light');
     setupHeaderEventListeners();
     
     db.ref('systemSettings/activeYear').once('value').then(snapshot => {
         activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear();
-        const lastViewedYear = localStorage.getItem('mcth_exam_viewed_year');
-        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : 2026;
+        const lastViewedYear = localStorage.getItem(VIEWED_YEAR_KEY);
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear;
         loadAppData(viewedYear);
     }).catch(err => {
         console.error("Could not fetch active year, defaulting.", err);
         activeYear = new Date().getFullYear();
-        const lastViewedYear = localStorage.getItem('mcth_exam_viewed_year');
-        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : 2026;
+        const lastViewedYear = localStorage.getItem(VIEWED_YEAR_KEY);
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear;
         loadAppData(viewedYear);
     });
 }
