@@ -772,9 +772,14 @@ function initializeAppLogic() {
         yearSelector.addEventListener('change', (e) => {
             const selectedYear = parseInt(e.target.value);
             if (selectedYear !== viewedYear) {
-                // No password prompt for mobile version to simplify UX, assuming trusted use
-                dataLoaded = false;
-                loadAppData(selectedYear);
+                const pass = prompt(`শিক্ষাবর্ষ পরিবর্তন করতে অ্যাডমিন পাসওয়ার্ড দিন:`);
+                if (pass === currentPassword) {
+                    dataLoaded = false;
+                    loadAppData(selectedYear);
+                } else {
+                    if (pass !== null) showToast('ভুল পাসওয়ার্ড!', 'error');
+                    yearSelector.value = viewedYear; // ভুল পাসওয়ার্ড দিলে আগের বছরে ফেরত যাবে
+                }
             }
         });
         setupGlobalMenu();
