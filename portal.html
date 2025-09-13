@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCTH Student Portal</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <!-- FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    
+    <!-- Chart.js for Analysis -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @font-face {
+          font-family: 'Kalpurush';
+          src: url('fonts/kalpurush.ttf') format('truetype');
+        }
+        :root {
+            /* Theme from index.html for consistency */
+            --bg-main: #f4f6f9; --bg-section: #ffffff; --bg-header: #1f2b38; --bg-tab-container: #e9ecef; --bg-tab: #f8f9fa; --bg-tab-active: #ffffff; --bg-input: #ffffff; --bg-input-disabled: #e9ecef; --bg-scrollable: #ffffff; --bg-hover: #eef2f7; --bg-footer: #1f2b38; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --text-tab: #495057; --text-tab-active: #0056b3; --text-input-disabled: #6c757d; --text-footer: #e9ecef; --text-footer-dev: #adb5bd; --border-color: #dee2e6; --border-accent: #007bff; --border-tab-active: #ffffff; --paid-color: #a9d8b8; --due-color: #f1b5b8; --paid-text: #146c43; --due-text: #842029; --future-text: #6c757d; --not-applicable-color: #f8f9fa; --not-applicable-text: #666666;
+            --toast-success-bg: #28a745; --toast-error-bg: #dc3545; --toast-info-bg: #17a2b8; --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1); --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12); --danger-color: #fa383e; --success-color: #31a24c; --warning-color: #ffc107;
+        }
+        
+        body[data-theme='dark'] {
+            --bg-main: #121212; --bg-section: #1e1e1e; --bg-header: #1f2b38; --bg-tab-container: #121212; --bg-tab: #2a2a2a; --bg-tab-active: #1e1e1e; --bg-input: #252525; --bg-input-disabled: #3a3a3a; --bg-scrollable: #1e1e1e; --bg-hover: #333333; --bg-footer: #1f2b38; --text-primary: #e8eaed; --text-secondary: #9aa0a6; --text-header: #e8eaed; --text-tab: #e8eaed; --text-tab-active: #8ab4f8; --text-input-disabled: #888888; --text-footer: #e8eaed; --text-footer-dev: #9aa0a6; --border-color: #3a3a34; --border-accent: #8ab4f8; --border-tab-active: #1e1e1e; --paid-color: #143d26; --due-color: #4a1c21; --paid-text: #a3d9a5; --due-text: #f5c6cb; --not-applicable-color: #2c2c2c; --not-applicable-text: #666666;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; font-family: 'Kalpurush', sans-serif; background-color: var(--bg-main); color: var(--text-primary); transition: background-color .3s, color .3s; }
+
+        /* Login & Signup Styles */
+        #auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
+        .auth-box { background-color: var(--bg-section); padding: 25px; border-radius: 8px; box-shadow: var(--shadow-md); width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--border-color); animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .auth-logo { width: 100px; height: 100px; margin: 0 auto 20px; }
+        .auth-box h1 { font-size: 1.6em; margin-bottom: 20px; color: var(--border-accent); }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group input, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input); color: var(--text-primary); box-sizing: border-box; }
+        .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
+        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
+        .auth-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: linear-gradient(45deg, var(--border-accent), #0056b3); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .auth-button:hover { box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); }
+        .auth-button:disabled { background: #ccc; cursor: not-allowed; }
+        .auth-link { margin-top: 20px; font-size: 0.9em; }
+        .auth-link a { color: var(--border-accent); text-decoration: none; font-weight: bold; }
+        #auth-error-msg { color: var(--due-text); margin-top: 15px; min-height: 20px; font-weight: bold; }
+        .hidden { display: none !important; }
+
+        /* Signup Specific Styles */
+        .signup-step { animation: fadeIn 0.5s ease; }
+        .step-title { font-size: 1.2em; color: var(--text-secondary); margin-bottom: 15px; }
+        .roll-selection-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+        .roll-box { padding: 15px 10px; border: 2px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-weight: bold; font-size: 1.1em; }
+        .roll-box:hover { background-color: var(--bg-hover); transform: translateY(-2px); }
+        .roll-box.selected { background-color: var(--border-accent); color: white; border-color: var(--border-accent); }
+        .password-strength { font-size: 0.8em; margin-top: 5px; text-align: left; }
+        #lockout-message { background-color: var(--due-color); color: var(--due-text); padding: 10px; border-radius: 6px; }
+
+        /* Login Footer (Copied) */
+        .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
+        .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
+        .developer-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background-color: var(--bg-main); }
+        .login-footer .developed-by-text { margin-bottom: 8px; font-size: 1.1em; }
+        .company-info { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; }
+        .company-logo { width: 40px; height: 40px; object-fit: contain; }
+        .company-text { text-align: left; line-height: 1.5; }
+        .company-text strong { font-size: 1.2em; color: var(--text-primary); }
+        .company-text small { font-size: 0.9em; }
+        .social-icons { display: flex; justify-content: center; gap: 20px; align-items: center; }
+        .social-icons a { display: inline-block; color: var(--text-secondary); transition: color 0.3s, transform 0.3s; }
+        .social-icons a:hover { color: var(--border-accent); transform: scale(1.1); }
+        .social-icons svg { width: 28px; height: 28px; fill: currentColor; }
+        .login-footer .instruction-text { font-size: 0.8em; font-style: italic; margin-top: 12px; margin-bottom: 0; color: var(--text-secondary); }
+
+        /* Main App Styles */
+        #app-container { display: flex; flex-direction: column; min-height: 100vh; position: relative; }
+        #center-watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70vw; max-width: 300px; height: 100vh; background-image: url(images/image2.png); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: .05; z-index: -1; pointer-events: none; }
+        body[data-theme=dark] #center-watermark{ filter: invert(1) grayscale(1); opacity: 0.08; }
+        
+        header { background-color: var(--bg-header); color: var(--text-header); padding: 12px 15px; position: sticky; top: 0; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; }
+        .header-left .institute-name { font-size: 1.2em; font-weight: bold; }
+        .header-right { position: relative; }
+        .profile-pic { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid white; }
+        .profile-menu { display: none; position: absolute; top: 50px; right: 0; background-color: var(--bg-section); border-radius: 8px; box-shadow: var(--shadow-md); z-index: 1002; width: 180px; overflow: hidden; }
+        .profile-menu.active { display: block; }
+        .profile-menu button { width: 100%; padding: 12px 15px; text-align: left; background: none; border: none; font-size: 1em; color: var(--text-primary); cursor: pointer; }
+        .profile-menu button:hover { background-color: var(--bg-hover); }
+
+        main { padding: 15px; flex-grow: 1; }
+        .page-section { background-color: var(--bg-section); padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+        
+        /* Navigation Tabs */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--bg-section); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 5px 0; border-top: 1px solid var(--border-color); }
+        .nav-item { flex: 1; text-align: center; padding: 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.2s; }
+        .nav-item.active { color: var(--border-accent); font-weight: bold; }
+        .nav-icon { font-size: 1.4em; }
+        .nav-label { font-size: 0.75em; display: block; }
+        
+        /* Dashboard Cards (Attendance.html) */
+        .attendance-header-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-item { text-align: center; background: var(--bg-main); padding: 10px; border-radius: 6px; }
+        .stat-item .label { font-size: 0.8em; color: var(--text-secondary); }
+        .stat-item .value { font-size: 1.4em; font-weight: bold; }
+        .stat-item .value.present { color: var(--success-color); }
+        .stat-item .value.absent { color: var(--danger-color); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .calendar-day { padding: 8px 4px; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: auto; font-size: 0.8em;}
+        .day-name { font-weight: bold; color: var(--text-secondary); padding-bottom: 10px; font-size: 0.8em;}
+        .day-present { background-color: var(--success-color); color: white; }
+        .day-absent { background-color: var(--danger-color); color: white; }
+        
+        /* Payment History Table */
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+        .history-table th, .history-table td { padding: 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .history-table th { background-color: var(--bg-main); }
+        
+        /* Shared Utils */
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--border-accent);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        #toast-container{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:10005;display:flex;flex-direction:column;gap:8px;width:90%;max-width:400px}.toast{padding:12px 15px;border-radius:6px;color:#fff;font-size:0.9em;box-shadow:0 2px 10px rgba(0,0,0,.2);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--toast-success-bg)}.toast.error{background-color:var(--toast-error-bg)}.toast.info{background-color:var(--toast-info-bg)}
+    </style>
+</head>
+<body data-theme="light">
+    <!-- AUTHENTICATION CONTAINER -->
+    <div id="auth-container">
+        <div class="auth-box">
+            <img src="images/image2.png" alt="Logo" class="auth-logo" onerror="this.style.display='none'">
+            <!-- Login View -->
+            <div id="login-view">
+                <h1>স্টুডেন্ট পোর্টালে স্বাগতম</h1>
+                <form id="login-form">
+                    <div class="input-group">
+                        <input type="tel" id="login-contact" placeholder="আপনার মোবাইল নম্বর" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="login-password" placeholder="আপনার পাসওয়ার্ড" required>
+                        <span id="password-toggle" class="password-toggle-icon">👁️</span>
+                    </div>
+                    <div class="auth-options">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="checkbox" id="remember-me"> আমাকে মনে রাখুন
+                        </label>
+                    </div>
+                    <button type="submit" class="auth-button">লগইন করুন</button>
+                    <div id="auth-error-msg"></div>
+                </form>
+                <p class="auth-link">অ্যাকাউন্ট নেই? <a href="#" id="show-signup">এখানে সাইন-আপ করুন</a></p>
+            </div>
+            <!-- Signup View -->
+            <div id="signup-view" class="hidden">
+                <h1>অ্যাকাউন্ট তৈরি করুন</h1>
+                <form id="signup-form">
+                    <!-- Step 1: Contact Number -->
+                    <div id="step-1" class="signup-step">
+                        <p class="step-title">কোচিং-এ দেওয়া আপনার মোবাইল নম্বরটি লিখুন</p>
+                        <div class="input-group">
+                            <input type="tel" id="signup-contact" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        <button type="button" id="btn-next-step-1" class="auth-button">পরবর্তী ধাপ</button>
+                    </div>
+                    <!-- Step 2: Verification -->
+                    <div id="step-2" class="signup-step hidden">
+                        <p class="step-title">পরিচয় যাচাই করুন</p>
+                        <p style="font-size:0.9em;">আপনার সঠিক রোল নম্বরটি বাছাই করুন:</p>
+                        <div id="roll-selection" class="roll-selection-grid"></div>
+                        <div class="input-group" style="margin-top: 15px;">
+                            <select id="signup-class" required><option value="">আপনার ক্লাস বাছাই করুন</option></select>
+                        </div>
+                        <div class="input-group">
+                            <select id="signup-batch" required disabled><option value="">আপনার ব্যাচ বাছাই করুন</option></select>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="signup-name" placeholder="আপনার সম্পূর্ণ নাম (ইংরেজিতে)" required>
+                        </div>
+                         <div class="input-group">
+                            <select id="signup-year" required><option value="">আপনার শিক্ষাবর্ষ বাছাই করুন</option></select>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="signup-trxid" placeholder="শেষ পেমেন্টের Transaction ID" required>
+                        </div>
+                        <button type="button" id="btn-verify" class="auth-button">যাচাই করুন</button>
+                    </div>
+                    <!-- Step 3: Set Password -->
+                    <div id="step-3" class="signup-step hidden">
+                        <p class="step-title">নতুন পাসওয়ার্ড সেট করুন</p>
+                        <div class="input-group">
+                            <input type="password" id="signup-password" placeholder="নতুন পাসওয়ার্ড" required>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="signup-confirm-password" placeholder="পুনরায় পাসওয়ার্ড দিন" required>
+                        </div>
+                        <div id="password-strength" class="password-strength"></div>
+                        <button type="submit" class="auth-button">অ্যাকাউন্ট তৈরি করুন</button>
+                    </div>
+                </form>
+                <div id="signup-error-msg" style="color: var(--due-text); margin-top: 15px; font-weight: bold;"></div>
+                <div id="lockout-message" class="hidden"></div>
+                <p class="auth-link">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" id="show-login">এখানে লগইন করুন</a></p>
+            </div>
+            <!-- Footer -->
+            <div class="login-footer">
+                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2025</p>
+                <div class="developer-box">
+                    <p class="developed-by-text">Developed by,</p>
+                    <div class="company-info">
+                        <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
+                        <div class="company-text">
+                            <strong>বিন্দুমাত্রা আইটি</strong><br>
+                            <small>CEO : Abdullah Al Rafi (BZS 26)</small>
+                        </div>
+                    </div>
+                    <div class="social-icons">
+                         <a href="mailto:rafiofficialpc@gmail.com" title="Email Abdullah Al Rafi" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg></a>
+                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg></a>
+                    </div>
+                    <p class="instruction-text">click the icons to visit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app-container" class="hidden">
+        <div id="center-watermark"></div>
+        <div id="loader-overlay"><div class="loader"></div></div>
+        <div id="toast-container"></div>
+
+        <header>
+            <div class="header-left">
+                <span class="institute-name">MCTH Student Portal</span>
+            </div>
+            <div class="header-right">
+                <img id="profile-pic-header" src="images/default_avatar.png" class="profile-pic" alt="Profile">
+                <div id="profile-menu" class="profile-menu">
+                    <button id="btn-view-profile">👤 প্রোফাইল দেখুন</button>
+                    <button id="btn-logout">🚪 লগআউট</button>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content" style="padding-bottom: 70px;"></main>
+        
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-page="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">ড্যাশবোর্ড</span>
+            </div>
+            <div class="nav-item" data-page="attendance">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">অ্যাটেনডেন্স</span>
+            </div>
+            <div class="nav-item" data-page="payment">
+                <span class="nav-icon">💳</span>
+                <span class="nav-label">পেমেন্ট</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HTML TEMPLATES -->
+    <template id="template-dashboard">
+        <div class="page-section">
+            <h2 id="dashboard-welcome"></h2>
+            <p>আপনার প্রোফাইল, উপস্থিতি এবং পেমেন্টের সারসংক্ষেপ দেখুন।</p>
+        </div>
+        <div class="page-section" id="dashboard-summary-cards">
+            <!-- Summary cards will be injected here -->
+        </div>
+    </template>
+
+    <template id="template-profile">
+        <div class="page-section" style="text-align: center;">
+            <img id="profile-page-pic" src="images/default_avatar.png" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--border-color); object-fit: cover;" alt="Profile">
+            <h2 id="profile-page-name" style="margin-top: 10px;"></h2>
+        </div>
+        <div class="page-section">
+            <h4>সাধারণ তথ্য</h4>
+            <p><strong>রোল:</strong> <span id="profile-roll"></span></p>
+            <p><strong>ক্লাস:</strong> <span id="profile-class"></span></p>
+            <p><strong>স্কুল:</strong> <span id="profile-school"></span></p>
+            <p><strong>মোবাইল নম্বর:</strong> <span id="profile-contact"></span></p>
+            <p><strong>ভর্তির তারিখ:</strong> <span id="profile-admission-date"></span></p>
+            <p><strong>শিক্ষাবর্ষ:</strong> <span id="profile-academic-year"></span></p>
+        </div>
+         <div class="page-section">
+            <h4>আমার ব্যাচসমূহ</h4>
+            <div id="profile-batches"></div>
+        </div>
+    </template>
+
+    <template id="template-attendance">
+        <div class="page-section">
+            <h2>আমার অ্যাটেনডেন্স</h2>
+            <div class="attendance-header-stats" style="margin-top: 20px;">
+                <div class="stat-item"><div class="label">মোট ক্লাস</div><div class="value" id="stat-student-total">0</div></div>
+                <div class="stat-item"><div class="label">উপস্থিত</div><div class="value present" id="stat-student-present">0</div></div>
+                <div class="stat-item"><div class="label">অনুপস্থিত</div><div class="value absent" id="stat-student-absent">0</div></div>
+                <div class="stat-item"><div class="label">উপস্থিতি %</div><div class="value present" id="stat-student-percentage">-%</div></div>
+            </div>
+        </div>
+        <div class="page-section">
+            <h3>মাসিক ক্যালেন্ডার</h3>
+            <div class="calendar-header" style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button id="prevMonthBtn" style="background:none; border:none; font-size:1.5em; cursor:pointer;">&lt;</button>
+                <h4 id="calendarMonthYear" style="margin:0;"></h4>
+                <button id="nextMonthBtn" style="background:none; border:none; font-size:1.5em; cursor:pointer;">&gt;</button>
+            </div>
+            <div class="calendar-grid day-names">
+                <div>রবি</div><div>সোম</div><div>মঙ্গল</div><div>বুধ</div><div>বৃহঃ</div><div>শুক্র</div><div>শনি</div>
+            </div>
+            <div id="calendar-days" class="calendar-grid"></div>
+        </div>
+        <div class="page-section">
+            <h3>উপস্থিতি চার্ট</h3>
+            <canvas id="personalAttendanceChart"></canvas>
+        </div>
+    </template>
+    
+    <template id="template-payment">
+        <div class="page-section">
+            <h2>আমার পেমেন্ট হিস্টোরি</h2>
+            <p>আপনার সকল লেনদেনের তালিকা নিচে দেওয়া হলো।</p>
+        </div>
+        <div class="page-section">
+            <h4>মাসিক ফি স্ট্যাটাস (<span id="payment-year"></span>)</h4>
+            <div class="yearly-status-chart" id="yearly-payment-chart" style="grid-template-columns: repeat(3, 1fr); margin-top:10px;">
+                <!-- Months will be injected here -->
+            </div>
+        </div>
+        <div class="page-section">
+            <h4>লেনদেনের তালিকা</h4>
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead><tr><th>তারিখ</th><th>বিবরণ</th><th>টাকা</th><th>Trx ID</th></tr></thead>
+                    <tbody id="payment-history-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+
+
+<script>
+// ================================================================== //
+//            FIREBASE CONFIGURATION AND INITIALIZATION             //
+// ================================================================== //
+const firebaseConfig = {
+    apiKey: "AIzaSyBE0xJ1nvqSj6a9bXtrtrNTDh0bu7PMLnw",
+    authDomain: "math-creative-teaching-h-a86fd.firebaseapp.com",
+    projectId: "math-creative-teaching-h-a86fd",
+    storageBucket: "math-creative-teaching-h-a86fd.appspot.com",
+    messagingSenderId: "547365102808",
+    appId: "1:547365102808:web:45c46b74ffaaa945dda3ad",
+    databaseURL: "https://math-creative-teaching-h-a86fd-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const studentAuthRef = db.ref('studentAuth');
+const academicYearsRef = db.ref('academicYears');
+
+// ================================================================== //
+//                GLOBAL UTILITY FUNCTIONS                          //
+// ================================================================== //
+function showToast(message, type = 'info', duration = 3000) { const c = document.getElementById('toast-container'); if (!c) return; const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = message; c.appendChild(t); setTimeout(() => t.classList.add('show'), 10); setTimeout(() => { t.classList.remove('show'); t.addEventListener('transitionend', () => t.remove()); }, duration); }
+const showLoader = () => document.getElementById('loader-overlay').style.display = 'flex';
+const hideLoader = () => document.getElementById('loader-overlay').style.display = 'none';
+function applyTheme(theme) { document.body.setAttribute('data-theme', theme); }
+const BENGALI_MONTHS=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
+
+// ================================================================== //
+//              AUTHENTICATION & SIGNUP SCRIPT                      //
+// ================================================================== //
+document.addEventListener('DOMContentLoaded', () => {
+    const authContainer = document.getElementById('auth-container');
+    const appContainer = document.getElementById('app-container');
+    
+    // Check for existing session
+    const loggedInStudent = sessionStorage.getItem('mcth_student_session');
+    if (loggedInStudent) {
+        authContainer.classList.add('hidden');
+        appContainer.classList.remove('hidden');
+        firebase.auth().signInAnonymously().then(() => {
+            initializeAppLogic(JSON.parse(loggedInStudent));
+        }).catch(err => {
+            console.error("Firebase sign-in failed on session restore:", err);
+            sessionStorage.removeItem('mcth_student_session');
+            location.reload();
+        });
+        return;
+    }
+
+    // --- Element Declarations ---
+    const loginView = document.getElementById('login-view');
+    const signupView = document.getElementById('signup-view');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const errorMsgDiv = document.getElementById('auth-error-msg');
+    
+    // --- View Toggling ---
+    document.getElementById('show-signup').addEventListener('click', (e) => { e.preventDefault(); loginView.classList.add('hidden'); signupView.classList.remove('hidden'); });
+    document.getElementById('show-login').addEventListener('click', (e) => { e.preventDefault(); signupView.classList.add('hidden'); loginView.classList.remove('hidden'); });
+
+    // --- Login Logic ---
+    const passwordToggle = document.getElementById('password-toggle');
+    passwordToggle.addEventListener('click', () => {
+        const passwordInput = document.getElementById('login-password');
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        passwordToggle.textContent = isPassword ? '🙈' : '👁️';
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const contact = document.getElementById('login-contact').value.trim();
+        const password = document.getElementById('login-password').value;
+        errorMsgDiv.textContent = '';
+        showLoader();
+
+        try {
+            await firebase.auth().signInAnonymously();
+            const snapshot = await studentAuthRef.orderByChild('contact').equalTo(contact).once('value');
+
+            if (!snapshot.exists()) {
+                errorMsgDiv.textContent = 'এই মোবাইল নম্বর দিয়ে কোনো অ্যাকাউন্ট নেই।';
+                hideLoader();
+                return;
+            }
+
+            const studentAuthData = Object.values(snapshot.val())[0];
+            if (studentAuthData.password === password) {
+                // Fetch full student profile
+                const studentProfileSnapshot = await academicYearsRef.child(`${studentAuthData.academicYear}/data/students`).orderByChild('id').equalTo(studentAuthData.studentId).once('value');
+                if(!studentProfileSnapshot.exists()) {
+                    errorMsgDiv.textContent = 'ছাত্রের প্রোফাইল খুঁজে পাওয়া যায়নি। অফিসে যোগাযোগ করুন।';
+                    hideLoader();
+                    return;
+                }
+                
+                const studentProfile = Object.values(studentProfileSnapshot.val())[0];
+                const sessionData = { ...studentProfile, academicYear: studentAuthData.academicYear };
+                sessionStorage.setItem('mcth_student_session', JSON.stringify(sessionData));
+                
+                authContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                initializeAppLogic(sessionData);
+
+            } else {
+                errorMsgDiv.textContent = 'পাসওয়ার্ড সঠিক নয়।';
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            errorMsgDiv.textContent = 'লগইন করার সময় একটি সমস্যা হয়েছে।';
+        } finally {
+            hideLoader();
+        }
+    });
+
+    // --- Signup Logic ---
+    let signupData = {
+        potentialStudents: [],
+        selectedStudent: null,
+        lockoutData: JSON.parse(localStorage.getItem('mcth_signup_lockout') || '{}')
+    };
+
+    const signupErrorDiv = document.getElementById('signup-error-msg');
+    const lockoutMsgDiv = document.getElementById('lockout-message');
+
+    function checkLockout() {
+        if (signupData.lockoutData.until && Date.now() < signupData.lockoutData.until) {
+            const timeLeft = Math.ceil((signupData.lockoutData.until - Date.now()) / 60000);
+            lockoutMsgDiv.textContent = `অনেকবার ভুল চেষ্টার কারণে আপনি ${timeLeft} মিনিটের জন্য ব্লকড আছেন।`;
+            lockoutMsgDiv.classList.remove('hidden');
+            document.querySelectorAll('#signup-form button').forEach(b => b.disabled = true);
+            return true;
+        }
+        return false;
+    }
+    
+    function handleFailedAttempt() {
+        const attempts = (signupData.lockoutData.attempts || 0) + 1;
+        const lockoutDurations = [15, 35, 60, 120]; // in minutes
+        let lockoutUntil = null;
+
+        if (attempts > lockoutDurations.length) {
+            lockoutUntil = Date.now() + 365 * 24 * 60 * 60 * 1000; // Permanent (1 year)
+            signupErrorDiv.textContent = 'আপনার ডিভাইসটি স্থায়ীভাবে ব্লক করা হয়েছে। অফিসে যোগাযোগ করুন।';
+        } else {
+            lockoutUntil = Date.now() + (lockoutDurations[attempts - 1] * 60 * 1000);
+            signupErrorDiv.textContent = 'আপনার দেওয়া তথ্যে ভুল রয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
+        }
+        
+        signupData.lockoutData = { attempts, until: lockoutUntil };
+        localStorage.setItem('mcth_signup_lockout', JSON.stringify(signupData.lockoutData));
+        checkLockout();
+    }
+    
+    if (checkLockout()) return;
+
+    document.getElementById('btn-next-step-1').addEventListener('click', async () => {
+        const contact = document.getElementById('signup-contact').value.trim();
+        if (!contact) { signupErrorDiv.textContent = 'মোবাইল নম্বর দিন।'; return; }
+        showLoader();
+        signupErrorDiv.textContent = '';
+        
+        try {
+            await firebase.auth().signInAnonymously();
+            const yearsSnapshot = await academicYearsRef.once('value');
+            if (!yearsSnapshot.exists()) { throw new Error("No academic data found."); }
+            
+            signupData.potentialStudents = [];
+            const yearsData = yearsSnapshot.val();
+            for (const year in yearsData) {
+                const students = yearsData[year].data?.students || [];
+                const foundStudent = students.find(s => s && s.parentContact === contact && !s.deletedAt);
+                if (foundStudent) {
+                    // Check if account already exists
+                    const authCheck = await studentAuthRef.child(foundStudent.id).once('value');
+                    if (!authCheck.exists()) {
+                       signupData.potentialStudents.push({ ...foundStudent, academicYear: year });
+                    }
+                }
+            }
+
+            if (signupData.potentialStudents.length === 0) {
+                signupErrorDiv.textContent = 'এই নম্বরটি কোনো ছাত্রের প্রোফাইলে পাওয়া যায়নি অথবা অ্যাকাউন্ট তৈরি আছে।';
+                hideLoader();
+                return;
+            }
+
+            // For simplicity, we'll use the first found student. A more robust system could handle multiple matches.
+            signupData.selectedStudent = signupData.potentialStudents[0];
+            
+            // Populate Step 2
+            populateVerificationStep(signupData.selectedStudent, yearsData);
+            
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+
+        } catch (error) {
+            console.error("Signup step 1 error:", error);
+            signupErrorDiv.textContent = 'তথ্য যাচাই করা সম্ভব হয়নি।';
+        } finally {
+            hideLoader();
+        }
+    });
+
+    function populateVerificationStep(student, allYearsData) {
+        // Roll selection
+        const rollContainer = document.getElementById('roll-selection');
+        rollContainer.innerHTML = '';
+        const correctRoll = student.roll;
+        const rollOptions = new Set([correctRoll]);
+        while (rollOptions.size < 8) {
+            const randomOffset = Math.floor(Math.random() * 20) - 10;
+            const fakeRoll = String(parseInt(correctRoll) + randomOffset);
+            if (fakeRoll !== correctRoll) rollOptions.add(fakeRoll);
+        }
+        const shuffledRolls = Array.from(rollOptions).sort(() => Math.random() - 0.5);
+        shuffledRolls.forEach(roll => {
+            const box = document.createElement('div');
+            box.className = 'roll-box';
+            box.textContent = roll;
+            box.dataset.roll = roll;
+            box.addEventListener('click', () => {
+                document.querySelectorAll('.roll-box').forEach(b => b.classList.remove('selected'));
+                box.classList.add('selected');
+            });
+            rollContainer.appendChild(box);
+        });
+
+        // Class and Batch selection
+        const classSelect = document.getElementById('signup-class');
+        const batchSelect = document.getElementById('signup-batch');
+        const yearSelect = document.getElementById('signup-year');
+        
+        const uniqueClasses = {};
+        Object.values(allYearsData).forEach(year => {
+            (year.data?.mainClassCategories || []).forEach(cls => {
+                if(!cls.deletedAt) uniqueClasses[cls.id] = cls.name;
+            });
+        });
+        classSelect.innerHTML = '<option value="">আপনার ক্লাস বাছাই করুন</option>';
+        for(const id in uniqueClasses) {
+            classSelect.add(new Option(uniqueClasses[id], id));
+        }
+
+        classSelect.addEventListener('change', () => {
+            batchSelect.innerHTML = '<option value="">আপনার ব্যাচ বাছাই করুন</option>';
+            batchSelect.disabled = true;
+            const selectedClassId = classSelect.value;
+            if(!selectedClassId) return;
+
+            Object.values(allYearsData).forEach(year => {
+                (year.data?.batchSchedule || []).forEach(day => {
+                    (day.classes || []).forEach(cls => {
+                        if (cls.classId === selectedClassId && !cls.deletedAt) {
+                            (cls.batches || []).forEach(batch => {
+                                if(!batch.deletedAt) {
+                                    batchSelect.add(new Option(`${day.dayName} (${batch.time})`, batch.id));
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+            if(batchSelect.options.length > 1) batchSelect.disabled = false;
+        });
+        
+        // Year selection
+        yearSelect.innerHTML = '<option value="">আপনার শিক্ষাবর্ষ বাছাই করুন</option>';
+        Object.keys(allYearsData).sort((a,b) => b-a).forEach(year => {
+            yearSelect.add(new Option(year, year));
+        });
+    }
+
+    document.getElementById('btn-verify').addEventListener('click', () => {
+        const selectedRollBox = document.querySelector('.roll-box.selected');
+        const selectedRoll = selectedRollBox ? selectedRollBox.dataset.roll : null;
+        const selectedClassId = document.getElementById('signup-class').value;
+        const selectedBatchId = document.getElementById('signup-batch').value;
+        const enteredName = document.getElementById('signup-name').value.trim().toLowerCase();
+        const enteredYear = document.getElementById('signup-year').value;
+        const enteredTrxId = document.getElementById('signup-trxid').value.trim();
+
+        const student = signupData.selectedStudent;
+        let isBatchCorrect = false;
+
+        // Find if student is in the selected batch
+        const studentBatches = [];
+        const yearData = academicYearsRef.child(`${student.academicYear}/data/batchSchedule`);
+        yearData.once('value').then(snapshot => {
+            if(snapshot.exists()) {
+                (snapshot.val() || []).forEach(day => {
+                    (day.classes || []).forEach(cls => {
+                        (cls.batches || []).forEach(batch => {
+                            if((batch.studentIds || []).includes(student.id)) {
+                                studentBatches.push(batch.id);
+                            }
+                        })
+                    })
+                })
+            }
+            isBatchCorrect = studentBatches.includes(selectedBatchId);
+
+            // Find last transaction ID
+            let lastTrxId = null;
+            let allPayments = [];
+            if(student.admissionFee?.status === 'paid' && student.admissionFee.token) {
+                allPayments.push({ date: new Date(student.admissionFee.date), token: student.admissionFee.token });
+            }
+            Object.values(student.monthlyPayments || {}).forEach(p => {
+                 if(p.status === 'paid' && p.token) {
+                     allPayments.push({ date: new Date(p.date), token: p.token });
+                 }
+            });
+            if (allPayments.length > 0) {
+                allPayments.sort((a,b) => b.date - a.date);
+                lastTrxId = allPayments[0].token;
+            }
+
+            // Verification checks
+            if (
+                selectedRoll === student.roll &&
+                selectedClassId === student.classId &&
+                isBatchCorrect &&
+                enteredName === student.name.toLowerCase() &&
+                enteredYear === student.academicYear &&
+                lastTrxId && enteredTrxId === lastTrxId
+            ) {
+                // Success
+                signupErrorDiv.textContent = '';
+                localStorage.removeItem('mcth_signup_lockout'); // Clear lockout on success
+                document.getElementById('step-2').classList.add('hidden');
+                document.getElementById('step-3').classList.remove('hidden');
+            } else {
+                handleFailedAttempt();
+            }
+        });
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm-password').value;
+        const strengthDiv = document.getElementById('password-strength');
+
+        if(password.length < 8) { strengthDiv.textContent = 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।'; strengthDiv.style.color = 'red'; return; }
+        if(!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) { strengthDiv.textContent = 'বড় হাতের অক্ষর, ছোট হাতের অক্ষর এবং সংখ্যা ব্যবহার করুন।'; strengthDiv.style.color = 'red'; return; }
+        if (password !== confirmPassword) { strengthDiv.textContent = 'পাসওয়ার্ড দুটি মিলেনি।'; strengthDiv.style.color = 'red'; return; }
+        
+        strengthDiv.textContent = '';
+        showLoader();
+
+        try {
+            const student = signupData.selectedStudent;
+            const newAuthData = {
+                studentId: student.id,
+                contact: student.parentContact,
+                academicYear: student.academicYear,
+                password: password // IMPORTANT: In a real app, hash this password!
+            };
+            
+            await studentAuthRef.child(student.id).set(newAuthData);
+            
+            // Auto-login after signup
+            const sessionData = { ...student, academicYear: student.academicYear };
+            sessionStorage.setItem('mcth_student_session', JSON.stringify(sessionData));
+            
+            authContainer.classList.add('hidden');
+            appContainer.classList.remove('hidden');
+            initializeAppLogic(sessionData);
+
+        } catch (error) {
+            console.error("Account creation error:", error);
+            signupErrorDiv.textContent = 'অ্যাকাউন্ট তৈরি করার সময় সমস্যা হয়েছে।';
+        } finally {
+            hideLoader();
+        }
+    });
+
+    applyTheme(localStorage.getItem('mcth_student_theme') || 'light');
+});
+
+
+// ================================================================== //
+//                  MAIN APP LOGIC AFTER LOGIN                      //
+// ================================================================== //
+function initializeAppLogic(studentData) {
+    let currentPage = 'dashboard';
+    let fullAcademicData = {};
+    let personalAttendanceChart = null;
+
+    const mainContent = document.getElementById('main-content');
+    const navItems = document.querySelectorAll('.nav-item');
+    const profilePicHeader = document.getElementById('profile-pic-header');
+    const profileMenu = document.getElementById('profile-menu');
+
+    // --- Initial Data Load ---
+    async function loadInitialData() {
+        showLoader();
+        try {
+            const snapshot = await academicYearsRef.child(studentData.academicYear).child('data').once('value');
+            fullAcademicData = snapshot.val() || {};
+            // Load the dashboard by default
+            renderPage(currentPage);
+        } catch (error) {
+            console.error("Failed to load academic data:", error);
+            showToast("আপনার তথ্য লোড করা সম্ভব হয়নি।", "error");
+        } finally {
+            hideLoader();
+        }
+    }
+    
+    // --- Page Rendering Engine ---
+    function renderPage(pageName) {
+        mainContent.innerHTML = '';
+        const template = document.getElementById(`template-${pageName}`);
+        if (template) {
+            mainContent.appendChild(template.content.cloneNode(true));
+            // Call the specific function to populate the page
+            switch (pageName) {
+                case 'dashboard': renderDashboard(); break;
+                case 'profile': renderProfile(); break;
+                case 'attendance': renderAttendance(); break;
+                case 'payment': renderPayment(); break;
+            }
+        } else {
+            mainContent.innerHTML = `<p>Error: Page not found.</p>`;
+        }
+        
+        // Update active nav item
+        navItems.forEach(item => {
+            item.classList.toggle('active', item.dataset.page === pageName);
+        });
+        currentPage = pageName;
+    }
+
+    // --- Specific Page Renderers ---
+    function renderDashboard() {
+        const welcomeEl = document.getElementById('dashboard-welcome');
+        if(welcomeEl) welcomeEl.textContent = `স্বাগতম, ${studentData.name}`;
+        
+        // Example summary cards
+        const summaryContainer = document.getElementById('dashboard-summary-cards');
+        if(summaryContainer) {
+            const presentDays = Object.values(fullAcademicData.attendance?.records || {})
+                .flatMap(dateRecord => Object.values(dateRecord))
+                .filter(batchRecord => batchRecord[studentData.id]?.status === 'present').length;
+
+            const totalDue = calculateStudentOutstandingAmount();
+
+            summaryContainer.innerHTML = `
+                <div class="stat-item"><div class="label">মোট উপস্থিতি</div><div class="value present">${presentDays} দিন</div></div>
+                <div class="stat-item"><div class="label">মোট বকেয়া</div><div class="value absent">${totalDue.toLocaleString('bn-BD')} ৳</div></div>
+            `;
+        }
+    }
+
+    function renderProfile() {
+        document.getElementById('profile-page-pic').src = studentData.photoURL || 'images/default_avatar.png';
+        document.getElementById('profile-page-name').textContent = studentData.name;
+        document.getElementById('profile-roll').textContent = studentData.roll;
+        document.getElementById('profile-class').textContent = fullAcademicData.mainClassCategories.find(c => c.id === studentData.classId)?.name || 'N/A';
+        document.getElementById('profile-school').textContent = studentData.schoolName || 'N/A';
+        document.getElementById('profile-contact').textContent = studentData.parentContact || 'N/A';
+        document.getElementById('profile-admission-date').textContent = new Date(studentData.createdAt).toLocaleDateString('bn-BD');
+        document.getElementById('profile-academic-year').textContent = studentData.academicYear;
+
+        const batchesDiv = document.getElementById('profile-batches');
+        batchesDiv.innerHTML = '';
+        const studentBatches = [];
+        (fullAcademicData.batchSchedule || []).forEach(day => {
+            (day.classes || []).forEach(cls => {
+                (cls.batches || []).forEach(batch => {
+                    if((batch.studentIds || []).includes(studentData.id)) {
+                        studentBatches.push(`<li>${day.dayName} (${batch.time})</li>`);
+                    }
+                })
+            })
+        });
+        if (studentBatches.length > 0) {
+            batchesDiv.innerHTML = `<ul style="list-style: none; padding: 0;">${studentBatches.join('')}</ul>`;
+        } else {
+            batchesDiv.textContent = "কোনো ব্যাচে যুক্ত নেই।";
+        }
+    }
+
+    function renderAttendance() {
+        const attendanceRecords = fullAcademicData.attendance?.records || {};
+        let presentCount = 0, absentCount = 0;
+        const studentAttendance = {}; // { 'YYYY-MM-DD': 'present'/'absent' }
+
+        for (const date in attendanceRecords) {
+            for (const batchId in attendanceRecords[date]) {
+                if (attendanceRecords[date][batchId][studentData.id]) {
+                    const status = attendanceRecords[date][batchId][studentData.id].status;
+                    studentAttendance[date] = status;
+                    if (status === 'present') presentCount++;
+                    else if (status === 'absent') absentCount++;
+                }
+            }
+        }
+        
+        const totalClasses = presentCount + absentCount;
+        const percentage = totalClasses > 0 ? ((presentCount / totalClasses) * 100).toFixed(1) : 0;
+        document.getElementById('stat-student-total').textContent = totalClasses;
+        document.getElementById('stat-student-present').textContent = presentCount;
+        document.getElementById('stat-student-absent').textContent = absentCount;
+        document.getElementById('stat-student-percentage').textContent = `${percentage}%`;
+
+        // Calendar
+        let currentDate = new Date();
+        const renderCalendar = (date) => {
+            const month = date.getMonth(), year = date.getFullYear();
+            document.getElementById('calendarMonthYear').textContent = date.toLocaleDateString('bn-BD', { month: 'long', year: 'numeric' });
+            const calendarDays = document.getElementById('calendar-days');
+            calendarDays.innerHTML = '';
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let i = 0; i < firstDayOfMonth; i++) calendarDays.innerHTML += `<div></div>`;
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                let dayClass = '';
+                const status = studentAttendance[dateStr];
+                if (status === 'present') dayClass = 'day-present'; else if (status === 'absent') dayClass = 'day-absent';
+                calendarDays.innerHTML += `<div class="calendar-day ${dayClass}">${day}</div>`;
+            }
+        };
+        document.getElementById('prevMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(currentDate); };
+        document.getElementById('nextMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(currentDate); };
+        renderCalendar(currentDate);
+
+        // Chart
+        if(personalAttendanceChart) personalAttendanceChart.destroy();
+        personalAttendanceChart = new Chart(document.getElementById('personalAttendanceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['উপস্থিত', 'অনুপস্থিত'],
+                datasets: [{
+                    data: [presentCount, absentCount],
+                    backgroundColor: ['var(--success-color)', 'var(--danger-color)'],
+                    borderColor: 'var(--bg-section)',
+                    borderWidth: 4
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } } }
+        });
+    }
+
+    function renderPayment() {
+        document.getElementById('payment-year').textContent = studentData.academicYear;
+        const chartContainer = document.getElementById('yearly-payment-chart');
+        const tableBody = document.getElementById('payment-history-table');
+        chartContainer.innerHTML = '';
+        tableBody.innerHTML = '';
+        let allPayments = [];
+
+        // Populate yearly chart
+        BENGALI_MONTHS.forEach((month, index) => {
+            const payment = studentData.monthlyPayments?.[month];
+            const box = document.createElement('div');
+            box.className = 'month-box';
+            let status = 'future';
+            if (payment?.status === 'paid') status = 'paid';
+            else if (new Date(studentData.academicYear, index, 1) < new Date()) status = 'due';
+            
+            box.classList.add(status);
+            box.textContent = month;
+            chartContainer.appendChild(box);
+        });
+
+        // Populate history table
+        if(studentData.admissionFee?.status === 'paid') {
+            allPayments.push({
+                date: new Date(studentData.admissionFee.date),
+                description: 'ভর্তি ফি',
+                amount: studentData.admissionFee.amount,
+                token: studentData.admissionFee.token
+            });
+        }
+        Object.entries(studentData.monthlyPayments || {}).forEach(([month, payment]) => {
+            if(payment.status === 'paid') {
+                allPayments.push({
+                    date: new Date(payment.date),
+                    description: `${month} মাসের ফি`,
+                    amount: payment.fee,
+                    token: payment.token
+                });
+            }
+        });
+        
+        allPayments.sort((a, b) => b.date - a.date);
+        if (allPayments.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">কোনো লেনদেনের তথ্য নেই।</td></tr>`;
+        } else {
+            allPayments.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.date.toLocaleDateString('bn-BD')}</td>
+                    <td>${p.description}</td>
+                    <td>${p.amount.toLocaleString('bn-BD')} ৳</td>
+                    <td>${p.token}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+    }
+
+    function calculateStudentOutstandingAmount() {
+        let totalDue = 0;
+        if (!studentData) return 0;
+
+        const admissionDate = new Date(studentData.createdAt);
+        if (studentData.admissionFee && studentData.admissionFee.status !== 'paid' && studentData.admissionFee.amount > 0) {
+            totalDue += studentData.admissionFee.amount;
+        }
+
+        for (let i = 0; i < 12; i++) {
+            const monthDate = new Date(studentData.academicYear, i, 1);
+            if (monthDate < new Date(admissionDate.getFullYear(), admissionDate.getMonth(), 1)) continue;
+            
+            const monthName = BENGALI_MONTHS[i];
+            const payment = studentData.monthlyPayments?.[monthName];
+            const isDueMonth = new Date() > new Date(studentData.academicYear, i, 10);
+
+            if (isDueMonth && (!payment || payment.status !== 'paid')) {
+                totalDue += payment?.fee || studentData.monthlyFeeDefault || 0;
+            }
+        }
+        return totalDue;
+    }
+
+    // --- Event Listeners ---
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            renderPage(item.dataset.page);
+        });
+    });
+
+    profilePicHeader.src = studentData.photoURL || 'images/default_avatar.png';
+    profilePicHeader.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileMenu.classList.toggle('active');
+    });
+    
+    document.body.addEventListener('click', () => {
+        profileMenu.classList.remove('active');
+    });
+
+    document.getElementById('btn-view-profile').addEventListener('click', () => {
+        profileMenu.classList.remove('active');
+        renderPage('profile');
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        sessionStorage.removeItem('mcth_student_session');
+        location.reload();
+    });
+
+    // --- Initial Load ---
+    loadInitialData();
+}
+
+</script>
+</body>
+</html>
