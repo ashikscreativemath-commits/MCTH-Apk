@@ -34,19 +34,83 @@
         body[data-theme='dark'] #center-watermark { filter: brightness(0) invert(1); }
         
         /* Login Page Styles */
-        #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: var(--bg-main); }
-        .login-box { background-color: var(--bg-section); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color); }
-        .login-logo { width: 100px; height: 100px; margin: 0 auto 40px; }
-        .login-box h1 { color: var(--text-primary); font-size: 1.8em; margin-bottom: 25px; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group input { width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em; background-color: var(--bg-input, #fff); color: var(--text-primary); box-sizing: border-box; }
+        #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
+        .login-box { background-color: var(--bg-section); padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color); }
+        .login-logo { width: 80px; height: 80px; margin: 0 auto 15px; }
+        .login-box h1 { font-size: 1.5em; margin-bottom: 20px; }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input, #fff); color: var(--text-primary); box-sizing: border-box; }
         .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
         .login-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
-        .login-button { width: 100%; padding: 15px; border: none; border-radius: 8px; background-color: var(--accent-color); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s, transform 0.1s ease; }
+        .login-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--accent-color); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
         .login-button:hover { background-color: var(--accent-color-dark); }
         #login-error-msg { color: var(--danger-color); margin-top: 15px; min-height: 20px; font-weight: bold; }
         #app-container.hidden { display: none; }
-        .login-footer { margin-top: 30px; font-size: 0.85em; color: var(--text-secondary); }
+        
+        /* -- NEW LOGIN FOOTER STYLES (FROM INDEX.HTML) -- */
+        .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
+        .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
+        .developer-box {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            background-color: var(--bg-main);
+        }
+        .login-footer .developed-by-text {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .company-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .company-text {
+            text-align: left;
+            line-height: 1.5;
+        }
+        .company-text strong {
+            font-size: 1.2em;
+            color: var(--text-primary);
+        }
+        .company-text small {
+            font-size: 0.9em;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+        .social-icons a {
+            display: inline-block;
+            color: var(--text-secondary);
+            transition: color 0.3s, transform 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        .social-icons svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+        .login-footer .instruction-text {
+            font-size: 0.8em;
+            font-style: italic;
+            margin-top: 12px;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+        /* -- END OF NEW LOGIN FOOTER STYLES -- */
         
         /* Main App Header Styles */
         .branding-tag-wrapper { display: flex; align-items: center; background-color: var(--bg-header); color: var(--text-primary); padding: 0 15px; border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); gap: 5px; position: sticky; top: 0; z-index: 1000; }
@@ -65,7 +129,7 @@
         .header-right-controls { margin-left: auto; display: flex; align-items: center; gap: 15px; }
         #year-management-controls { display: flex; align-items: center; gap: 12px; visibility: hidden; }
         #yearSelector { padding: 7px 15px; border-radius: 20px; border: 1px solid #5a6a7e; background-color: #334257; color: #e8eaed; font-weight: bold; font-size: 0.9em; cursor: pointer; -webkit-appearance: none; appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat; background-position: right 10px top 50%; padding-right: 35px; transition: all 0.25s ease-in-out; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         #sms-credit-display { background: linear-gradient(45deg, var(--special-color), #4a86e8); color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; position: relative; }
         #sms-credit-display.low-credit { background: linear-gradient(45deg, var(--danger-color), var(--warning-color)); animation: pulse 1.5s infinite; }
@@ -181,10 +245,30 @@
                 <button type="submit" class="login-button">Login to Panel</button>
                 <div id="login-error-msg"></div>
             </form>
-             <div class="login-footer">
-                Developed by: Abdullah Al Rafi<br>
-                Mail: rafiofficialpc@gmail.com<br><br>
-                &copy; All Rights Reserved by Math Creative Teaching Home 2025
+            <div class="login-footer">
+                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2025</p>
+                <div class="developer-box">
+                    <p class="developed-by-text">Developed by,</p>
+                    <div class="company-info">
+                        <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
+                        <div class="company-text">
+                            <strong>বিন্দুমাত্রা আইটি</strong><br>
+                            <small>CEO : Abdullah Al Rafi (BZS 26)</small>
+                        </div>
+                    </div>
+                    <div class="social-icons">
+                        <a href="mailto:rafiofficialpc@gmail.com" title="Email Abdullah Al Rafi" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg>
+                        </a>
+                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg>
+                        </a>
+                    </div>
+                    <p class="instruction-text">click the icons to visit</p>
+                </div>
             </div>
         </div>
     </div>
@@ -438,7 +522,7 @@
                 <div class="footer-socials">
                     <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg><span>01745938158</span></a>
                     <a href="https://www.facebook.com/abdullahalrafi13" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"></path></svg><span>abdullahalrafi13</span></a>
-                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75.52.204 1.1.384 1.685.43 1.02.046 1.344.06 3.96.06s2.94-.014 3.96-.06c1.01-.05 1.58-.212 1.685-.43.47-.18.86-.41 1.2-.75.34-.34.57.73.75-1.2.218-.52.38-1.1.43-1.685.046-1.02.06-1.344.06-3.96s-.014-2.94-.06-3.96c-.05-1.01-.212-1.58-.43-1.685-.18-.47-.41-.86-.75-1.2-.34-.34-.73-.57-1.2-.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg><span>abdullah_al.rafi</span></a>
+                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg><span>abdullah_al.rafi</span></a>
                 </div>
                 <div class="footer-contact">
                     <a href="mailto:rafiofficialpc@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>rafiofficialpc@gmail.com</span></a>
