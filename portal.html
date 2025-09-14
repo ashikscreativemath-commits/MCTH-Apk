@@ -21,7 +21,6 @@
           src: url('fonts/kalpurush.ttf') format('truetype');
         }
         :root {
-            /* Theme from index.html for consistency */
             --bg-main: #f0f2f5; --bg-section: #ffffff; --bg-header: #1f2b38; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --border-color: #dee2e6; --border-accent: #007bff; --paid-color: #d1e7dd; --due-color: #f8d7da; --paid-text: #0f5132; --due-text: #842029; --future-text: #6c757d;
             --toast-success-bg: #28a745; --toast-error-bg: #dc3545; --toast-info-bg: #17a2b8; --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05); --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.1); --danger-color: #dc3545; --success-color: #198754; --warning-color: #ffc107; --bg-hover: #e9ecef;
         }
@@ -42,7 +41,6 @@
         .input-group { position: relative; margin-bottom: 15px; }
         .input-group input, .input-group select { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input, #fff); color: var(--text-primary); box-sizing: border-box; }
         .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
-        .auth-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
         .auth-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background: linear-gradient(45deg, var(--border-accent), #0056b3); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s; }
         .auth-button:hover:not(:disabled) { box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4); transform: translateY(-2px); }
         .auth-button:disabled { background: #ccc; cursor: not-allowed; }
@@ -64,22 +62,6 @@
         .roll-box.selected { background-color: var(--border-accent); color: white; border-color: var(--border-accent); }
         .password-strength { font-size: 0.8em; margin-top: 5px; text-align: left; }
         #lockout-message { background-color: var(--due-color); color: var(--due-text); padding: 10px; border-radius: 6px; }
-
-        /* Login Footer (Updated) */
-        .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
-        .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
-        .developer-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background-color: var(--bg-main); }
-        .login-footer .developed-by-text { margin-bottom: 8px; font-size: 1.1em; }
-        .company-info { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 15px; }
-        .company-logo { width: 40px; height: 40px; object-fit: contain; }
-        .company-text { text-align: left; line-height: 1.5; }
-        .company-text strong { font-size: 1.2em; color: var(--text-primary); }
-        .company-text small { font-size: 0.9em; }
-        .social-icons { display: flex; justify-content: center; gap: 20px; align-items: center; }
-        .social-icons a { display: inline-block; color: var(--text-secondary); transition: color 0.3s, transform 0.3s; }
-        .social-icons a:hover { color: var(--border-accent); transform: scale(1.1); }
-        .social-icons svg { width: 28px; height: 28px; fill: currentColor; }
-        .login-footer .instruction-text { font-size: 0.8em; font-style: italic; margin-top: 12px; margin-bottom: 0; color: var(--text-secondary); }
 
         /* Main App Styles */
         #app-container { display: flex; flex-direction: column; min-height: 100vh; position: relative; }
@@ -173,7 +155,7 @@
                         <span id="password-toggle" class="password-toggle-icon">👁️</span>
                     </div>
                     <div id="login-profile-confirmation" class="hidden" style="margin-bottom: 20px; animation: fadeIn 0.5s;">
-                        <img id="login-profile-pic" src="images/default_avatar.png" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;" onerror="this.onerror=null; this.src='images/default_avatar.png';">
+                        <img id="login-profile-pic" src="images/default_avatar.png" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;" onerror="this.src='images/default_avatar.png'">
                         <h3 id="login-profile-name" style="margin: 0; font-size: 1.2em;"></h3>
                     </div>
                     <div class="auth-options"><label style="display: flex; align-items: center; gap: 5px; cursor: pointer;"><input type="checkbox" id="remember-me"> আমাকে মনে রাখুন</label></div>
@@ -209,7 +191,7 @@
                         <button type="button" id="btn-next-step-4" class="auth-button" style="margin-top: 15px;">পরবর্তী ধাপ</button>
                     </div>
                     <div id="step-5" class="signup-step hidden">
-                        <p class="step-title"> চূড়ান্ত যাচাইকরণ</p>
+                        <p class="step-title">চূড়ান্ত যাচাইকরণ</p>
                          <div class="input-group"><input type="text" id="signup-trxid" name="signup-trxid" placeholder="ভর্তি ফি-এর Transaction ID লিখুন" required disabled></div>
                         <button type="button" id="btn-verify" class="auth-button">যাচাই করুন</button>
                     </div>
@@ -225,7 +207,6 @@
                 <div id="lockout-message" class="hidden"></div>
                 <p class="auth-link">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" id="show-login">এখানে লগইন করুন</a></p>
             </div>
-            <!-- Footer -->
             <div class="login-footer">
                 <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2025</p>
                 <div class="developer-box">
@@ -236,11 +217,6 @@
                             <strong>বিন্দুমাত্রা আইটি</strong><br>
                             <small>CEO : Abdullah Al Rafi (BZS 26)</small>
                         </div>
-                    </div>
-                    <div class="social-icons">
-                         <a href="mailto:rafiofficialpc@gmail.com" title="Email Abdullah Al Rafi" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
-                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg></a>
-                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg></a>
                     </div>
                 </div>
             </div>
@@ -305,7 +281,7 @@
 
     <template id="template-profile">
         <div class="page-section" style="text-align: center;">
-            <img id="profile-page-pic" src="images/default_avatar.png" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--border-color); object-fit: cover; box-shadow: var(--shadow-md);" alt="Profile" onerror="this.onerror=null; this.src='images/default_avatar.png';">
+            <img id="profile-page-pic" src="images/default_avatar.png" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--border-color); object-fit: cover; box-shadow: var(--shadow-md);" alt="Profile" onerror="this.src='images/default_avatar.png'">
             <h2 id="profile-page-name" style="margin-top: 15px; font-size: 1.8em;"></h2>
             <p style="background-color: var(--bg-hover); padding: 5px 10px; border-radius: 20px; display: inline-block; font-size: 0.9em;"><strong>Student ID:</strong> <span id="profile-student-id"></span></p>
         </div>
@@ -488,42 +464,26 @@ document.addEventListener('DOMContentLoaded', () => {
             await firebase.auth().signInAnonymously();
             const snapshot = await studentAuthRef.orderByChild('contact').equalTo(contact).once('value');
 
-            if (!snapshot.exists()) {
-                errorMsgDiv.textContent = 'এই মোবাইল নম্বর দিয়ে কোনো অ্যাকাউন্ট নেই।';
-                return;
-            }
+            if (!snapshot.exists()) { errorMsgDiv.textContent = 'এই মোবাইল নম্বর দিয়ে কোনো অ্যাকাউন্ট নেই।'; return; }
 
             const studentAuthData = Object.values(snapshot.val())[0];
             if (studentAuthData.password === password) {
-                const yearSnapshot = await academicYearsRef.child(studentAuthData.academicYear).child('data').once('value');
-                if(!yearSnapshot.exists()){
-                    errorMsgDiv.textContent = 'ছাত্রের তথ্য খুঁজে পাওয়া যায়নি।';
-                    return;
-                }
-                const allStudentsInYear = yearSnapshot.val().students || [];
-                const studentProfile = allStudentsInYear.find(s => s && s.id === studentAuthData.studentId);
+                const studentProfileSnapshot = await academicYearsRef.child(`${studentAuthData.academicYear}/data/students`).child(studentAuthData.studentId).once('value');
+                if(!studentProfileSnapshot.exists()) { errorMsgDiv.textContent = 'ছাত্রের প্রোফাইল খুঁজে পাওয়া যায়নি। অফিসে যোগাযোগ করুন।'; return; }
                 
-                if (!studentProfile) {
-                     errorMsgDiv.textContent = 'ছাত্রের প্রোফাইল খুঁজে পাওয়া যায়নি। অফিসে যোগাযোগ করুন।';
-                     return;
-                }
-
+                const studentProfile = studentProfileSnapshot.val();
                 loginAttemptStudentData = { ...studentProfile, academicYear: studentAuthData.academicYear };
                 
-                const profilePic = document.getElementById('login-profile-pic');
-                profilePic.src = loginAttemptStudentData.photoURL || 'images/default_avatar.png';
-                profilePic.onerror = () => { profilePic.onerror = null; profilePic.src = 'images/default_avatar.png'; };
+                document.getElementById('login-profile-pic').src = loginAttemptStudentData.photoURL || 'images/default_avatar.png';
+                document.getElementById('login-profile-pic').onerror = () => { document.getElementById('login-profile-pic').src = 'images/default_avatar.png' };
                 document.getElementById('login-profile-name').textContent = `স্বাগতম, ${loginAttemptStudentData.name}`;
                 profileConfirmDiv.classList.remove('hidden');
                 document.querySelector('#login-form button[type="submit"]').textContent = 'প্রবেশ করুন';
                 
-            } else {
-                errorMsgDiv.textContent = 'পাসওয়ার্ড সঠিক নয়।';
-            }
+            } else { errorMsgDiv.textContent = 'পাসওয়ার্ড সঠিক নয়।'; }
         } catch (error) { console.error("Login error:", error); errorMsgDiv.textContent = 'লগইন করার সময় একটি সমস্যা হয়েছে।'; } 
         finally { hideLoader(); }
     });
-
 
     // --- Signup Logic ---
     let signupData = { allYearsData: {}, potentialStudents: [], selectedStudent: null, lockoutData: JSON.parse(localStorage.getItem('mcth_signup_lockout') || '{}') };
@@ -1049,6 +1009,8 @@ function initializeAppLogic(studentData) {
             
             const studentBatches = (fullAcademicData.batchSchedule || []).flatMap(d => (d.classes || []).flatMap(c => (c.batches || []).filter(b => (b.studentIds || []).includes(studentData.id)).map(b => b.id)));
             const batchParticipants = Object.keys(exam.results).filter(id => {
+                const participant = (fullAcademicData.students || []).find(s => s.id === id);
+                if(!participant) return false;
                 const participantBatches = (fullAcademicData.batchSchedule || []).flatMap(d => (d.classes || []).flatMap(c => (c.batches || []).filter(b => (b.studentIds || []).includes(id)).map(b => b.id)));
                 return studentBatches.some(b => participantBatches.includes(b));
             });
@@ -1083,6 +1045,7 @@ function initializeAppLogic(studentData) {
             }
         });
 
+        // Render chart if there's data
         if(chartLabels.length > 0) {
             chartContainer.style.display = 'block';
             new Chart(document.getElementById('examPerformanceChart'), {
@@ -1117,14 +1080,14 @@ function initializeAppLogic(studentData) {
         const overdue = [];
         for (let i = 0; i < 12; i++) {
             const monthDate = new Date(studentData.academicYear, i, 1);
-            if (monthDate < new Date(new Date(studentData.createdAt).getFullYear(), new Date(studentData.createdAt).getMonth(), 1)) continue;
+            if (monthDate < new Date(studentData.createdAt).setMonth(new Date(studentData.createdAt).getMonth(), 1)) continue;
             const payment = studentData.monthlyPayments?.[BENGALI_MONTHS[i]];
             const isDueMonth = new Date() > new Date(studentData.academicYear, i, 10);
             if (isDueMonth && (!payment || payment.status !== 'paid')) {
                 overdue.push(BENGALI_MONTHS[i]);
             }
         }
-        return overdue.join(', ') || 'কোনো বকেয়া নেই';
+        return overdue.join(', ');
     }
 
     // --- Event Listeners ---
