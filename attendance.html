@@ -1446,8 +1446,13 @@ function initializeAppLogic() {
             document.getElementById('stat-avg-students').textContent = data.avgStudents;
             document.getElementById('topPresentersList').innerHTML = data.topPresenters.map(s => `<li><div class="list-student-photo">${s.photoURL ? `<img src="${s.photoURL}" alt="${s.name}" onerror="this.onerror=null; this.parentElement.innerHTML = getStudentPhotoPlaceholder();">` : getStudentPhotoPlaceholder()}</div><span class="name">${s.roll}. ${s.name}</span> <span class="stat">${s.present} days</span></li>`).join('');
             document.getElementById('topAbsenteesList').innerHTML = data.topAbsentees.map(s => `<li><div class="list-student-photo">${s.photoURL ? `<img src="${s.photoURL}" alt="${s.name}" onerror="this.onerror=null; this.parentElement.innerHTML = getStudentPhotoPlaceholder();">` : getStudentPhotoPlaceholder()}</div><span class="name">${s.roll}. ${s.name}</span> <span class="stat">${s.absent} days</span></li>`).join('');
+            
             const chartTextColor = getComputedStyle(document.body).getPropertyValue('--text-primary');
-            charts.overall = new Chart(document.getElementById('overallAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.totalPresents, data.totalAbsents], backgroundColor: ['var(--success-color)', 'var(--danger-color)'], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } });
+            // === FIX START ===
+            const successColor = getComputedStyle(document.body).getPropertyValue('--success-color').trim();
+            const dangerColor = getComputedStyle(document.body).getPropertyValue('--danger-color').trim();
+            charts.overall = new Chart(document.getElementById('overallAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.totalPresents, data.totalAbsents], backgroundColor: [successColor, dangerColor], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } });
+            // === FIX END ===
             charts.trend = new Chart(document.getElementById('attendanceTrendChart'), { type: 'line', data: { datasets: [{ label: 'Attendance %', data: data.trendData, borderColor: 'var(--special-color)', tension: 0.1, fill: false }]}, options: { responsive: true, scales: { x: { type: 'time', time: { unit: 'day' }, ticks: { color: chartTextColor } }, y: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } } }, plugins: { legend: { labels: { color: chartTextColor } } } } });
             charts.dayWise = new Chart(document.getElementById('dayWiseChart'), { type: 'bar', data: { labels: data.dayLabels, datasets: [{ label: 'Avg. Attendance %', data: data.dayData, backgroundColor: 'var(--accent-color)' }] }, options: { responsive: true, scales: { y: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } }, x: { ticks: { color: chartTextColor } } }, plugins: { legend: { display: false } } } });
         }, 10);
@@ -1515,7 +1520,11 @@ function initializeAppLogic() {
         document.getElementById('stat-student-absent').textContent = data.absentCount;
         
         const chartTextColor = getComputedStyle(document.body).getPropertyValue('--text-primary');
-        
+        // === FIX START ===
+        const successColor = getComputedStyle(document.body).getPropertyValue('--success-color').trim();
+        const dangerColor = getComputedStyle(document.body).getPropertyValue('--danger-color').trim();
+        // === FIX END ===
+
         let currentDate = new Date();
         const renderCalendar = (date) => {
             const month = date.getMonth(), year = date.getFullYear();
@@ -1539,7 +1548,9 @@ function initializeAppLogic() {
         document.getElementById('nextMonthBtn').onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(currentDate); };
         renderCalendar(currentDate);
 
-        charts.personal = new Chart(document.getElementById('personalAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.presentCount, data.absentCount], backgroundColor: ['var(--success-color)', 'var(--danger-color)'], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } });
+        // === FIX START ===
+        charts.personal = new Chart(document.getElementById('personalAttendanceChart'), { type: 'doughnut', data: { labels: ['Present', 'Absent'], datasets: [{ data: [data.presentCount, data.absentCount], backgroundColor: [successColor, dangerColor], borderColor: 'var(--bg-section)', borderWidth: 4 }] }, options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: chartTextColor } } } } });
+        // === FIX END ===
         charts.comparison = new Chart(document.getElementById('comparisonChart'), { type: 'bar', data: { labels: ['Student', 'Batch Avg.'], datasets: [{ label: 'Attendance %', data: [data.studentPercentage, data.overallBatchAvg], backgroundColor: ['var(--special-color)', 'var(--accent-color)'] }] }, options: { responsive: true, indexAxis: 'y', scales: { x: { beginAtZero: true, max: 100, ticks: { color: chartTextColor, callback: val => val + '%' } }, y: { ticks: { color: chartTextColor }}}, plugins: { legend: { display: false } } } });
         charts.absencePattern = new Chart(document.getElementById('studentDayAbsenceChart'), { type: 'bar', data: { labels: data.dayLabels, datasets: [{ label: 'Days Absent', data: data.dayData, backgroundColor: 'var(--danger-color)' }] }, options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: chartTextColor } }, x: { ticks: { color: chartTextColor }} }, plugins: { legend: { display: false } } } });
     }
