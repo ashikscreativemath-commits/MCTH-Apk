@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন - লটারি ড্যাশবোর্ড</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <style>
+        /* portal.html থেকে স্টাইলগুলো এখানে কপি করে নিন অথবা একটি مشترکہ CSS ফাইল ব্যবহার করুন */
+        /* আমি কিছু বেসিক স্টাইল দিয়ে দিচ্ছি */
+        :root {
+            --bg-main: #f4f6f9; --bg-section: #ffffff; --bg-header: #1f2b38; --text-primary: #212529; --text-secondary: #6c757d; --text-header: #ffffff; --border-color: #dee2e6; --border-accent: #007bff; --special-color: #6f42c1;
+        }
+        body { font-family: 'Kalpurush', sans-serif; margin: 0; background-color: var(--bg-main); color: var(--text-primary); }
+        header { background-color: var(--bg-header); color: var(--text-header); padding: 15px; text-align: center; }
+        main { padding: 15px; }
+        .page-section { background-color: var(--bg-section); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        select, input { padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid var(--border-color); text-align: left; }
+        th { background-color: var(--bg-main); }
+        .winner-card { background-color: var(--special-color); color: white; padding: 10px; border-radius: 6px; margin-top: 5px; }
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--border-accent);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+    <div id="loader-overlay"><div class="loader"></div></div>
+    
+    <header>
+        <h1>লটারি ড্যাশবোর্ড (অ্যাডমিন)</h1>
+    </header>
+
+    <main>
+        <div class="page-section">
+            <div class="filters">
+                <select id="year-filter"></select>
+                <select id="class-filter" disabled><option value="">সকল ক্লাস</option></select>
+                <select id="batch-filter" disabled><option value="">সকল ব্যাচ</option></select>
+            </div>
+        </div>
+        <div class="page-section" id="lottery-results-container">
+            <p>অনুগ্রহ করে শিক্ষাবর্ষ এবং ব্যাচ নির্বাচন করুন।</p>
+        </div>
+    </main>
+    
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBE0xJ1nvqSj6a9bXtrtrNTDh0bu7PMLnw",
+        authDomain: "math-creative-teaching-h-a86fd.firebaseapp.com",
+        projectId: "math-creative-teaching-h-a86fd",
+        databaseURL: "https://math-creative-teaching-h-a86fd-default-rtdb.asia-southeast1.firebasedatabase.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const academicYearsRef = db.ref('academicYears');
+    const BENGALI_MONTHS = ["জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন", "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"];
+
+    const loader = document.getElementById('loader-overlay');
+    const yearFilter = document.getElementById('year-filter');
+    const classFilter = document.getElementById('class-filter');
+    const batchFilter = document.getElementById('batch-filter');
+    const resultsContainer = document.getElementById('lottery-results-container');
+    let allData = {};
+
+    async function initialize() {
+        loader.style.display = 'flex';
+        await firebase.auth().signInAnonymously();
+        const snapshot = await academicYearsRef.once('value');
+        allData = snapshot.val();
+        
+        Object.keys(allData).sort((a,b) => b-a).forEach(year => {
+            const option = new Option(year, year);
+            yearFilter.add(option);
+        });
+        
+        yearFilter.addEventListener('change', populateClassFilter);
+        classFilter.addEventListener('change', populateBatchFilter);
+        batchFilter.addEventListener('change', renderResults);
+        
+        populateClassFilter();
+        loader.style.display = 'none';
+    }
+
+    function populateClassFilter() {
+        const year = yearFilter.value;
+        classFilter.innerHTML = '<option value="">সকল ক্লাস</option>';
+        batchFilter.innerHTML = '<option value="">সকল ব্যাচ</option>';
+        batchFilter.disabled = true;
+        resultsContainer.innerHTML = '<p>অনুগ্রহ করে একটি ক্লাস ও ব্যাচ নির্বাচন করুন।</p>';
+
+        const classes = (allData[year]?.data?.mainClassCategories || []).filter(c => c && !c.deletedAt);
+        if(classes.length > 0) {
+            classes.forEach(c => classFilter.add(new Option(c.name, c.id)));
+            classFilter.disabled = false;
+        }
+    }
+
+    function populateBatchFilter() {
+        const year = yearFilter.value;
+        const classId = classFilter.value;
+        batchFilter.innerHTML = '<option value="">সকল ব্যাচ</option>';
+        resultsContainer.innerHTML = '<p>অনুগ্রহ করে একটি ব্যাচ নির্বাচন করুন।</p>';
+
+        if (!classId) {
+            batchFilter.disabled = true;
+            return;
+        }
+        
+        const batches = [];
+        (allData[year]?.data?.batchSchedule || []).filter(d => d && !d.deletedAt).forEach(day => {
+            (day.classes || []).filter(c => c && !c.deletedAt && c.classId === classId).forEach(cs => {
+                (cs.batches || []).filter(b => b && !b.deletedAt).forEach(batch => {
+                    batches.push({ id: batch.id, name: `${day.dayName} (${batch.time})` });
+                });
+            });
+        });
+
+        if(batches.length > 0) {
+            [...new Map(batches.map(item => [item.id, item])).values()].forEach(b => batchFilter.add(new Option(b.name, b.id)));
+            batchFilter.disabled = false;
+        }
+    }
+
+    async function renderResults() {
+        const year = yearFilter.value;
+        const batchId = batchFilter.value;
+
+        if (!batchId) {
+            resultsContainer.innerHTML = '<p>অনুগ্রহ করে একটি ব্যাচ নির্বাচন করুন।</p>';
+            return;
+        }
+        
+        loader.style.display = 'flex';
+        resultsContainer.innerHTML = '';
+        const lotteryResults = allData[year]?.data?.lotteryResults || {};
+        
+        for (let i = 0; i < 11; i++) { // Jan to Nov
+            const month = BENGALI_MONTHS[i];
+            const monthResult = lotteryResults[month]?.[batchId];
+            
+            const monthDiv = document.createElement('div');
+            monthDiv.className = 'page-section';
+            
+            let content = `<h3>${month}</h3>`;
+            if (monthResult) {
+                content += `
+                    <div class="winner-card"><strong>১ম:</strong> ${monthResult.first.name} (রোল: ${monthResult.first.roll})</div>
+                    <div class="winner-card"><strong>২য়:</strong> ${monthResult.second.name} (রোল: ${monthResult.second.roll})</div>
+                    <div class="winner-card"><strong>৩য়:</strong> ${monthResult.third.name} (রোল: ${monthResult.third.roll})</div>
+                `;
+            } else {
+                content += `<p>এই মাসের লটারি এখনো অনুষ্ঠিত হয়নি বা কোনো ফলাফল পাওয়া যায়নি।</p>`;
+            }
+            monthDiv.innerHTML = content;
+            resultsContainer.appendChild(monthDiv);
+        }
+        loader.style.display = 'none';
+    }
+
+    initialize();
+</script>
+</body>
+</html>
