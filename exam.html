@@ -674,7 +674,6 @@ function initializeAppLogic() {
         currentOlympiadId = null; currentExamId = null; currentSeriesExamId = null;
         mainContainer.innerHTML = '';
         mainContainer.appendChild(document.getElementById('template-main-view').content.cloneNode(true));
-        setupAppEventListeners();
         renderExamTabs();
     };
     
@@ -745,12 +744,24 @@ function initializeAppLogic() {
     function handleSaveExam(e){
         e.preventDefault();
         const modal = document.getElementById('createExamModal');
+        /* === FIX START === */
+        const submitBtn = modal.querySelector('#examModalSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+        /* === FIX END === */
+        
         const examId = modal.querySelector('#examIdInput').value;
         const name = modal.querySelector('#examNameInput').value.trim();
         const date = modal.querySelector('#examDateInput').value;
         const totalMarks = modal.querySelector('#examTotalMarksInput').value;
         
-        if (!name || !date || !totalMarks) return showToast("Please fill all required fields.", 'error');
+        if (!name || !date || !totalMarks) {
+            /* === FIX START === */
+            submitBtn.disabled = false;
+            submitBtn.textContent = examId ? 'Save Changes' : 'পরীক্ষা তৈরি করুন';
+            /* === FIX END === */
+            return showToast("Please fill all required fields.", 'error');
+        }
 
         const examData = { name, date, totalMarks: parseInt(totalMarks) };
         showLoader();
@@ -762,6 +773,10 @@ function initializeAppLogic() {
             const selectedBatches = [...modal.querySelectorAll('input[name="selectedBatches"]:checked')].map(e => e.value);
             if (selectedBatches.length === 0) {
                 hideLoader();
+                 /* === FIX START === */
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'পরীক্ষা তৈরি করুন';
+                /* === FIX END === */
                 return showToast("Please select at least one batch.", 'error');
             }
             examData.selectedBatches = selectedBatches;
@@ -777,6 +792,10 @@ function initializeAppLogic() {
             showToast(`Error: ${err.message}`, 'error');
         }).finally(() => {
             hideLoader();
+            /* === FIX START === */
+            submitBtn.disabled = false;
+            submitBtn.textContent = examId ? 'Save Changes' : 'পরীক্ষা তৈরি করুন';
+            /* === FIX END === */
         });
     }
     
@@ -929,6 +948,10 @@ function initializeAppLogic() {
     // --- Initial Load ---
     applyTheme(localStorage.getItem('examAppTheme') || 'light');
     setupHeaderEventListeners();
+    /* === FIX START === */
+    // This function is now called only ONCE during initialization to prevent multiple event listeners.
+    setupAppEventListeners();
+    /* === FIX END === */
     
     db.ref('systemSettings/activeYear').once('value').then(snapshot => {
         activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear();

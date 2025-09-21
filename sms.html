@@ -47,7 +47,6 @@
         #login-error-msg { color: var(--danger-color); margin-top: 15px; min-height: 20px; font-weight: bold; }
         #app-container.hidden { display: none; }
         
-        /* -- NEW LOGIN FOOTER STYLES (FROM INDEX.HTML) -- */
         .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
         .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
         .developer-box {
@@ -110,7 +109,6 @@
             margin-bottom: 0;
             color: var(--text-secondary);
         }
-        /* -- END OF NEW LOGIN FOOTER STYLES -- */
         
         /* Main App Header Styles */
         .branding-tag-wrapper { display: flex; align-items: center; background-color: var(--bg-header); color: var(--text-primary); padding: 0 15px; border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); gap: 5px; position: sticky; top: 0; z-index: 1000; }
@@ -148,18 +146,38 @@
         /* Two-column layout */
         .sms-layout-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
         .control-panel { display: flex; flex-direction: column; gap: 20px; }
-        .sent-box-panel .panel-header { display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .sent-box-panel .panel-header h3 { margin: 0; }
-        .panel-header .filters { display: flex; gap: 10px; align-items: center; }
-        .panel-header .filters select { padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--bg-main); color: var(--text-primary); }
-        .sent-box-list, .pending-box-list { max-height: 250px; overflow-y: auto; padding-right: 10px; }
-        .sent-item, .pending-item { background-color: var(--bg-main); padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid var(--accent-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-        .sent-item:hover, .pending-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-        .sent-item.due-reminder, .pending-item.due-reminder { border-left-color: var(--danger-color); }
-        .sent-item-header, .pending-item-header { display: flex; justify-content: space-between; font-size: 0.9em; color: var(--text-secondary); margin-bottom: 8px; }
-        .sent-item-body p, .pending-item-body p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .pending-item { border-left-color: var(--warning-color); display:flex; align-items:center; gap: 10px; }
-        .pending-item-content { flex-grow: 1; }
+        
+        /* NEW Box View Styles */
+        .box-view-container { display: flex; flex-direction: column; gap: 20px; }
+        .box-button {
+            padding: 25px; text-align: center; font-size: 1.3em; font-weight: bold;
+            border-radius: 12px; cursor: pointer; transition: all 0.2s ease-in-out;
+            position: relative; border: 2px solid;
+        }
+        .box-button:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .box-button .count-badge {
+            position: absolute; top: 10px; right: 10px; background-color: var(--danger-color);
+            color: white; border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;
+        }
+        .box-button.pending { background-color: var(--bg-main); color: var(--warning-color); border-color: var(--warning-color);}
+        .box-button.sent { background-color: var(--bg-main); color: var(--success-color); border-color: var(--success-color); }
+        .box-button.sent .count-badge { background-color: var(--success-color); }
+        
+        .box-list-view { display: none; /* Initially hidden */ }
+        .box-list-header { display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .box-list-header h3 { margin: 0; }
+        .filters { display: flex; gap: 10px; align-items: center; }
+        .filters select { padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--bg-main); color: var(--text-primary); }
+        .box-list { max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .list-item { background-color: var(--bg-main); padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .list-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .list-item.pending { border-left-color: var(--warning-color); }
+        .list-item.sent { border-left-color: var(--success-color); }
+        .list-item-header { display: flex; justify-content: space-between; font-size: 0.9em; color: var(--text-secondary); margin-bottom: 8px; }
+        .list-item-body p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-item { display:flex; align-items:center; gap: 10px; }
+        .list-item-content { flex-grow: 1; }
         .select-all-container { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
         .select-all-container label { font-weight: bold; }
 
@@ -217,7 +235,7 @@
 
         @media (max-width: 900px) {
             .sms-layout-grid { grid-template-columns: 1fr; }
-            .sent-box-panel { margin-top: 25px; }
+            .sent-box-panel, .box-view-container { margin-top: 25px; }
             .branding-tag-wrapper { flex-wrap: wrap; }
             .header-right-controls { width: 100%; justify-content: center; order: -1; margin: 0 0 10px 0; }
             .branding-center { position: static; transform: none; width: 100%; order: -2; padding-bottom: 10px;}
@@ -246,18 +264,18 @@
                 <div id="login-error-msg"></div>
             </form>
             <div class="login-footer">
-                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2025</p>
+                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2026</p>
                 <div class="developer-box">
                     <p class="developed-by-text">Developed by,</p>
                     <div class="company-info">
                         <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
                         <div class="company-text">
                             <strong>বিন্দুমাত্রা আইটি</strong><br>
-                            <small>CEO : Abdullah Al Rafi (BZS 26)</small>
+                            <small>CEO : Abdullah Al Rafi </small>
                         </div>
                     </div>
                     <div class="social-icons">
-                        <a href="mailto:rafiofficialpc@gmail.com" title="Email Abdullah Al Rafi" target="_blank">
+                        <a href="mailto:bindumatrait@gmail.com" title="Email Abdullah Al Rafi" target="_blank">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                         </a>
                         <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank">
@@ -286,7 +304,6 @@
                     <hr style="margin: 5px 0; border-top: 1px solid var(--border-color)">
                     <button id="btnToggleTheme"><span>Change Theme</span><span id="themeIcon"></span></button>
                     <button id="btnAboutDev"><span>About Developer</span></button>
-                    <!-- NEW: Clear Data Button -->
                     <button id="btnClearData"><span>⚠️ Clear SMS Data</span></button>
                     <hr style="margin: 5px 0; border-top: 1px solid var(--border-color)">
                     <button id="btnLogout"><span>Logout</span></button>
@@ -339,24 +356,8 @@
 গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
                             </div>
                         </div>
-                        <div class="sent-box-panel">
-                             <div class="panel-header">
-                                <h3>Pending Box</h3>
-                                <div>
-                                    <button class="btn-danger btn-sm" data-action="delete-selected" data-type="attendance">Delete</button>
-                                    <button class="btn-primary btn-sm" data-action="send-selected" data-type="attendance">Send</button>
-                                </div>
-                            </div>
-                            <div class="select-all-container">
-                                <label><input type="checkbox" class="select-all-checkbox" data-type="attendance"> Select All</label>
-                            </div>
-                            <div id="attendance-pending-box" class="pending-box-list"></div>
-                            <hr style="margin: 20px 0;">
-                            <div class="panel-header">
-                                <h3>Sent Box</h3>
-                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="attendance">Clear Sent Box</button>
-                            </div>
-                            <div id="attendance-sent-box" class="sent-box-list"></div>
+                        <div id="attendance-box-container">
+                            <!-- This will be populated by JS -->
                         </div>
                     </div>
                 </div>
@@ -381,24 +382,8 @@
 গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
                             </div>
                         </div>
-                        <div class="sent-box-panel">
-                            <div class="panel-header">
-                                <h3>Pending Box</h3>
-                                <div>
-                                    <button class="btn-danger btn-sm" data-action="delete-selected" data-type="payment">Delete</button>
-                                    <button class="btn-primary btn-sm" data-action="send-selected" data-type="payment">Send</button>
-                                </div>
-                            </div>
-                             <div class="select-all-container">
-                                <label><input type="checkbox" class="select-all-checkbox" data-type="payment"> Select All</label>
-                            </div>
-                            <div id="payment-pending-box" class="pending-box-list"></div>
-                            <hr style="margin: 20px 0;">
-                             <div class="panel-header">
-                                <h3>Sent Box</h3>
-                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="payment">Clear Sent Box</button>
-                            </div>
-                            <div id="payment-sent-box" class="sent-box-list"></div>
+                        <div id="payment-box-container">
+                             <!-- This will be populated by JS -->
                         </div>
                     </div>
                 </div>
@@ -425,12 +410,14 @@
                             <hr>
                             <button id="send-due-reminders-now-btn" class="btn-danger" style="width: 100%;">Send Due Reminders Manually to All (This Year)</button>
                         </div>
-                        <div class="sent-box-panel">
-                            <div class="panel-header">
+                        <div class="box-list-view" id="due-reminder-sent-box-view">
+                            <div class="box-list-header">
                                 <h3>Sent Box (Due Reminders)</h3>
-                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="due-reminder">Clear Sent Box</button>
+                                <div class="filters">
+                                    <button class="btn-danger btn-sm" data-action="clear-sent" data-type="due-reminder">Clear Box</button>
+                                </div>
                             </div>
-                            <div id="due-reminder-sent-box" class="sent-box-list"></div>
+                            <div class="box-list"></div>
                         </div>
                     </div>
                 </div>
@@ -457,12 +444,12 @@
                             </div>
                             <button id="send-exam-sms-btn" class="btn-primary" disabled>Send Result to All Participants</button>
                         </div>
-                         <div class="sent-box-panel">
-                            <div class="panel-header">
+                         <div class="box-list-view" id="exam-sent-box-view">
+                            <div class="box-list-header">
                                 <h3>Sent Box (by Exam)</h3>
-                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="exam">Clear Sent Box</button>
+                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="exam">Clear Box</button>
                             </div>
-                            <div id="exam-sent-box" class="sent-box-list"></div>
+                            <div class="box-list"></div>
                         </div>
                     </div>
                 </div>
@@ -486,30 +473,30 @@
                              </div>
                              <button id="send-custom-sms-btn" class="btn-primary" disabled>Send Notice</button>
                         </div>
-                        <div class="sent-box-panel">
-                             <div class="panel-header">
+                        <div class="box-list-view" id="custom-sent-box-view">
+                             <div class="box-list-header">
                                 <h3>Sent Box (Custom Notices)</h3>
-                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="custom">Clear Sent Box</button>
+                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="custom">Clear Box</button>
                             </div>
-                            <div id="custom-sent-box" class="sent-box-list"></div>
+                            <div class="box-list"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- DRAFTS TAB -->
                 <div id="tab-content-drafts" class="tab-content">
-                    <div class="sent-box-panel">
-                        <div class="panel-header">
+                    <div class="box-list-view" id="drafts-box-view" style="display:block;">
+                        <div class="box-list-header">
                             <h3>Draft Box (Failed to Send)</h3>
-                            <div>
-                                <button class="btn-danger btn-sm" data-action="delete-selected" data-type="drafts">Delete</button>
+                            <div class="filters">
+                                 <button class="btn-danger btn-sm" data-action="delete-selected" data-type="drafts">Delete Selected</button>
                                 <button class="btn-primary btn-sm" data-action="send-selected" data-type="drafts">Retry Sending</button>
                             </div>
                         </div>
                         <div class="select-all-container">
                             <label><input type="checkbox" class="select-all-checkbox" data-type="drafts"> Select All</label>
                         </div>
-                        <div id="drafts-box" class="pending-box-list" style="max-height: 500px;"></div>
+                        <div class="box-list"></div>
                     </div>
                 </div>
             </div>
@@ -517,21 +504,50 @@
 
         <footer class="app-footer">
             <div class="footer-content">
-                <p>© Math Creative Teaching Home 2025</p>
-                <p>Developed by Abdullah Al Rafi</p>
+                <p>© Math Creative Teaching Home 2026</p>
+                <p>Developed by বিন্দুমাত্রা আইটি</p>
                 <div class="footer-socials">
-                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg><span>01745938158</span></a>
-                    <a href="https://www.facebook.com/abdullahalrafi13" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"></path></svg><span>abdullahalrafi13</span></a>
-                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg><span>abdullah_al.rafi</span></a>
+                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg><span>Chat on Whatsapp</span></a>
+                    <a href="https://www.facebook.com/profile.php?id=61580476801857" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"></path></svg><span>Bindumatra IT</span></a>
+                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg><span>Executive Director</span></a>
                 </div>
                 <div class="footer-contact">
-                    <a href="mailto:rafiofficialpc@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>rafiofficialpc@gmail.com</span></a>
+                    <a href="mailto:bindumatrait@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>bindumatrait@gmail.com</span></a>
                 </div>
             </div>
         </footer>
     </div>
     
     <!-- TEMPLATES -->
+    <template id="template-box-view">
+        <div class="box-view-container">
+            <button class="box-button pending">
+                Pending Box <span class="count-badge">0</span>
+            </button>
+            <button class="box-button sent">
+                Sent Box <span class="count-badge">0</span>
+            </button>
+        </div>
+        <div class="box-list-view">
+            <div class="box-list-header">
+                <h3></h3>
+                <div class="filters">
+                    <select class="class-filter"></select>
+                    <select class="batch-filter"></select>
+                    <button class="btn-secondary btn-sm" data-action="back-to-boxes">Back</button>
+                </div>
+            </div>
+            <div class="select-all-container" style="display:none;">
+                <label><input type="checkbox" class="select-all-checkbox"> Select All</label>
+            </div>
+            <div class="box-list"></div>
+            <div class="modal-footer" style="display:none; padding-top: 15px; margin-top: 15px; border-top: 1px solid var(--border-color);">
+                <button class="btn-danger btn-sm" data-action="delete-selected">Delete Selected</button>
+                <button class="btn-primary btn-sm" data-action="send-selected">Send Selected</button>
+            </div>
+        </div>
+    </template>
+
     <template id="template-api-settings-modal">
         <div id="apiSettingsModal" class="modal-overlay">
             <div class="modal-content">
@@ -545,7 +561,7 @@
                     </p>
                     <div class="form-group">
                         <label for="api-base-url-input">Base API URL</label>
-                        <input type="text" id="api-base-url-input" placeholder="e.g., http://bulksmsbd.net/api/smsapi">
+                        <input type="text" id="api-base-url-input" placeholder="e.g., https://api.bdbulksms.net/api.php">
                         <small>URL-এর শেষে `?` (প্রশ্নবোধক চিহ্ন) পর্যন্ত অংশটি দিন। সিস্টেম বাকিটা যোগ করে নেবে।</small>
                     </div>
                     <div class="form-group">
@@ -624,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const username = usernameInput.value;
         const password = passwordInput.value;
-        errorMsgDiv.textContent = ''; // Clear previous errors
+        errorMsgDiv.textContent = '';
 
         try {
             await firebase.auth().signInAnonymously();
@@ -675,36 +691,19 @@ function initializeAppLogic() {
     let viewedYear = new Date().getFullYear();
     let activeYear = new Date().getFullYear();
     let currentPassword = '';
-    let autoSendInterval = null;
 
     const mainContainer = document.getElementById('app-main-content'); 
-
     const BENGALI_MONTHS=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
 
     // --- Utility Functions ---
     const showLoader = () => document.getElementById('loader-overlay').style.display = 'flex';
     const hideLoader = () => document.getElementById('loader-overlay').style.display = 'none';
-    function showToast(message, type = 'info', duration = 3000, actions = []) { 
+    function showToast(message, type = 'info', duration = 3000) { 
         const container = document.getElementById('toast-container');
         if (!container) return;
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        
-        const messageSpan = document.createElement('span');
-        messageSpan.textContent = message;
-        toast.appendChild(messageSpan);
-
-        actions.forEach(action => {
-            const button = document.createElement('button');
-            button.textContent = action.text;
-            button.onclick = () => {
-                action.onClick();
-                toast.classList.remove('show');
-                toast.addEventListener('transitionend', () => toast.remove());
-            };
-            toast.appendChild(button);
-        });
-
+        toast.textContent = message;
         container.appendChild(toast);
         setTimeout(() => toast.classList.add('show'), 10);
         setTimeout(() => { 
@@ -712,9 +711,13 @@ function initializeAppLogic() {
             toast.addEventListener('transitionend', () => toast.remove());
         }, duration);
     }
-    function applyTheme(theme) { document.body.classList.toggle('dark-theme', theme === 'dark'); localStorage.setItem('smsAppTheme', theme); }
+    function applyTheme(theme) { 
+        document.body.classList.toggle('dark-theme', theme === 'dark'); 
+        localStorage.setItem('smsAppTheme', theme); 
+        const themeIcon = document.getElementById('themeIcon');
+        if(themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
     function toggleTheme() { const newTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark'; applyTheme(newTheme); }
-    const getDbRefForYear = (year) => db.ref(`academicYears/${year}/data`);
     function isStudentDue(student, year) {
         if (!student || student.deletedAt) return false;
         const admissionDate = student.createdAt ? new Date(student.createdAt) : new Date(year, 0, 1);
@@ -762,7 +765,6 @@ function initializeAppLogic() {
             allYearsData = yearsSnapshot.val() || {};
             currentPassword = allYearsData[viewedYear]?.data?.currentPassword || 'ashik@602';
 
-            // Use .on for realtime updates on smsManagement
             smsManagementRef.on('value', snapshot => { 
                 smsManagementData = snapshot.val() || { automation: {}, apiSettings: {}, logs: {}, pending: {}, drafts: {} };
                 if (!smsManagementData.pending) smsManagementData.pending = {};
@@ -770,20 +772,16 @@ function initializeAppLogic() {
                 if (!smsManagementData.automation) smsManagementData.automation = {};
                 if (!smsManagementData.logs) smsManagementData.logs = {};
                 
-                // Update UI elements that depend on smsManagementData
                 document.getElementById('attendance-auto-sms-switch').checked = smsManagementData.automation?.attendanceEnabled || false;
                 document.getElementById('payment-auto-sms-switch').checked = smsManagementData.automation?.paymentEnabled || false;
                 document.getElementById('due-reminder-day').value = smsManagementData.automation?.dueReminderDay || 16;
                 
-                renderAllBoxes(); 
+                renderAllBoxViews(); 
             });
 
             renderTabsAndControls();
             updateCreditBalance();
             updateYearSelectorUI();
-            startAutoSendInterval();
-            checkAndShowPendingNotification();
-
         } catch (error) {
             console.error("Firebase read failed: ", error); 
             showToast("Cannot connect to database.", "error"); 
@@ -797,70 +795,82 @@ function initializeAppLogic() {
         if (!phone || typeof phone !== 'string' || phone.trim() === '' || phone.trim().toLowerCase() === 'n/a') {
             return { success: false, error: "Phone number is not available." };
         }
-        let sanitizedPhone = phone.replace(/\s/g, '').replace(/-/g, '');
-        if (sanitizedPhone.startsWith('+88')) {
-            sanitizedPhone = sanitizedPhone.substring(3);
-        }
-        if (!/^(01)\d{9}$/.test(sanitizedPhone)) {
+        let sanitizedPhone = phone.replace(/[^0-9]/g, '');
+        if (sanitizedPhone.startsWith('01')) {
+            sanitizedPhone = '88' + sanitizedPhone;
+        } else if (!sanitizedPhone.startsWith('8801')) {
              return { success: false, error: `Invalid phone number format: ${phone}` };
         }
-
         const { baseUrl, apiKey, senderId } = smsManagementData.apiSettings || {};
         if (!baseUrl || !apiKey || !senderId) {
             return { success: false, error: "API settings not configured." };
         }
-        
-        const creditCountEl = document.getElementById('credit-count');
-        const creditCount = parseFloat(creditCountEl.textContent);
+        const creditCount = parseFloat(document.getElementById('credit-count').textContent);
         if (isNaN(creditCount) || creditCount < 1) {
             return { success: false, error: "Insufficient SMS credits." };
         }
-        
         const encodedMessage = encodeURIComponent(message);
-        const finalUrl = `${baseUrl}?api_key=${apiKey}&type=text&contacts=${sanitizedPhone}&senderid=${senderId}&msg=${encodedMessage}`;
-        
-        console.log(`SENDING TO: ${finalUrl}`);
-        // This is a placeholder for the actual API call. Replace with your provider's logic.
-        // For testing, we simulate success/failure.
-        await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-        const isSuccess = Math.random() > 0.1; // 90% success rate for simulation
-        
-        if (isSuccess) {
-            const newCredit = creditCount - 1;
-            creditCountEl.textContent = newCredit.toFixed(2);
-            if(newCredit < 100) creditCountEl.classList.add('low-credit');
-            return { success: true, response: "SMS Sent Successfully (Simulated)" };
-        } else {
-            return { success: false, error: "Simulated API Error" };
+        const finalUrl = `${baseUrl}?token=${apiKey}&to=${sanitizedPhone}&senderid=${senderId}&message=${encodedMessage}`;
+        try {
+            const response = await fetch(finalUrl);
+            const responseText = await response.text();
+            if (!response.ok) {
+                return { success: false, error: `API Error (Status: ${response.status}): ${responseText}` };
+            }
+            const successKeywords = ['success', 'sent', 'submitted', '1000', '1002', '1003', '1004'];
+            if (successKeywords.some(keyword => responseText.toLowerCase().includes(keyword))) {
+                updateCreditBalance();
+                return { success: true, response: responseText };
+            } else {
+                return { success: false, error: responseText || "Unknown API Error" };
+            }
+        } catch (error) {
+            console.error("SMS API Call failed:", error);
+            return { success: false, error: "Network error or API is unreachable." };
         }
     }
-
     async function logSentMessage(type, details) {
         const logEntry = { timestamp: new Date().toISOString(), ...details };
         return smsManagementRef.child('logs').child(type).push(logEntry);
     }
-    
-    async function addMessageToBox(boxType, type, details) {
+    async function addMessageToBox(boxType, originalType, details) {
         const id = `${boxType}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-        const entry = { id, timestamp: new Date().toISOString(), ...details, originalType: type };
+        const entry = { id, timestamp: new Date().toISOString(), ...details, originalType };
         await smsManagementRef.child(boxType).child(id).set(entry);
         showToast(`SMS moved to ${boxType.charAt(0).toUpperCase() + boxType.slice(1)} Box.`, "warning");
     }
-
     async function updateCreditBalance() {
         const creditCountEl = document.getElementById('credit-count');
-        creditCountEl.textContent = '...';
-        // DEMO: Replace with actual API call to get balance
-        setTimeout(() => { 
-            const newCredit = (Math.random() * 5000 + 50).toFixed(2);
-            creditCountEl.textContent = newCredit;
-            if(newCredit < 100) {
-                creditCountEl.classList.add('low-credit');
-                showToast("SMS credit is low!", "warning");
+        creditCountEl.textContent = '...'; 
+        const { apiKey } = smsManagementData.apiSettings || {};
+        if (!apiKey) {
+            creditCountEl.textContent = 'N/A';
+            return;
+        }
+        const balanceApiUrl = `http://bulksmsbd.net/api/getBalanceApi?api_key=${apiKey}`; 
+        try {
+            const response = await fetch(balanceApiUrl);
+            const textResponse = await response.text();
+            if (!response.ok) throw new Error(`API Error (${response.status}): ${textResponse}`);
+            const creditMatch = textResponse.match(/[\d\.]+/); 
+            if (creditMatch && creditMatch[0]) {
+                const newCredit = parseFloat(creditMatch[0]);
+                creditCountEl.textContent = newCredit.toFixed(2);
+                const creditDisplay = document.getElementById('sms-credit-display');
+                if (newCredit < 100) {
+                    creditDisplay.classList.add('low-credit');
+                    showToast("SMS credit is low!", "warning");
+                } else {
+                    creditDisplay.classList.remove('low-credit');
+                }
             } else {
-                creditCountEl.classList.remove('low-credit');
+                throw new Error(`Could not parse balance from API response: "${textResponse}"`);
             }
-        }, 1000);
+        } catch (error) {
+            console.error("Error fetching credit balance:", error);
+            creditCountEl.textContent = 'Error';
+            showToast("Could not fetch SMS credit balance.", "error");
+        }
     }
 
     // --- UI Rendering & Event Listeners ---
@@ -895,25 +905,6 @@ function initializeAppLogic() {
         document.querySelectorAll('.tag-buttons button').forEach(btn => btn.addEventListener('click', insertTag));
         document.getElementById('send-custom-sms-btn').addEventListener('click', handleSendCustomSms);
 
-        mainContainer.addEventListener('click', (e) => {
-            const button = e.target.closest('button[data-action]');
-            if (button) {
-                const action = button.dataset.action;
-                const type = button.dataset.type;
-                if (action === 'send-selected') handleSendSelected(type);
-                else if (action === 'delete-selected') handleDeleteSelected(type);
-                else if (action === 'clear-sent') handleClearSentBox(type);
-            }
-            
-            const checkbox = e.target.closest('.select-all-checkbox');
-            if (checkbox) {
-                const type = checkbox.dataset.type;
-                const isChecked = checkbox.checked;
-                const containerId = type === 'drafts' ? 'drafts-box' : `${type}-pending-box`;
-                document.querySelectorAll(`#${containerId} .pending-checkbox`).forEach(cb => cb.checked = isChecked);
-            }
-        });
-
         const yearSelector = document.getElementById('yearSelector');
         yearSelector.addEventListener('change', (e) => {
             const selectedYear = parseInt(e.target.value);
@@ -924,7 +915,7 @@ function initializeAppLogic() {
                     loadAllData();
                 } else if(pass) {
                     showToast('ভুল পাসওয়ার্ড!', 'error');
-                    yearSelector.value = viewedYear; // Revert selection
+                    yearSelector.value = viewedYear;
                 } else {
                     yearSelector.value = viewedYear;
                 }
@@ -936,14 +927,11 @@ function initializeAppLogic() {
         const yearSelector = document.getElementById('yearSelector');
         yearSelector.innerHTML = '';
         const years = Object.keys(allYearsData).length > 0 ? Object.keys(allYearsData).sort((a,b) => b-a) : [new Date().getFullYear()];
-
         years.forEach(year => {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = `${year}${year == activeYear ? ' (Active)' : ''}`;
-            if (year == viewedYear) {
-                option.selected = true;
-            }
+            if (year == viewedYear) option.selected = true;
             yearSelector.appendChild(option);
         });
         document.getElementById('year-management-controls').style.visibility = 'visible';
@@ -982,133 +970,319 @@ function initializeAppLogic() {
         document.querySelectorAll('.batch-checkbox').forEach(cb => cb.addEventListener('change', updateCustomSendButtonState));
     }
     
-    function renderAllBoxes() {
-        ['attendance', 'payment', 'due-reminder', 'exam', 'custom'].forEach(type => {
-            renderPendingBox(type);
-            renderSentBox(type);
+    // --- NEW UI Logic: Box Views ---
+    function renderAllBoxViews() {
+        ['attendance', 'payment'].forEach(type => {
+            const container = document.getElementById(`${type}-box-container`);
+            if (container) {
+                container.innerHTML = '';
+                const boxView = document.getElementById('template-box-view').content.cloneNode(true);
+                container.appendChild(boxView);
+                
+                const pendingCount = Object.keys(smsManagementData.pending?.[type] || {}).length;
+                const sentCount = Object.keys(smsManagementData.logs?.[type] || {}).length;
+                
+                const pendingBtn = container.querySelector('.box-button.pending');
+                const sentBtn = container.querySelector('.box-button.sent');
+                
+                pendingBtn.querySelector('.count-badge').textContent = pendingCount;
+                sentBtn.querySelector('.count-badge').textContent = sentCount;
+
+                pendingBtn.onclick = () => showBoxListView(type, 'pending', container);
+                sentBtn.onclick = () => showBoxListView(type, 'sent', container);
+            }
         });
-        renderDraftsBox();
+        renderSimpleBoxListView('due-reminder', 'sent');
+        renderSimpleBoxListView('exam', 'sent');
+        renderSimpleBoxListView('custom', 'sent');
+        renderSimpleBoxListView('drafts', 'pending');
     }
 
-    // --- Automation Logic ---
-    function startAutoSendInterval() {
-        if (autoSendInterval) clearInterval(autoSendInterval);
-        autoSendInterval = setInterval(async () => {
-            const pending = smsManagementData.pending || {};
-            for (const type in pending) {
-                const isAttendance = type === 'attendance' && smsManagementData.automation?.attendanceEnabled;
-                const isPayment = type === 'payment' && smsManagementData.automation?.paymentEnabled;
+    function showBoxListView(type, box, container) {
+        const boxView = container.querySelector('.box-view-container');
+        const listView = container.querySelector('.box-list-view');
+        
+        boxView.style.display = 'none';
+        listView.style.display = 'block';
+        
+        listView.dataset.type = type;
+        listView.dataset.box = box;
 
-                if (isAttendance || isPayment) {
-                    const messages = Object.values(pending[type] || {});
-                    if (messages.length > 0) {
-                        const msgToSend = messages[0];
-                        const student = findStudentInAllYears(msgToSend.studentId);
-                        if (student) {
-                            const res = await sendSmsApiCall(student.parentContact, msgToSend.message);
-                            if (res.success) {
-                                await logSentMessage(type, { ...msgToSend, status: 'success' });
-                            } else {
-                                await addMessageToBox('drafts', type, { ...msgToSend, error: res.error });
-                            }
+        const title = listView.querySelector('h3');
+        title.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} - ${box.charAt(0).toUpperCase() + box.slice(1)} Box`;
+
+        const selectAllContainer = listView.querySelector('.select-all-container');
+        const footerActions = listView.querySelector('.modal-footer');
+        if (box === 'pending') {
+            selectAllContainer.style.display = 'block';
+            footerActions.style.display = 'flex';
+        } else {
+            selectAllContainer.style.display = 'none';
+            footerActions.style.display = 'none';
+        }
+
+        listView.querySelector('[data-action="back-to-boxes"]').onclick = () => {
+            boxView.style.display = 'flex';
+            listView.style.display = 'none';
+        };
+
+        const classFilter = listView.querySelector('.class-filter');
+        const batchFilter = listView.querySelector('.batch-filter');
+        
+        populateClassFilter(classFilter, type, box);
+        classFilter.onchange = () => populateBatchFilter(batchFilter, classFilter.value, type, box);
+        batchFilter.onchange = () => renderFilteredList(listView, type, box, classFilter.value, batchFilter.value);
+
+        listView.querySelector('.select-all-checkbox').dataset.type = type;
+        listView.querySelector('[data-action="delete-selected"]').dataset.type = type;
+        listView.querySelector('[data-action="send-selected"]').dataset.type = type;
+        
+        renderFilteredList(listView, type, box);
+    }
+
+    function renderSimpleBoxListView(type, box) {
+        let viewId, listContainerId;
+        if(type === 'drafts'){
+            viewId = 'drafts-box-view';
+        } else {
+            viewId = `${type}-${box}-box-view`;
+        }
+
+        const listView = document.getElementById(viewId);
+        if(!listView) return;
+
+        const listContainer = listView.querySelector('.box-list');
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : (type === 'drafts' ? smsManagementData.drafts : smsManagementData.logs?.[type]);
+
+        displayListItems(listContainer, data || {}, type, box);
+        
+        if (type === 'drafts') {
+            const selectAll = listView.querySelector('.select-all-checkbox');
+            selectAll.dataset.type = 'drafts';
+            selectAll.onchange = (e) => {
+                const isChecked = e.target.checked;
+                listContainer.querySelectorAll('.list-item-checkbox').forEach(cb => cb.checked = isChecked);
+            };
+            listView.querySelector('[data-action="delete-selected"]').onclick = () => handleDeleteSelected('drafts');
+            listView.querySelector('[data-action="send-selected"]').onclick = () => handleSendSelected('drafts');
+        } else {
+             listView.querySelector('[data-action="clear-sent"]').onclick = () => handleClearSentBox(type);
+        }
+    }
+
+    function renderFilteredList(listView, type, box, classId = '', batchId = '') {
+        const listContainer = listView.querySelector('.box-list');
+        const data = (box === 'pending') ? (smsManagementData.pending?.[type] || {}) : (smsManagementData.logs?.[type] || {});
+
+        let items = Object.values(data);
+        if(classId) {
+            items = items.filter(item => item.classId === classId);
+        }
+        if(batchId) {
+            items = items.filter(item => item.batchId === batchId);
+        }
+        items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        displayListItems(listContainer, items, type, box);
+    }
+    
+    function displayListItems(container, items, type, box) {
+        const itemsArray = Array.isArray(items) ? items : Object.values(items);
+        container.innerHTML = itemsArray.length === 0 ? `<p style="text-align:center; color: var(--text-secondary);">No messages found.</p>` : '';
+        
+        itemsArray.forEach(log => {
+            const student = findStudentInAllYears(log.studentId);
+            const item = document.createElement('div');
+            item.className = `list-item ${box}`;
+            
+            let title = `To: ${student ? `${student.name} (${student.roll})` : 'Unknown'}`;
+            let body = `<p>${(log.message || '').split('\n')[0]}</p>`;
+
+            const checkboxHTML = (box === 'pending' || type === 'drafts') ? `<input type="checkbox" class="list-item-checkbox" data-id="${log.id}">` : '';
+
+            item.innerHTML = `${checkboxHTML}
+            <div class="list-item-content">
+                <div class="list-item-header">
+                    <span>${title}</span><span>${new Date(log.timestamp).toLocaleString('bn-BD')}</span>
+                </div>
+                <div class="list-item-body">${body}</div>
+            </div>`;
+            item.addEventListener('click', (e) => { if (!e.target.matches('.list-item-checkbox')) openMessagePreviewModal(log); });
+            container.appendChild(item);
+        });
+    }
+
+    function populateClassFilter(selectElement, type, box) {
+        selectElement.innerHTML = '<option value="">All Classes</option>';
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : smsManagementData.logs?.[type];
+        if (!data) return;
+
+        const classIds = new Set(Object.values(data).map(item => item.classId).filter(Boolean));
+        classIds.forEach(id => {
+            const classInfo = (allYearsData[viewedYear]?.data?.mainClassCategories || []).find(c => c.id === id);
+            if (classInfo) {
+                selectElement.add(new Option(classInfo.name, id));
+            }
+        });
+    }
+
+    function populateBatchFilter(selectElement, classId, type, box) {
+        selectElement.innerHTML = '<option value="">All Batches</option>';
+        if (!classId) return;
+
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : smsManagementData.logs?.[type];
+        if (!data) return;
+
+        const batchIds = new Set(Object.values(data).filter(item => item.classId === classId).map(item => item.batchId).filter(Boolean));
+        batchIds.forEach(id => {
+            for (const year in allYearsData) {
+                const schedule = allYearsData[year]?.data?.batchSchedule;
+                if (schedule) {
+                    for (const day of schedule) {
+                        for (const cls of day.classes || []) {
+                           const batchInfo = (cls.batches || []).find(b => b.id === id);
+                           if (batchInfo) {
+                               selectElement.add(new Option(`${day.dayName} (${batchInfo.time})`, id));
+                               return;
+                           }
                         }
-                        await smsManagementRef.child('pending').child(type).child(msgToSend.id).remove();
-                        return; // Process one message per interval
                     }
                 }
             }
-        }, 30000); // Check every 30 seconds
+        });
+    }
+
+    // --- Sending/Deleting Actions ---
+    async function handleSendSelected(type) {
+        const isDraftBox = type === 'drafts';
+        const container = isDraftBox ? document.getElementById('drafts-box-view') : document.querySelector(`.tab-content.active .box-list-view[data-type="${type}"]`);
+        if (!container) return;
+        const selectedIds = Array.from(container.querySelectorAll('.list-item-checkbox:checked')).map(cb => cb.dataset.id);
+
+        if (selectedIds.length === 0) return showToast("No messages selected.", "warning");
+        if (!confirm(`Send/Retry ${selectedIds.length} message(s)?`)) return;
+
+        showLoader();
+        let successCount = 0;
+        
+        for (const id of selectedIds) {
+            const msgData = isDraftBox ? smsManagementData.drafts[id] : smsManagementData.pending[type]?.[id];
+            if (msgData) {
+                const student = findStudentInAllYears(msgData.studentId);
+                if (student && student.parentContact) {
+                    const result = await sendSmsApiCall(student.parentContact, msgData.message);
+                    if (result.success) {
+                        await logSentMessage(msgData.originalType || type, msgData);
+                        successCount++;
+                    } else {
+                        msgData.error = result.error;
+                        await addMessageToBox('drafts', msgData.originalType || type, msgData);
+                    }
+                } else {
+                    msgData.error = "Student or contact number not found.";
+                    await addMessageToBox('drafts', msgData.originalType || type, msgData);
+                }
+                const sourcePath = isDraftBox ? `drafts/${id}` : `pending/${type}/${id}`;
+                await smsManagementRef.child(sourcePath).remove();
+            }
+        }
+        showToast(`${successCount} message(s) sent successfully. ${selectedIds.length - successCount} failed and moved to Drafts.`, successCount > 0 ? 'success' : 'error');
+        hideLoader();
     }
     
+    // MODIFIED: handleDeleteSelected to handle new UI and Drafts fix
+    async function handleDeleteSelected(type) {
+        const isDraftBox = type === 'drafts';
+        const container = isDraftBox ? document.getElementById('drafts-box-view') : document.querySelector(`.tab-content.active .box-list-view[data-type="${type}"]`);
+        if (!container) return;
+
+        const selectedIds = Array.from(container.querySelectorAll('.list-item-checkbox:checked')).map(cb => cb.dataset.id);
+        if (selectedIds.length === 0) return showToast("No messages selected.", "warning");
+        if (!confirm(`Delete ${selectedIds.length} selected message(s)? This cannot be undone.`)) return;
+
+        showLoader();
+        const updates = {};
+        const path = isDraftBox ? 'drafts' : `pending/${type}`;
+        selectedIds.forEach(id => { updates[`/${path}/${id}`] = null; });
+        await smsManagementRef.update(updates);
+        showToast(`${selectedIds.length} messages deleted.`, 'info');
+        hideLoader();
+    }
+    
+    async function handleClearSentBox(type) {
+        if (!confirm(`Are you sure you want to clear all sent messages for '${type}'?`)) return;
+        await smsManagementRef.child('logs').child(type).remove();
+        showToast(`Sent box for '${type}' cleared.`, 'info');
+    }
+
+    // --- Other handlers ---
     function handleAutomationSwitch(event) {
         event.preventDefault();
         const typeMap = { 'attendance-auto-sms-switch': 'attendanceEnabled', 'payment-auto-sms-switch': 'paymentEnabled'};
         const type = typeMap[event.target.id];
         if(!type) return;
-
         const switchElement = event.target;
         const currentState = switchElement.checked;
-        
         const pass = prompt(`To change this setting, please enter the admin password:`);
         if (pass === currentPassword) {
             const newState = !currentState;
             smsManagementRef.child('automation').child(type).set(newState)
-                .then(() => {
-                    showToast(`Automation for ${type.replace('Enabled','')} has been ${newState ? 'ENABLED' : 'DISABLED'}.`, 'success');
-                    // The realtime listener will update the checkbox state
-                });
+                .then(() => showToast(`Automation for ${type.replace('Enabled','')} has been ${newState ? 'ENABLED' : 'DISABLED'}.`, 'success'));
         } else if (pass) {
             showToast('Incorrect password.', 'error');
-            switchElement.checked = currentState; // Revert the switch UI
+            switchElement.checked = currentState;
         } else {
-            switchElement.checked = currentState; // Revert if cancelled
+            switchElement.checked = currentState;
         }
     }
-
     function saveReminderDay() {
         const day = document.getElementById('due-reminder-day').value;
         if (day < 1 || day > 28) return showToast("Please enter a day between 1 and 28.", "error");
-        
         smsManagementRef.child('automation/dueReminderDay').set(parseInt(day))
             .then(() => showToast(`Reminder day saved to ${day}.`, 'success'));
     }
-
     async function findAndSendDueReminders(isManual = false) {
         if (isManual && !confirm(`আপনি কি '${viewedYear}' শিক্ষাবর্ষের সকল বকেয়া থাকা ছাত্রকে এখনই রিমাইন্ডার পাঠাতে চান?`)) return;
         showLoader();
-        
         const studentsForYear = allYearsData[viewedYear]?.data?.students || [];
         const dueStudents = studentsForYear.filter(student => isStudentDue(student, viewedYear));
-
         if (dueStudents.length === 0) {
             hideLoader();
             return showToast("No students with due payments found for this year.", 'info');
         }
-
         let successCount = 0;
         const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
         const messageTemplate = `সম্মানিত অভিভাবক, আপনার সন্তান [নাম] (রোল: [রোল]) এর মাসিক বেতন বকেয়া রয়েছে। অনুগ্রহ করে দ্রুত পরিশোধ করুন।`;
-
         for(const student of dueStudents) {
             if(student.parentContact) {
                 let message = `${messageTemplate.replace('[নাম]', student.name).replace('[রোল]', student.roll)}${footer}`;
                 const res = await sendSmsApiCall(student.parentContact, message);
                 if(res.success) {
                     successCount++;
-                    await logSentMessage('due-reminder', { studentId: student.id, studentName: student.name, studentRoll: student.roll });
+                    await logSentMessage('due-reminder', { studentId: student.id, studentName: student.name, studentRoll: student.roll, message });
                 } else {
-                    await addMessageToBox('drafts', 'due-reminder', { studentId: student.id, message, studentName: student.name, studentRoll: student.roll, error: res.error });
+                    await addMessageToBox('drafts', 'due-reminder', { studentId: student.id, message, studentName: student.name, error: res.error });
                 }
             }
         }
-        
-        showToast(`${successCount} due reminders sent.`, 'success');
+        showToast(`${successCount} due reminders sent. ${dueStudents.length - successCount} failed.`, 'success');
         hideLoader();
     }
-    
-    // --- Specific Tab Logic ---
     async function handleSendExamSms() {
         const examId = document.getElementById('exam-select').value; if (!examId) return;
         const exam = allYearsData[viewedYear]?.data?.exams[examId];
         const results = exam.results || {};
         const participants = Object.keys(results);
-
         if (participants.length === 0) return showToast("No results found.", "warning");
         if (!confirm(`Send results to ${participants.length} students?`)) return;
-
         showLoader();
         const sendBtn = document.getElementById('send-exam-sms-btn'); sendBtn.disabled = true;
-        
         const allStudentsOfYear = allYearsData[viewedYear]?.data?.students || [];
         const highestMark = Math.max(0, ...Object.values(results));
-        
         const ranked = participants.map(id => ({ id, marks: results[id] })).sort((a,b) => (b.marks || 0) - (a.marks || 0));
         let rank = 1, lastMark = -Infinity;
         const finalData = ranked.map((item, index) => { if (item.marks !== lastMark) { rank = index + 1; lastMark = item.marks; } return { ...item, rank }; });
-
         let success = 0;
         const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
-
         for (const item of finalData) {
             const student = allStudentsOfYear.find(s => s.id === item.id);
             if (student && student.parentContact) {
@@ -1116,7 +1290,7 @@ function initializeAppLogic() {
                 const res = await sendSmsApiCall(student.parentContact, message);
                 if (res.success) {
                     success++;
-                    await logSentMessage('exam', { examId, examName: exam.name, studentId: student.id, studentName: student.name });
+                    await logSentMessage('exam', { examId, examName: exam.name, studentId: student.id, studentName: student.name, message });
                 } else {
                     await addMessageToBox('drafts', 'exam', { studentId: student.id, message, studentName: student.name, error: res.error });
                 }
@@ -1125,54 +1299,40 @@ function initializeAppLogic() {
         showToast(`${success} result SMS sent successfully.`, 'success');
         hideLoader(); sendBtn.disabled = false;
     }
-    
     function updateCustomSendButtonState() {
         const anyBatchSelected = document.querySelectorAll('.batch-checkbox:checked').length > 0;
         const messageExists = document.getElementById('custom-sms-textarea').value.trim().length > 0;
         document.getElementById('send-custom-sms-btn').disabled = !(anyBatchSelected && messageExists);
     }
-    
     function handleTextareaInput(e) {
         const textarea = e.target;
         const count = textarea.value.length;
         const smsCount = Math.ceil(count / 160) || 1;
-        const counterElement = document.getElementById('char-count');
-        if (counterElement) {
-            counterElement.parentElement.textContent = `${count}/160 (${smsCount} SMS)`;
-        }
+        document.getElementById('char-count').parentElement.textContent = `${count}/160 (${smsCount} SMS)`;
         updateCustomSendButtonState();
     }
-
     function insertTag(e) {
         const textarea = document.getElementById('custom-sms-textarea');
         const tag = e.target.dataset.tag;
         textarea.value += ` ${tag} `;
         textarea.focus();
-        handleTextareaInput({ target: textarea }); // Manually trigger the update
+        handleTextareaInput({ target: textarea });
     }
-
     async function handleSendCustomSms() {
         const batchIds = Array.from(document.querySelectorAll('.batch-checkbox:checked')).map(cb => cb.value);
         const msgTpl = document.getElementById('custom-sms-textarea').value.trim();
         const studentIds = new Set();
         const studentsForYear = allYearsData[viewedYear]?.data?.students || [];
         const scheduleForYear = allYearsData[viewedYear]?.data?.batchSchedule || [];
-
         scheduleForYear.forEach(day => (day.classes || []).forEach(cls => (cls.batches || []).forEach(b => {
-            if (batchIds.includes(b.id)) {
-                (b.studentIds || []).forEach(sid => studentIds.add(sid));
-            }
+            if (batchIds.includes(b.id)) (b.studentIds || []).forEach(sid => studentIds.add(sid));
         })));
-        
         const recipients = Array.from(studentIds).map(id => studentsForYear.find(s => s.id === id)).filter(Boolean);
-
         if(recipients.length === 0) return showToast("No students selected.", "warning");
         if(!confirm(`Send notice to ${recipients.length} students?`)) return;
-
         showLoader(); const sendBtn = document.getElementById('send-custom-sms-btn'); sendBtn.disabled = true;
         let success = 0;
         const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
-
         for(const student of recipients) {
             if(student.parentContact) {
                 let message = `${msgTpl.replace(/\[নাম\]/g, student.name).replace(/\[রোল\]/g, student.roll)}${footer}`;
@@ -1187,11 +1347,9 @@ function initializeAppLogic() {
         if (success > 0) {
             await logSentMessage('custom', { recipientCount: success, message: msgTpl, batches: batchIds });
         }
-        showToast(`${success} notices sent!`, 'success');
+        showToast(`${success} notices sent! ${recipients.length - success} failed.`, 'success');
         hideLoader(); sendBtn.disabled = false;
     }
-    
-    // --- Box Rendering & Actions ---
     function findStudentInAllYears(studentId) {
         for (const year in allYearsData) {
             const student = (allYearsData[year]?.data?.students || []).find(s => s && s.id === studentId);
@@ -1199,121 +1357,6 @@ function initializeAppLogic() {
         }
         return null;
     }
-
-    function renderPendingBox(type) {
-        const container = document.getElementById(`${type}-pending-box`); if (!container) return;
-        const allPending = Object.values(smsManagementData.pending?.[type] || {});
-        displayLogs(container, allPending, type, true);
-    }
-
-    function renderDraftsBox() {
-        const container = document.getElementById('drafts-box'); if (!container) return;
-        const allDrafts = Object.values(smsManagementData.drafts || {});
-        displayLogs(container, allDrafts, 'drafts', true);
-    }
-    
-    function renderSentBox(type) {
-        const container = document.getElementById(`${type}-sent-box`); if (!container) return;
-        const logs = Object.values(smsManagementData.logs?.[type] || {});
-        logs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-        displayLogs(container, logs, type, false);
-    }
-    
-    function displayLogs(container, logArray, type, isMutable) { // isMutable for pending/drafts
-        container.innerHTML = logArray.length === 0 ? `<p style="text-align:center; color: var(--text-secondary);">No messages found.</p>` : '';
-        logArray.forEach(log => {
-            const student = findStudentInAllYears(log.studentId);
-            const item = document.createElement('div');
-            item.className = isMutable ? 'pending-item' : 'sent-item';
-            
-            let title = `To: ${student ? `${student.name} (${student.roll})` : 'Unknown'}`;
-            let body = `<p>${(log.message || '').split('\n')[0]}</p>`;
-
-            const checkboxHTML = isMutable ? `<input type="checkbox" class="pending-checkbox" data-id="${log.id}">` : '';
-
-            item.innerHTML = `${checkboxHTML}
-            <div class="pending-item-content">
-                <div class="pending-item-header">
-                    <span>${title}</span><span>${new Date(log.timestamp).toLocaleString('bn-BD')}</span>
-                </div>
-                <div class="pending-item-body">${body}</div>
-            </div>`;
-            item.addEventListener('click', (e) => { if (!e.target.matches('.pending-checkbox')) openMessagePreviewModal(log); });
-            container.appendChild(item);
-        });
-    }
-
-    async function handleSendSelected(boxType) {
-        const isDraftBox = boxType === 'drafts';
-        const containerId = isDraftBox ? 'drafts-box' : `${boxType}-pending-box`;
-        const container = document.getElementById(containerId);
-        if(!container) return;
-        const selected = Array.from(container.querySelectorAll('.pending-checkbox:checked')).map(cb => cb.dataset.id);
-        if (selected.length === 0) return showToast("No messages selected.", "warning");
-        if (!confirm(`Send/Retry ${selected.length} message(s)?`)) return;
-
-        showLoader();
-        let success = 0;
-        
-        for (const id of selected) {
-            const msg = isDraftBox ? smsManagementData.drafts[id] : smsManagementData.pending[boxType][id];
-            if (msg) {
-                const student = findStudentInAllYears(msg.studentId);
-                if (student && student.parentContact) {
-                    const res = await sendSmsApiCall(student.parentContact, msg.message);
-                    if (res.success) {
-                        await logSentMessage(msg.originalType || boxType, msg);
-                        success++;
-                    } else {
-                        // If it fails again, update error and keep in drafts
-                        msg.error = res.error;
-                        await smsManagementRef.child('drafts').child(id).set(msg);
-                    }
-                }
-                // Always remove from original box
-                await smsManagementRef.child(isDraftBox ? 'drafts' : `pending/${boxType}`).child(id).remove();
-            }
-        }
-        showToast(`${success} messages sent successfully. ${selected.length - success} failed and were moved/kept in Drafts.`, success > 0 ? 'success' : 'error');
-        hideLoader();
-    }
-    
-    async function handleDeleteSelected(boxType) {
-        const isDraftBox = boxType === 'drafts';
-        const containerId = isDraftBox ? 'drafts-box' : `${boxType}-pending-box`;
-        const container = document.getElementById(containerId);
-        if(!container) return;
-
-        const selected = Array.from(container.querySelectorAll('.pending-checkbox:checked')).map(cb => cb.dataset.id);
-        if (selected.length === 0) return showToast("No messages selected.", "warning");
-        if (!confirm(`Delete ${selected.length} selected message(s)? This cannot be undone.`)) return;
-
-        showLoader();
-        const updates = {};
-        const path = isDraftBox ? 'drafts' : `pending/${boxType}`;
-        selected.forEach(id => { updates[`/${path}/${id}`] = null; });
-        await smsManagementRef.update(updates);
-        showToast(`${selected.length} messages deleted.`, 'info');
-        hideLoader();
-    }
-
-    async function handleClearSentBox(type) {
-        if (!confirm(`Are you sure you want to clear all sent messages for '${type}'?`)) return;
-        await smsManagementRef.child('logs').child(type).remove();
-        showToast(`Sent box for '${type}' cleared.`, 'info');
-    }
-
-    function checkAndShowPendingNotification() {
-        const pending = smsManagementData.pending || {};
-        let totalPending = 0;
-        Object.values(pending).forEach(type => totalPending += Object.keys(type).length);
-
-        if (totalPending > 0) {
-            showToast(`${totalPending} SMS are waiting in the Pending Box.`, 'info', 10000);
-        }
-    }
-    
-    // --- Modals & Other Helpers ---
     function openApiSettingsModal() {
         document.body.insertAdjacentHTML('beforeend', document.getElementById('template-api-settings-modal').innerHTML);
         const modal = document.getElementById('apiSettingsModal');
@@ -1338,11 +1381,11 @@ function initializeAppLogic() {
                 modal.remove();
             });
         };
-        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
-        modal.querySelector('.modal-cancel-btn').onclick = () => modal.remove();
+        const closeModal = () => modal.remove();
+        modal.querySelector('.modal-close-btn').onclick = closeModal;
+        modal.querySelector('.modal-cancel-btn').onclick = closeModal;
         modal.classList.add('visible');
     }
-    
     function openMessagePreviewModal(log) {
         const student = findStudentInAllYears(log.studentId);
         const modalContent = `
@@ -1370,7 +1413,6 @@ function initializeAppLogic() {
         modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
         modal.onclick = (e) => { if(e.target === modal) modal.remove() };
     }
-
     function openAboutDevModal() {
         const modalTemplate = document.getElementById('template-about-dev-modal'); if (!modalTemplate) return;
         document.body.appendChild(modalTemplate.content.cloneNode(true));
@@ -1378,17 +1420,12 @@ function initializeAppLogic() {
         modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
         modal.classList.add('visible');
     }
-
     function handleClearSmsData() {
         const pass = prompt('To clear all SMS data (pending, drafts, logs), please enter the admin password:');
         if (pass === currentPassword) {
             if (confirm('WARNING! This will permanently delete all pending, draft, and sent SMS logs. This action cannot be undone. Are you sure?')) {
                 showLoader();
-                const updates = {
-                    'pending': null,
-                    'drafts': null,
-                    'logs': null
-                };
+                const updates = { 'pending': null, 'drafts': null, 'logs': null };
                 smsManagementRef.update(updates).then(() => {
                     showToast('All SMS data has been cleared.', 'success');
                     hideLoader();
@@ -1406,5 +1443,4 @@ function initializeAppLogic() {
     initializeApp();
 }
 </script>
-</body>
 </html>
