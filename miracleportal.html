@@ -1215,7 +1215,7 @@ function initializeAppLogic(studentData) {
 
         handleForegroundMessage(payload) {
             console.log('Foreground message received:', payload);
-            showToast(`🔔 ${payload.notification.title}`, 'info', 5000);
+            showToast(`🔔 ${payload.data.title}`, 'info', 5000);
             const page = payload.data?.click_action?.split('#')[1];
             if (page) {
                 const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
