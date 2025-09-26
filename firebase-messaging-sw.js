@@ -1,6 +1,6 @@
-// Import the Firebase app and messaging modules.
-importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging.js');
+// Import and configure the Firebase SDK using the COMPAT libraries
+importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging-compat.js');
 
 // Initialize the Firebase app in the service worker
 const firebaseConfig = {
@@ -13,21 +13,20 @@ const firebaseConfig = {
     databaseURL: "https://miracle-math-online-software-default-rtdb.asia-southeast1.firebasedabase.app"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-const messaging = firebase.getMessaging(app);
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
 
 // Background Message Handler
-// This handler is called when a push message is received and the app is not in the foreground.
-firebase.onBackgroundMessage(messaging, (payload) => {
+messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-
+  
   // Extract notification data from the 'data' object of the payload
   const notificationTitle = payload.data.title;
   const notificationOptions = {
     body: payload.data.body,
     icon: '/images/image2.png',
     data: { // Pass data to the notification for click events
-        click_action: payload.data.click_action
+        click_action: payload.data.click_action 
     }
   };
 
@@ -36,20 +35,20 @@ firebase.onBackgroundMessage(messaging, (payload) => {
 
 // Optional: Add a click event listener for better user experience
 self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    
-    const targetUrl = event.notification.data.click_action || '/';
+  event.notification.close();
   
-    event.waitUntil(
-      clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-        for (const client of clientList) {
-          if (client.url.includes(targetUrl) && 'focus' in client) {
-            return client.focus();
-          }
+  const targetUrl = event.notification.data.click_action || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(targetUrl) && 'focus' in client) {
+          return client.focus();
         }
-        if (clients.openWindow) {
-          return clients.openWindow(targetUrl);
-        }
-      })
-    );
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
 });
