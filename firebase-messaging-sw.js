@@ -1,7 +1,4 @@
-// This file must be named firebase-messaging-sw.js and be in the root of your site.
-
-// Import the Firebase app and messaging modules using the COMPAT libraries,
-// as your main app uses them.
+// Import the Firebase app and messaging modules using the COMPAT libraries
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.15.0/firebase-messaging-compat.js');
 
@@ -13,29 +10,40 @@ const firebaseConfig = {
     storageBucket: "miracle-math-online-software.firebasestorage.app",
     messagingSenderId: "27829239296",
     appId: "1:27829239296:web:108d6b86969c95cea2a2e5"
-    // databaseURL is not needed in the service worker for messaging
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging(app);
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
 
-// This is the magic handler that will receive messages when the app is in the background or closed.
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message: ', payload);
-
-  // Customize the notification here
-  const notificationTitle = payload.data.title;
-  const notificationOptions = {
-    body: payload.data.body,
-    icon: '/images/image2.png',
-    data: { // This data is passed to the notification click event
-        url: payload.data.click_action || '/'
+// THIS IS THE NEW PART: Directly listen for 'push' events.
+// This is the most reliable way to handle incoming push messages.
+self.addEventListener('push', (event) => {
+    console.log('[firebase-messaging-sw.js] Push event received.', event);
+    
+    let payload;
+    try {
+        payload = event.data.json();
+    } catch (e) {
+        console.error('Could not parse push data as JSON.', e);
+        // If data is not JSON, we cannot proceed.
+        return;
     }
-  };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    const notificationTitle = payload.data.title || 'New Notification';
+    const notificationOptions = {
+        body: payload.data.body || 'You have a new message.',
+        icon: '/images/image2.png',
+        data: {
+            url: payload.data.click_action || '/'
+        }
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(notificationTitle, notificationOptions)
+    );
 });
+
 
 // Listener for when a user clicks on the notification.
 self.addEventListener('notificationclick', (event) => {
@@ -50,17 +58,20 @@ self.addEventListener('notificationclick', (event) => {
       type: "window",
       includeUncontrolled: true
     }).then((clientList) => {
-      // If a window for the app is already open, focus it.
       for (const client of clientList) {
-        // You might need to adjust the URL check to be more flexible
         if (client.url === targetUrl && 'focus' in client) {
           return client.focus();
         }
       }
-      // Otherwise, open a new window.
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
     })
   );
+});
+
+// The onBackgroundMessage is a Firebase helper, but we are now using the standard 'push' event.
+// We can keep it for logging purposes if needed, but the 'push' event listener is the primary handler.
+messaging.onBackgroundMessage((payload) => {
+  console.log('[firebase-messaging-sw.js] onBackgroundMessage was also triggered (this is for info only).', payload);
 });
