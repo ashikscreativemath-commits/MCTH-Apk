@@ -1,0 +1,28 @@
+{
+  "name": "Miracle Student Portal",
+  "short_name": "Miracle Portal",
+  "start_url": "/portal.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00695c",
+  "description": "The official student portal for Miracle Cadet & Academic Institute.",
+  "icons": [
+    {
+      "src": "/images/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/image2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/image2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
