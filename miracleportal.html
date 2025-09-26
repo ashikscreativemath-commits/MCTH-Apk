@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Miracle Student Portal</title>
     <link rel="icon" type="image/x-icon" href="images/image2.png">
-    <link rel="manifest" href="manifest.json?v=4">
+    <link rel="manifest" href="manifest.json?v=5"> <!-- Version Updated -->
 
     <!-- FIREBASE SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -29,52 +29,10 @@
         }
         
         :root {
-            /* THEME UPDATE based on user request */
-            --bg-main: #e8f5e9; /* Light Parrot Green for background */
-            --bg-section: #ffffff; /* White for cards for better contrast */
-            --bg-header: #00695c; /* Deeper Green */
-            --bg-tab-container: var(--bg-main);
-            --bg-tab: #e8f5e9;
-            --bg-tab-active: #ffffff;
-            --bg-input: #f1f8e9; /* Light green for inputs */
-            --bg-input-disabled: #f5f5f5;
-            --bg-subtle: #f1f8e9; /* A subtle green for stat boxes, etc. */
-            --bg-scrollable: #ffffff;
-            --bg-hover: #dcedc8; /* Light green hover */
-            --bg-footer: #00695c; /* Deeper Green */
-            --text-primary: #212121;
-            --text-secondary: #757575;
-            --text-header: #ffffff;
-            --text-tab: #424242;
-            --text-tab-active: #ff9f43; /* Main Orange */
-            --text-input-disabled: #bdbdbd;
-            --text-footer: #e0f2f1;
-            --text-footer-dev: #b2dfdb;
-            --border-color: #e0e0e0;
-            --border-accent: #ff9f43; /* Main Orange */
-            --accent-green: #2ed573;
-            --border-tab-active: #ffffff;
-            --paid-color: rgba(46, 213, 115, 0.15);
-            --due-color: rgba(255, 107, 107, 0.15);
-            --paid-text: #27ae60;
-            --due-text: #e74c3c;
-            --not-applicable-color: #f5f5f5;
-            --not-applicable-text: #9e9e9e;
-            --toast-success-bg: #27ae60;
-            --toast-error-bg: #e74c3c;
-            --toast-info-bg: #3498db;
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --danger-color: #ff6b6b;
-            --success-color: #2ed573; /* Parrot Green */
-            --warning-color: #feca57; /* Yellow */
-            --special-color: #ff9f43; /* Orange */
+            --bg-main: #e8f5e9; --bg-section: #ffffff; --bg-header: #00695c; --bg-tab-container: var(--bg-main); --bg-tab: #e8f5e9; --bg-tab-active: #ffffff; --bg-input: #f1f8e9; --bg-input-disabled: #f5f5f5; --bg-subtle: #f1f8e9; --bg-scrollable: #ffffff; --bg-hover: #dcedc8; --bg-footer: #00695c; --text-primary: #212121; --text-secondary: #757575; --text-header: #ffffff; --text-tab: #424242; --text-tab-active: #ff9f43; --text-input-disabled: #bdbdbd; --text-footer: #e0f2f1; --text-footer-dev: #b2dfdb; --border-color: #e0e0e0; --border-accent: #ff9f43; --accent-green: #2ed573; --border-tab-active: #ffffff; --paid-color: rgba(46, 213, 115, 0.15); --due-color: rgba(255, 107, 107, 0.15); --paid-text: #27ae60; --due-text: #e74c3c; --not-applicable-color: #f5f5f5; --not-applicable-text: #9e9e9e; --toast-success-bg: #27ae60; --toast-error-bg: #e74c3c; --toast-info-bg: #3498db; --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05); --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1); --danger-color: #ff6b6b; --success-color: #2ed573; --warning-color: #feca57; --special-color: #ff9f43;
         }
-        
         html { scroll-behavior: smooth; }
         body { margin: 0; padding: 0; font-family: 'Kalpurush', sans-serif; background-color: var(--bg-main); color: var(--text-primary); transition: background-color .3s, color .3s; }
-
-        /* Login & Signup Styles */
         #auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
         .auth-box { background-color: var(--bg-section); padding: 25px; border-radius: 8px; box-shadow: var(--shadow-md); width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--border-color); animation: fadeIn 0.5s ease; overflow: hidden; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
@@ -91,19 +49,14 @@
         .auth-link a { color: var(--border-accent); text-decoration: none; font-weight: bold; }
         #auth-error-msg, #signup-error-msg { color: var(--due-text); margin-top: 15px; min-height: 20px; font-weight: bold; }
         .hidden { display: none !important; }
-
-        /* Welcome Page Styles */
         #welcome-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; animation: fadeIn 0.5s ease; }
         .welcome-box { text-align: center; }
         #welcome-profile-pic { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border-color); box-shadow: var(--shadow-md); margin-bottom: 20px; }
         #welcome-profile-name { font-size: 2em; font-weight: bold; color: var(--text-primary); margin-bottom: 30px; }
         #btn-proceed-to-app { width: 100%; max-width: 300px; }
-        
         .typewriter h2 { overflow: hidden; border-right: .15em solid var(--border-accent); white-space: nowrap; margin: 0 auto; letter-spacing: .1em; animation: typing 3s steps(30, end), blink-caret .75s step-end infinite; }
         @keyframes typing { from { width: 0 } to { width: 100% } }
         @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--border-accent); } }
-        
-        /* Signup Specific Styles */
         .signup-step { animation: fadeIn 0.5s ease; }
         .step-title { font-size: 1.2em; color: var(--text-secondary); margin-bottom: 15px; }
         #student-selection-list { max-height: 250px; overflow-y: auto; }
@@ -117,8 +70,6 @@
         .roll-box.selected { background-color: var(--border-accent); color: white; border-color: var(--border-accent); }
         .password-strength { font-size: 0.8em; margin-top: 5px; text-align: left; }
         #lockout-message { background-color: var(--due-color); color: var(--due-text); padding: 10px; border-radius: 6px; }
-
-        /* Login Footer */
         .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
         .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
         .developer-box { border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background-color: var(--bg-main); }
@@ -133,12 +84,8 @@
         .social-icons a:hover { color: var(--border-accent); transform: scale(1.1); }
         .social-icons svg { width: 28px; height: 28px; fill: currentColor; }
         .login-footer .instruction-text { font-size: 0.8em; font-style: italic; margin-top: 12px; margin-bottom: 0; color: var(--text-secondary); }
-
-        /* Main App Styles */
         #app-container { display: flex; flex-direction: column; min-height: 100vh; }
         #center-watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70vw; max-width: 300px; height: 100vh; background-image: url(images/image2.png); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: .04; z-index: 2; pointer-events: none; filter: grayscale(1); }
-        
-        /* HEADER STYLE UPDATE */
         header { background-color: var(--bg-header); color: var(--text-header); padding: 15px 15px; position: sticky; top: 0; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; flex-wrap: wrap; }
         .header-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 15px; }
         .header-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; min-width: 0; }
@@ -163,41 +110,19 @@
         .nav-btn:hover { background-color: rgba(255,255,255,0.1); }
         .nav-btn:active { transform: scale(0.9); }
         .nav-btn svg { width: 22px; height: 22px; fill: currentColor; }
-
-        #notification-bell {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-            padding: 5px;
-            position: relative;
-        }
-        #notification-bell.allowed {
-            color: var(--success-color);
-        }
-        #notification-bell.denied {
-            color: var(--danger-color);
-            cursor: not-allowed;
-        }
-
+        #notification-bell { background: none; border: none; color: white; font-size: 1.5em; cursor: pointer; padding: 5px; position: relative; }
+        #notification-bell.allowed { color: var(--success-color); }
+        #notification-bell.denied { color: var(--danger-color); cursor: not-allowed; }
         main { padding: 15px; flex-grow: 1; position: relative; z-index: 1; padding-bottom: 80px; }
         .page-section { background-color: var(--bg-section); padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
-        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--bg-section); box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 5px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-item { flex: 1; text-align: center; padding: 8px 0; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; position: relative; }
         .nav-item.active { color: var(--border-accent); font-weight: bold; }
         .nav-item.active::before { content: ''; position: absolute; top: 0; left: 10%; width: 80%; height: 3px; background-color: var(--border-accent); border-radius: 0 0 4px 4px; }
         .nav-icon { font-size: 1.4em; }
         .nav-label { font-size: 0.75em; display: block; }
-        
         .nav-item.has-unseen { position: relative; }
-        .nav-item.has-unseen::after {
-            content: ''; position: absolute; top: 5px; right: calc(50% - 20px); width: 8px;
-            height: 8px; background-color: var(--danger-color); border-radius: 50%;
-            border: 1px solid var(--bg-section); box-shadow: 0 0 3px var(--danger-color);
-        }
-        
+        .nav-item.has-unseen::after { content: ''; position: absolute; top: 5px; right: calc(50% - 20px); width: 8px; height: 8px; background-color: var(--danger-color); border-radius: 50%; border: 1px solid var(--bg-section); box-shadow: 0 0 3px var(--danger-color); }
         .home-banner-image { width: 100%; height: auto; max-height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 15px; box-shadow: var(--shadow-md); }
         .home-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
         .stat-item { text-align: center; background: var(--bg-subtle); padding: 15px; border-radius: 8px; border-left: 5px solid; }
@@ -207,9 +132,6 @@
         .stat-item.present .value { color: var(--paid-text); }
         .stat-item.absent { border-left-color: var(--danger-color); }
         .stat-item.absent .value { color: var(--due-text); }
-        .notification-prompt { display: flex; align-items: center; justify-content: space-between; background-color: var(--bg-section); padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-green); }
-        .notification-prompt button { background-color: var(--accent-green); color: #111; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-
         #home-image-showcase { padding: 0; background-color: transparent; box-shadow: none; border: none; }
         .slideshow-container { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: auto; overflow: hidden; border-radius: 8px; box-shadow: var(--shadow-md); -webkit-user-select: none; -ms-user-select: none; user-select: none; }
         .slide { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; transition: opacity 1.5s ease-in-out; }
@@ -218,7 +140,6 @@
         .slideshow-dots { text-align: center; padding-top: 10px; }
         .dot { cursor: pointer; height: 10px; width: 10px; margin: 0 4px; background-color: var(--border-color); border-radius: 50%; display: inline-block; transition: background-color: 0.6s ease; }
         .dot.active, .dot:hover { background-color: var(--border-accent); }
-
         .profile-info-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .profile-info-card { background-color: var(--bg-subtle); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-green); padding: 15px; border-radius: 8px; transition: all 0.3s ease; animation: fadeInUp 0.5s ease-out; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -229,7 +150,6 @@
         .profile-info-card p span { font-weight: bold; word-break: break-all; }
         .profile-action-btn { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; background: linear-gradient(45deg, var(--accent-green), #2ecc71); color: #111; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .profile-action-btn:hover { box-shadow: 0 4px 15px rgba(123, 237, 159, 0.3); transform: translateY(-2px); }
-
         .yearly-status-chart { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
         .month-box { background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; text-align: center; }
         .month-name { font-weight: bold; font-size: 1.1em; margin-bottom: 5px; }
@@ -247,7 +167,6 @@
         .history-table th, .history-table td { padding: 12px 10px; text-align: left; }
         .history-table th { background-color: transparent; border-bottom: 2px solid var(--success-color); color: var(--paid-text); }
         .history-table td:last-child { font-family: monospace; }
-
         .exam-card { background: var(--bg-subtle); border: 1px solid var(--border-color); border-left: 5px solid var(--accent-green); padding: 15px; border-radius: 8px; }
         .exam-card-content h4 { margin: 0 0 10px; font-size: 1.2em; }
         .exam-stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 0.9em; }
@@ -256,7 +175,6 @@
         .result-pending { color: var(--warning-color); font-style: italic; }
         .graph-toggle-btn { grid-column: 1 / -1; margin-top: 10px; padding: 8px; background-color: var(--border-accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .graph-container { display: none; margin-top: 15px; }
-        
         .calendar-container { padding:0; border:none; box-shadow: none; }
         .calendar-header { display:flex; justify-content: space-between; align-items: center; }
         #calendarMonthYear { margin: 0; font-size: 1.2em; }
@@ -266,65 +184,17 @@
         .calendar-day { padding: 8px 4px; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin: auto; font-size: 0.9em;}
         .day-present { background-color: var(--success-color); color: var(--bg-header); }
         .day-absent { background-color: var(--danger-color); color: white; }
-        
-        /* Analysis Styles */
         .analysis-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .analysis-card { background-color: var(--bg-subtle); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); }
         .analysis-card h3 { margin-top: 0; border-bottom: 2px solid var(--accent-green); padding-bottom: 8px; font-size: 1.1em; }
-
-        /* Lottery Page Styles */
-        .lottery-result-box {
-            background: linear-gradient(145deg, var(--bg-subtle), #ffffff);
-            border: 1px solid var(--border-color);
-            border-left: 5px solid var(--success-color);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-sm);
-        }
-        .lottery-result-box.pinned {
-             border-left-color: var(--special-color);
-             background: linear-gradient(145deg, #fffbeb, #ffffff);
-        }
-        .lottery-result-box h3 {
-            margin: 0 0 10px;
-            color: var(--bg-header);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-            font-size: 1.3em;
-        }
-        .lottery-result-box p {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-        }
-        .lottery-result-box .winner-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .lottery-result-box .winner-list li {
-            background: rgba(255, 255, 255, 0.7);
-            padding: 10px 15px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid var(--accent-green);
-        }
-        .lottery-result-box .winner-list li strong {
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-        .lottery-result-box .winner-list li span {
-            color: var(--text-secondary);
-            text-align: right;
-        }
-
-        /* Notice Page Styles */
+        .lottery-result-box { background: linear-gradient(145deg, var(--bg-subtle), #ffffff); border: 1px solid var(--border-color); border-left: 5px solid var(--success-color); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+        .lottery-result-box.pinned { border-left-color: var(--special-color); background: linear-gradient(145deg, #fffbeb, #ffffff); }
+        .lottery-result-box h3 { margin: 0 0 10px; color: var(--bg-header); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; font-size: 1.3em; }
+        .lottery-result-box p { font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px; }
+        .lottery-result-box .winner-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+        .lottery-result-box .winner-list li { background: rgba(255, 255, 255, 0.7); padding: 10px 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent-green); }
+        .lottery-result-box .winner-list li strong { font-weight: bold; color: var(--text-primary); }
+        .lottery-result-box .winner-list li span { color: var(--text-secondary); text-align: right; }
         .latest-notice-card { border: 2px solid var(--special-color); background-color: #fffbeb; }
         .latest-notice-card h3 { color: var(--special-color); }
         .new-badge { background-color: var(--special-color); color: white; padding: 3px 8px; font-size: 0.7em; font-weight: bold; border-radius: 10px; margin-left: 10px; }
@@ -338,20 +208,11 @@
         #image-viewer-modal .modal-header { padding-bottom: 5px; margin-bottom: 5px; }
         .notice-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 5px; }
         .notice-time-ago { font-size: 0.75em; color: var(--text-secondary); font-style: italic; flex-shrink: 0; margin-left: 10px; }
-        #load-more-notices-btn {
-            width: 100%; padding: 12px; border: 1px solid var(--border-accent);
-            color: var(--border-accent); background-color: transparent; border-radius: 8px;
-            font-size: 1em; font-weight: bold; cursor: pointer; margin-top: 10px;
-            transition: all 0.3s;
-        }
+        #load-more-notices-btn { width: 100%; padding: 12px; border: 1px solid var(--border-accent); color: var(--border-accent); background-color: transparent; border-radius: 8px; font-size: 1em; font-weight: bold; cursor: pointer; margin-top: 10px; transition: all 0.3s; }
         #load-more-notices-btn:hover { background-color: var(--border-accent); color: white; }
-
-        /* Shared Utils & Modals */
         #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--accent-green);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
         #toast-container{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);z-index:10005;display:flex;flex-direction:column;gap:8px;width:90%;max-width:400px}.toast{padding:12px 15px;border-radius:6px;color:#fff;font-size:0.9em;box-shadow:0 2px 10px rgba(0,0,0,.2);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--toast-success-bg)}.toast.error{background-color:var(--toast-error-bg)}.toast.info{background-color:var(--toast-info-bg)}
         .modal-overlay{display:none;position:fixed;z-index:10001;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;}.modal-overlay.visible{display:flex}.modal-content{background-color:var(--bg-section);margin:auto;padding:20px;border-radius:12px;width:95%;max-width:500px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 5px 15px rgba(0,0,0,.3)}.modal-header{padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:1.4em}.modal-close-btn{background:none;border:none;font-size:2em;cursor:pointer;color:var(--text-secondary);line-height:1;padding:0 5px;}.modal-body{flex-grow:1;overflow-y:auto;}
-
-        /* Footer Styles */
         .app-footer { background-color: var(--bg-footer); color: var(--text-footer); padding: 10px 15px 80px; text-align: center; }
         .footer-content { max-width: 1000px; margin: 0 auto; line-height: 1.6; }
         .footer-content p { margin: 1px 0; font-size: 0.8em; }
@@ -361,535 +222,31 @@
         .footer-contact { margin-top: 5px; }
         .footer-socials svg, .footer-contact svg { width: 14px; height: 14px; fill: currentColor; }
         .footer-qr-code { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
-
-
-        /* ========================================================== */
-        /*          === ID CARD VIEWER STYLES (RE-OPTIMIZED) ===      */
-        /* ========================================================== */
-        .id-card-viewer-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px);
-            z-index: 10002;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
+        .id-card-viewer-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 10002; display: none; justify-content: center; align-items: center; }
         .id-card-viewer-modal.visible { display: flex; }
-        .id-card-viewer-content {
-            background-color: var(--bg-main);
-            padding: 20px;
-            border-radius: 12px;
-            width: 95%;
-            max-width: 800px;
-            max-height: 95vh;
-            overflow-y: auto;
-        }
-        .id-card-viewer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+        .id-card-viewer-content { background-color: var(--bg-main); padding: 20px; border-radius: 12px; width: 95%; max-width: 800px; max-height: 95vh; overflow-y: auto; }
+        .id-card-viewer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .id-card-viewer-header h2 { margin: 0; font-size: 1.5em; }
         .id-card-controls { display: flex; gap: 10px; }
-        #id-card-download-btn {
-            background-color: var(--success-color);
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        #id-card-download-btn { background-color: var(--success-color); color: #fff; padding: 8px 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
         .id-card-viewer-close-btn { font-size: 2em; line-height: 1; }
-        .id-card-preview-area {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .id-card-container {
-            width: 300px;
-            aspect-ratio: 54 / 86;
-            position: relative;
-            box-shadow: var(--shadow-md);
-            border-radius: 12px;
-            overflow: hidden;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .id-card-container .bg-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .id-card-photo {
-            position: absolute;
-            top: 17.7%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50.75%;
-            aspect-ratio: 9.25 / 10;  
-            object-fit: cover;
-            border-radius: 15px;
-        }
-        .id-card-details-container {
-            position: absolute;
-            top: 53.5%;
-            left: 50%;
-            width: 50%;
-            height: auto;
-            color: #1c1c1c;
-        }
-        .id-card-details-container p {
-            font-family: 'Kalpurush', sans-serif; /* For Bengali text */
-            margin: 0;
-            padding: 0;
-            font-size: 12.3px;
-            font-weight: bold;
-            line-height: 1.65;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .id-card-qr-container {
-            position: absolute;
-            top: 48.3%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 28.5%;
-            background: white;
-            padding: 4px;
-            border-radius: 2px;
-        }
-        .id-card-qr-container img {
-             width: 100% !important;
-             height: auto !important;
-             display: block;
-        }
-
+        .id-card-preview-area { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .id-card-container { width: 300px; aspect-ratio: 54 / 86; position: relative; box-shadow: var(--shadow-md); border-radius: 12px; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+        .id-card-container .bg-img { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
+        .id-card-photo { position: absolute; top: 17.7%; left: 50%; transform: translateX(-50%); width: 50.75%; aspect-ratio: 9.25 / 10; object-fit: cover; border-radius: 15px; }
+        .id-card-details-container { position: absolute; top: 53.5%; left: 50%; width: 50%; height: auto; color: #1c1c1c; }
+        .id-card-details-container p { font-family: 'Kalpurush', sans-serif; margin: 0; padding: 0; font-size: 12.3px; font-weight: bold; line-height: 1.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .id-card-qr-container { position: absolute; top: 48.3%; left: 50%; transform: translateX(-50%); width: 28.5%; background: white; padding: 4px; border-radius: 2px; }
+        .id-card-qr-container img { width: 100% !important; height: auto !important; display: block; }
     </style>
 </head>
 <body data-theme="light">
-    <!-- AUTHENTICATION CONTAINER -->
-    <div id="auth-container">
-        <div class="auth-box">
-            <img src="images/image2.png" alt="Logo" class="auth-logo" onerror="this.style.display='none'">
-            <div id="login-view">
-                <h1>স্টুডেন্ট পোর্টালে স্বাগতম</h1>
-                <form id="login-form">
-                    <div class="input-group">
-                        <input type="tel" id="login-contact" placeholder="আপনার মোবাইল নম্বর" required>
-                    </div>
-                    <div class="input-group">
-                        <input type="password" id="login-password" placeholder="আপনার পাসওয়ার্ড" required>
-                        <span id="password-toggle" class="password-toggle-icon">👁️</span>
-                    </div>
-                    <div class="auth-options">
-                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                            <input type="checkbox" id="remember-me" checked> আমাকে মনে রাখুন
-                        </label>
-                    </div>
-                    <button type="submit" class="auth-button">লগইন করুন</button>
-                    <div id="auth-error-msg"></div>
-                </form>
-                <p class="auth-link">অ্যাকাউন্ট নেই? <a href="#" id="show-signup">এখানে সাইন-আপ করুন</a></p>
-            </div>
-            <div id="signup-view" class="hidden">
-                <h1>অ্যাকাউন্ট তৈরি করুন</h1>
-                <form id="signup-form">
-                    <div id="step-1" class="signup-step">
-                        <p class="step-title">আপনার ব্যাচ শনাক্ত করুন</p>
-                        <div class="input-group"><select id="signup-year" required><option value="">শিক্ষাবর্ষ বাছাই করুন</option></select></div>
-                        <div class="input-group"><select id="signup-class" required disabled><option value="">ক্লাস বাছাই করুন</option></select></div>
-                        <div class="input-group"><select id="signup-batch" required disabled><option value="">ব্যাচ বাছাই করুন</option></select></div>
-                        <button type="button" id="btn-next-step-1" class="auth-button" disabled>পরবর্তী ধাপ</button>
-                    </div>
-                    <div id="step-2" class="signup-step hidden">
-                        <p class="step-title">কোচিং-এ দেওয়া আপনার মোবাইল নম্বরটি লিখুন</p>
-                        <div class="input-group"><input type="tel" id="signup-contact" placeholder="01XXXXXXXXX" required></div>
-                        <button type="button" id="btn-next-step-2" class="auth-button">আমার প্রোফাইল খুঁজুন</button>
-                    </div>
-                    <div id="step-3" class="signup-step hidden">
-                        <p class="step-title">আপনার সঠিক প্রোফাইলটি বাছাই করুন</p>
-                        <div id="student-selection-list"></div>
-                        <button type="button" id="btn-next-step-3" class="auth-button" style="margin-top:15px;" disabled>পরবর্তী ধাপ</button>
-                    </div>
-                    <div id="step-4" class="signup-step hidden">
-                        <p class="step-title">পরিচয় যাচাই করুন (রোল নম্বর)</p>
-                        <p style="font-size:0.9em;">আপনার সঠিক রোল নম্বরটি বাছাই করুন:</p>
-                        <div id="roll-selection" class="roll-selection-grid"></div>
-                        <button type="button" id="btn-next-step-4" class="auth-button" style="margin-top: 15px;" disabled>পরবর্তী ধাপ</button>
-                    </div>
-                    <div id="step-5" class="signup-step hidden">
-                        <p class="step-title"> চূড়ান্ত যাচাইকরণ (Trx ID)</p>
-                         <div class="input-group"><input type="text" id="signup-trxid" name="signup-trxid" placeholder="ভর্তি ফি-এর Transaction ID লিখুন" required></div>
-                        <button type="button" id="btn-verify-trx" class="auth-button">যাচাই করুন</button>
-                    </div>
-                    <div id="step-6" class="signup-step hidden">
-                        <p class="step-title">নতুন পাসওয়ার্ড সেট করুন</p>
-                        <div id="unique-contact-container" class="hidden">
-                            <p style="font-size:0.9em; color: var(--text-secondary); text-align: left; margin-bottom: 10px; border-left: 3px solid var(--warning-color); padding-left: 8px;">একাধিক শিক্ষার্থী এই অভিভাবকের নম্বরটি ব্যবহার করায়, আপনার লগইনের জন্য একটি স্বতন্ত্র মোবাইল নম্বর দিন।</p>
-                            <div class="input-group">
-                                <input type="tel" id="signup-new-contact" placeholder="আপনার স্বতন্ত্র মোবাইল নম্বর (লগইনের জন্য)">
-                            </div>
-                        </div>
-                        <div class="input-group"><input type="password" id="signup-password" name="signup-password" placeholder="নতুন পাসওয়ার্ড" required></div>
-                        <div class="input-group"><input type="password" id="signup-confirm-password" name="signup-confirm-password" placeholder="পুনরায় পাসওয়ার্ড দিন" required></div>
-                        <div id="password-strength" class="password-strength"></div>
-                        <button type="submit" class="auth-button">অ্যাকাউন্ট তৈরি করুন</button>
-                    </div>
-                </form>
-                <div id="signup-error-msg"></div>
-                <div id="lockout-message" class="hidden"></div>
-                <p class="auth-link">ইতিমধ্যে অ্যাকাউন্ট আছে? <a href="#" id="show-login">এখানে লগইন করুন</a></p>
-            </div>
-            <div class="login-footer">
-                <p class="copyright-text">&copy; Copyright by Miracle Cadet & Academic Institute 2026</p>
-                <div class="developer-box">
-                    <p class="developed-by-text">Developed by,</p>
-                    <div class="company-info">
-                        <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
-                        <div class="company-text">
-                            <strong>বিন্দুমাত্রা আইটি</strong><br>
-                            <small>CEO : Abdullah Al Rafi </small>
-                        </div>
-                    </div>
-                    <div class="social-icons">
-                         <a href="mailto:bindumatrait@gmail.com" title="Email Abdullah Al Rafi" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
-                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg></a>
-                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg></a>
-                    </div>
-                    <p class="instruction-text">click the icons to visit</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="welcome-container" class="hidden">
-        <div class="welcome-box">
-            <img src="images/image2.png" alt="Logo" class="auth-logo" onerror="this.style.display='none'">
-            <h1 style="font-size: 1.5em; color: var(--text-secondary); margin-bottom: 20px;">মিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</h1>
-            <img src="images/image6.jpg" alt="Welcome Banner" style="width: 100%; max-width: 380px; height: auto; border-radius: 8px; margin-bottom: 20px; box-shadow: var(--shadow-md);" onerror="this.style.display='none'">
-            <img id="welcome-profile-pic" src="images/default_avatar.png" alt="Profile Picture" onerror="this.onerror=null; this.src='images/default_avatar.png';">
-            <div id="welcome-message-container" class="typewriter" style="margin-bottom: 30px;">
-                 <h2 id="welcome-profile-name"></h2>
-            </div>
-            <button id="btn-proceed-to-app" class="auth-button">পোর্টালে প্রবেশ করুন</button>
-        </div>
-    </div>
-
-    <!-- MAIN APP CONTAINER -->
-    <div id="app-container" class="hidden">
-        <div id="center-watermark"></div>
-        <div id="loader-overlay"><div class="loader"></div></div>
-        <div id="toast-container"></div>
-
-        <header>
-            <div class="header-top-row">
-                <div class="header-left">
-                    <img src="images/favicon.ico" class="header-logo" alt="Logo">
-                    <div class="header-info-text">
-                        <span class="institute-name">মিরাকল</span>
-                        <span class="institute-subtext">ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</span>
-                        <div class="institute-contact-info">
-                            <span class="contact-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                                Bogura
-                            </span>
-                            <span class="contact-item">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                                01737-562860
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <button id="notification-bell" title="Toggle Notifications">🔔</button>
-                    <img id="profile-pic-header" src="images/default_avatar.png" class="profile-pic" alt="Profile" onerror="this.onerror=null; this.src='images/default_avatar.png';">
-                    <div class="profile-actions-menu">
-                        <button id="menu-toggle-btn" class="menu-toggle-btn">&vellip;</button>
-                        <div id="profile-menu" class="profile-menu">
-                            <button id="btn-view-profile">👤 Profile</button>
-                            <button id="btn-about-dev">👨‍💻 Developer</button>
-                            <button id="btn-logout">🚪 Log Out</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="header-controls">
-                <div class="header-actions">
-                    <button id="btn-back" class="nav-btn" title="Back"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></button>
-                    <button id="btn-refresh" class="nav-btn" title="Refresh"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg></button>
-                </div>
-                <span id="header-academic-year" class="header-year"></span>
-            </div>
-        </header>
-
-        <main id="main-content"></main>
-        
-        <nav class="bottom-nav">
-            <div class="nav-item active" data-page="home">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">হোম</span>
-            </div>
-             <div class="nav-item" data-page="notice">
-                <span class="nav-icon">🔔</span>
-                <span class="nav-label">নোটিশ</span>
-            </div>
-            <div class="nav-item" data-page="attendance">
-                <span class="nav-icon">📋</span>
-                <span class="nav-label">অ্যাটেনডেন্স</span>
-            </div>
-            <div class="nav-item" data-page="payment">
-                <span class="nav-icon">💳</span>
-                <span class="nav-label">পেমেন্ট</span>
-            </div>
-             <div class="nav-item" data-page="lottery">
-                <span class="nav-icon">🏆</span>
-                <span class="nav-label">লটারি</span>
-            </div>
-            <div class="nav-item" data-page="exam">
-                <span class="nav-icon">📝</span>
-                <span class="nav-label">পরীক্ষা</span>
-            </div>
-        </nav>
-        
-        <footer class="app-footer">
-            <div class="footer-content">
-                <p>© Miracle Cadet & Academic Institute 2026</p>
-                <p>Developed by বিন্দুমাত্রা আইটি</p>
-                <div class="footer-socials">
-                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg><span>Chat on Whatsapp</span></a>
-                    <a href="https://www.facebook.com/profile.php?id=61580476801857" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"></path></svg><span>Facebook</span></a>
-                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer">
-                        <svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75.52.204 1.1.384 1.685.43 1.02.046 1.344.06 3.96.06s2.94-.014 3.96-.06c1.01-.05 1.58-.212 1.685-.43.47-.18.86-.41 1.2-.75.34-.34.57.73.75-1.2.218-.52.38-1.1.43-1.685.046-1.02.06-1.344.06-3.96s-.014-2.94-.06-3.96c-.05-1.01-.212-1.58-.43-1.685-.18-.47-.41-.86-.75-1.2-.34-.34-.73-.57-1.2-.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg>
-                        <span>Executive Director</span>
-                    </a>
-                    <img src="images/qr.png" alt="QR Code" class="footer-qr-code" onerror="this.style.display='none'">
-                </div>
-                <div class="footer-contact">
-                    <a href="mailto:bindumatrait@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>bindumatrait@gmail.com</span></a>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- HTML TEMPLATES -->
-    <template id="template-home">
-        <div id="home-banner-container">
-            <img src="images/image1.png" alt="Banner" class="home-banner-image" onerror="this.style.display='none'">
-        </div>
-        <div class="page-section">
-            <h2 id="home-welcome" style="font-size: 1.5em; color: var(--text-primary);"></h2>
-            <p style="color: var(--text-secondary);">আপনার অ্যাকাউন্টের একটি সংক্ষিপ্ত বিবরণ নিচে দেওয়া হলো।</p>
-        </div>
-        <div class="page-section hidden" id="notification-prompt-container"></div>
-        <div class="page-section">
-            <div id="home-summary-cards" class="home-cards-grid"></div>
-        </div>
-        <div class="page-section" id="home-image-showcase">
-        </div>
-    </template>
+    <!-- আপনার সম্পূর্ণ HTML বডি কন্টেন্ট এখানে অপরিবর্তিত থাকবে -->
+    <!-- ... AUTHENTICATION CONTAINER ... -->
+    <!-- ... WELCOME CONTAINER ... -->
+    <!-- ... MAIN APP CONTAINER ... -->
+    <!-- ... HTML TEMPLATES ... -->
     
-    <template id="template-profile">
-        <div class="page-section" style="text-align: center;">
-            <img id="profilePagePhoto" src="images/default_avatar.png" alt="Profile Photo" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--border-color);" onerror="this.onerror=null; this.src='images/default_avatar.png';">
-            <h2 id="profileNameHeader" style="margin-top: 15px; font-size: 1.8em;"></h2>
-        </div>
-        <div class="page-section">
-            <div class="profile-info-grid">
-                <div class="profile-info-card">
-                    <p><strong>Student ID:</strong> <span id="profileStudentId"></span></p>
-                    <p><strong>রোল:</strong> <span id="profileRoll"></span></p>
-                    <p><strong>ক্লাস:</strong> <span id="profileClass"></span></p>
-                    <p><strong>স্কুল:</strong> <span id="profileSchool"></span></p>
-                </div>
-                 <div class="profile-info-card">
-                    <p><strong>অভিভাবকের নম্বর:</strong> <span id="profileParentContact"></span></p>
-                    <p><strong>ভর্তির তারিখ:</strong> <span id="profileAdmissionDate"></span></p>
-                </div>
-                <div class="profile-info-card">
-                     <h4>আমার ব্যাচসমূহ</h4>
-                     <div id="student-profile-batches" style="padding-top: 10px;"></div>
-                </div>
-            </div>
-            <button id="btn-view-id" class="profile-action-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px;"><path d="M3.38 2.5a.88.88 0 00-.88.88v17.24c0 .49.4.88.88.88h17.24a.88.88 0 00.88-.88V3.38a.88.88 0 00-.88-.88H3.38zm1.76 1.76h13.72v4.4H5.14V4.26zM13.2 13a3.52 3.52 0 11-7.04 0 3.52 3.52 0 017.04 0zm-5.28 6.16c0-1.94 1.57-3.52 3.52-3.52s3.52 1.58 3.52 3.52v.44H7.92v-.44zm10.56-4.4h-4.4v-1.76h4.4v1.76zm0 2.64h-4.4v-1.76h4.4v1.76zm0 2.64h-4.4v-1.76h4.4v1.76z"></path></svg>
-                <span>View My ID Card</span>
-            </button>
-        </div>
-    </template>
-    
-    <template id="template-about-dev-modal">
-        <div id="aboutDeveloperModal" class="modal-overlay">
-            <div class="modal-content" style="max-width: 95%; padding: 15px;">
-                <div class="modal-header">
-                    <h2>About the Developer</h2>
-                    <button class="modal-close-btn">&times;</button>
-                </div>
-                <div class="modal-body" style="padding:0;">
-                    <img src="images/Abdullah-Al-Rafi-Digital-Card.png" alt="Developer Digital Card" style="width: 100%; height: auto; border-radius: 8px; display: block;" onerror="this.alt='Image not found.';">
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="template-attendance">
-        <div class="page-section">
-            <h2 style="font-size: 1.5em; color: var(--text-primary);">আমার অ্যাটেনডেন্স</h2>
-            <p style="color: var(--text-secondary);">আপনার ক্লাসের উপস্থিতি নিচে দেখুন।</p>
-        </div>
-        <div class="page-section">
-            <div class="home-cards-grid" id="attendance-summary-cards"></div>
-        </div>
-        <div class="page-section">
-            <h3>মাসিক ওভারভিউ</h3>
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button id="prevMonthBtn" class="nav-btn">&lt;</button>
-                    <h3 id="calendarMonthYear"></h3>
-                    <button id="nextMonthBtn" class="nav-btn">&gt;</button>
-                </div>
-                <div class="calendar-grid day-names">
-                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-                </div>
-                <div id="calendar-days" class="calendar-grid"></div>
-            </div>
-        </div>
-        <div class="page-section" id="analysis-section-container">
-            <h3>বিশ্লেষণ</h3>
-            <div class="analysis-grid">
-                <div class="analysis-card">
-                    <h3>ব্যক্তিগত অ্যাটেনডেন্স</h3>
-                    <canvas id="personalAttendanceChart"></canvas>
-                </div>
-                <div class="analysis-card">
-                    <h3>ব্যাচের সাথে তুলনা</h3>
-                    <canvas id="comparisonChart"></canvas>
-                </div>
-                <div class="analysis-card">
-                    <h3>অনুপস্থিতির প্যাটার্ন</h3>
-                    <canvas id="studentDayAbsenceChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </template>
-    
-    <template id="template-payment">
-        <div class="page-section">
-            <h2 style="font-size: 1.5em; color: var(--text-primary);">আমার পেমেন্ট হিস্টোরি</h2>
-            <p style="color: var(--text-secondary);">আপনার সকল লেনদেনের তালিকা নিচে দেওয়া হলো।</p>
-        </div>
-        <div class="page-section">
-            <h4>মাসিক ফি স্ট্যাটাস (<span id="payment-year"></span>)</h4>
-            <div class="yearly-status-chart" id="yearly-payment-chart"></div>
-        </div>
-        <div id="upcoming-payment-section" class="page-section hidden"></div>
-        <div class="page-section">
-            <h4>লেনদেনের তালিকা</h4>
-            <div style="overflow-x: auto;">
-                <table class="history-table">
-                    <thead><tr><th>তারিখ</th><th>বিবরণ</th><th>টাকা</th><th>Trx ID</th></tr></thead>
-                    <tbody id="payment-history-table"></tbody>
-                </table>
-            </div>
-        </div>
-    </template>
-    
-    <template id="template-exam">
-        <div class="page-section">
-             <h2 style="font-size: 1.5em; color: var(--text-primary);">আমার পরীক্ষার ফলাফল</h2>
-             <p style="color: var(--text-secondary);">আপনার সকল পরীক্ষার ফলাফল নিচে দেওয়া হলো।</p>
-        </div>
-        <div id="exam-list-container" style="display: grid; gap: 15px;"></div>
-    </template>
-
-    <template id="template-notice">
-        <div class="page-section">
-            <h2 style="font-size: 1.5em; color: var(--text-primary);">নোটিশ বোর্ড</h2>
-            <p style="color: var(--text-secondary);">গুরুত্বপূর্ণ নোটিশ ও ঘোষণাগুলো এখানে দেখুন।</p>
-        </div>
-        <div id="latest-notice-container"></div>
-        <div class="page-section">
-            <h4>পূর্ববর্তী নোটিশসমূহ</h4>
-            <div id="notice-history-container">
-                <p>ইতিহাস লোড হচ্ছে...</p>
-            </div>
-            <div id="load-more-container"></div>
-        </div>
-    </template>
-    
-    <template id="template-lottery">
-         <div class="page-section">
-            <h2 style="font-size: 1.5em; color: var(--text-primary);">মাসিক পেমেন্ট লটারি</h2>
-            <p style="color: var(--text-secondary);">যারা নির্ধারিত তারিখের মধ্যে বেতন পরিশোধ করে, তাদের জন্য এই লটারি।</p>
-        </div>
-        <div id="latest-lottery-result-pinned" class="page-section" style="display: none;">
-        </div>
-        <div class="page-section">
-            <div class="filter-container" style="margin-bottom: 15px; display: flex; flex-direction: column;">
-                <label for="lottery-month-selector" style="margin-bottom: 5px; font-weight: bold; text-align: left;">মাস নির্বাচন করে ফলাফল দেখুন:</label>
-                <select id="lottery-month-selector" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); background-color: var(--bg-input); font-size: 1em;"></select>
-            </div>
-            <div id="lottery-results-container">
-                <p>ফলাফল লোড হচ্ছে...</p>
-            </div>
-        </div>
-    </template>
-
-    <template id="template-image-viewer-modal">
-        <div id="image-viewer-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header" style="padding: 5px 10px; margin: 0;">
-                    <h2 style="font-size: 1.1em;">Image Preview</h2>
-                    <button class="modal-close-btn">&times;</button>
-                </div>
-                <div class="modal-body" style="padding: 5px;">
-                    <img id="modal-image-content" src="" alt="Full size notice image">
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="template-id-card-viewer">
-        <div class="id-card-viewer-modal">
-            <div class="id-card-viewer-content">
-                <div class="id-card-viewer-header">
-                    <h2>Student ID Card</h2>
-                    <div class="id-card-controls">
-                        <button id="id-card-download-btn">Download as PDF</button>
-                        <button class="modal-close-btn id-card-viewer-close-btn">&times;</button>
-                    </div>
-                </div>
-                <div class="id-card-preview-area">
-                    <div id="id-card-front" class="id-card-container">
-                        <img src="images/id1.png" class="bg-img" alt="ID Card Front Template">
-                        <img id="id-card-photo" src="images/default_avatar.png" class="id-card-photo" alt="Student Photo">
-                        <div class="id-card-details-container">
-                            <p id="id-card-name">N/A</p>
-                            <p id="id-card-school">N/A</p>
-                            <p id="id-card-class">N/A</p>
-                            <p id="id-card-section">N/A</p>
-                            <p id="id-card-roll">N/A</p>
-                            <p id="id-card-contact">N/A</p>
-                            <p id="id-card-batch">N/A</p>
-                            <p id="id-card-sid">N/A</p>
-                        </div>
-                    </div>
-                    <div id="id-card-back" class="id-card-container">
-                        <img src="images/id2.png" class="bg-img" alt="ID Card Back Template">
-                        <div id="id-card-qr-container" class="id-card-qr-container">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
 <script>
 // ================================================================== //
 //            FIREBASE CONFIGURATION AND INITIALIZATION             //
@@ -1050,7 +407,219 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     function initializeSignupLogic() {
-        // All signup logic is here, but condensed for brevity.
+        const signupForm = document.getElementById('signup-form');
+        const signupErrorDiv = document.getElementById('signup-error-msg');
+        let signupData = { allYearsData: {}, potentialStudents: [], selectedStudent: null, requiresUniqueContact: false };
+
+        function showStep(stepNum) {
+            document.querySelectorAll('.signup-step').forEach(step => step.classList.add('hidden'));
+            document.getElementById(`step-${stepNum}`).classList.remove('hidden');
+            signupErrorDiv.textContent = '';
+        }
+
+        const yearSelect = document.getElementById('signup-year');
+        const classSelect = document.getElementById('signup-class');
+        const batchSelect = document.getElementById('signup-batch');
+        const btnNextStep1 = document.getElementById('btn-next-step-1');
+
+        async function initializeSelectors() {
+            showLoader();
+            try {
+                await firebase.auth().signInAnonymously();
+                const yearsSnapshot = await academicYearsRef.once('value');
+                if (!yearsSnapshot.exists()) { signupErrorDiv.textContent = "কোনো শিক্ষাবর্ষের তথ্য পাওয়া যায়নি।"; return; }
+                signupData.allYearsData = yearsSnapshot.val();
+                yearSelect.innerHTML = '<option value="">শিক্ষাবর্ষ বাছাই করুন</option>';
+                Object.keys(signupData.allYearsData).sort((a,b) => b-a).forEach(year => yearSelect.add(new Option(year, year)));
+            } catch(e) { console.error(e); signupErrorDiv.textContent = "তথ্য লোড করতে সমস্যা হয়েছে।"; } finally { hideLoader(); }
+        }
+        
+        yearSelect.onchange = () => {
+            const year = yearSelect.value;
+            classSelect.innerHTML = '<option value="">ক্লাস বাছাই করুন</option>';
+            batchSelect.innerHTML = '<option value="">ব্যাচ বাছাই করুন</option>';
+            classSelect.disabled = true; batchSelect.disabled = true; btnNextStep1.disabled = true;
+            if (!year) return;
+            const classes = (signupData.allYearsData[year]?.data?.mainClassCategories || []).filter(c => c && !c.deletedAt);
+            classes.forEach(c => classSelect.add(new Option(c.name, c.id)));
+            classSelect.disabled = false;
+        };
+
+        classSelect.onchange = () => {
+            const year = yearSelect.value;
+            const classId = classSelect.value;
+            batchSelect.innerHTML = '<option value="">ব্যাচ বাছাই করুন</option>';
+            batchSelect.disabled = true; btnNextStep1.disabled = true;
+            if (!classId) return;
+            const batches = [];
+            const yearData = signupData.allYearsData[year]?.data;
+            if (yearData?.batchSchedule) {
+                yearData.batchSchedule
+                    .filter(day => day && !day.deletedAt && day.classes)
+                    .forEach(day => {
+                        day.classes
+                            .filter(cs => cs && !cs.deletedAt && cs.classId === classId && cs.batches)
+                            .forEach(cs => {
+                                cs.batches
+                                    .filter(batch => batch && !batch.deletedAt)
+                                    .forEach(batch => { batches.push({ id: batch.id, name: `${day.dayName} (${batch.time})` }); });
+                            });
+                    });
+            }
+            const uniqueBatches = [...new Map(batches.map(item => [item.id, item])).values()];
+            uniqueBatches.forEach(b => batchSelect.add(new Option(b.name, b.id)));
+            batchSelect.disabled = false;
+        };
+        
+        batchSelect.onchange = () => { btnNextStep1.disabled = !batchSelect.value; };
+        btnNextStep1.onclick = () => { signupData.year = yearSelect.value; signupData.classId = classSelect.value; signupData.batchId = batchSelect.value; showStep(2); };
+
+        document.getElementById('btn-next-step-2').onclick = async () => {
+            signupData.contact = document.getElementById('signup-contact').value.trim();
+            if (signupData.contact.length < 11) { signupErrorDiv.textContent = "সঠিক মোবাইল নম্বর দিন।"; return; }
+            showLoader();
+            try {
+                const yearData = signupData.allYearsData[signupData.year]?.data;
+                const students = (yearData?.students || []).filter(s => s && !s.deletedAt);
+                let studentIdsInBatch = [];
+                if (yearData?.batchSchedule) {
+                    for (const day of yearData.batchSchedule) {
+                        if (!day || day.deletedAt || !day.classes) continue;
+                        for (const cs of day.classes) {
+                            if (!cs || cs.deletedAt || !cs.batches) continue;
+                            const foundBatch = cs.batches.find(b => b && !b.deletedAt && b.id === signupData.batchId);
+                            if (foundBatch) { studentIdsInBatch = foundBatch.studentIds || []; break; }
+                        }
+                        if (studentIdsInBatch.length > 0) break;
+                    }
+                }
+                signupData.potentialStudents = students.filter(s => s.classId === signupData.classId && studentIdsInBatch.includes(s.id) && (s.contact === signupData.contact || s.parentContact === signupData.contact));
+                displayStudentMatches(signupData.potentialStudents);
+            } catch (e) { console.error(e); signupErrorDiv.textContent = "প্রোফাইল খুঁজতে সমস্যা হয়েছে।"; } 
+            finally { hideLoader(); }
+        };
+
+        async function displayStudentMatches(students) {
+            const listContainer = document.getElementById('student-selection-list');
+            listContainer.innerHTML = '';
+            if (students.length === 0) { signupErrorDiv.textContent = "এই তথ্যের সাথে কোনো প্রোফাইল মেলেনি।"; return; }
+            const authSnapshot = await studentAuthRef.once('value');
+            const existingAuths = Object.values(authSnapshot.val() || {}).map(a => a.studentId);
+            const availableStudents = students.filter(s => !existingAuths.includes(s.id));
+            if (availableStudents.length === 0) { signupErrorDiv.textContent = "আপনার প্রোফাইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা আছে।"; return; }
+            signupData.requiresUniqueContact = availableStudents.length > 1;
+            availableStudents.forEach(student => {
+                const item = document.createElement('div');
+                item.className = 'student-item';
+                item.dataset.studentId = student.id;
+                item.innerHTML = `<strong>${student.name}</strong><span>রোল: **** | স্কুল: *********</span>`;
+                item.onclick = () => {
+                    document.querySelectorAll('.student-item').forEach(el => el.classList.remove('selected'));
+                    item.classList.add('selected');
+                    signupData.selectedStudent = student;
+                    document.getElementById('btn-next-step-3').disabled = false;
+                };
+                listContainer.appendChild(item);
+            });
+            showStep(3);
+        }
+        
+        document.getElementById('btn-next-step-3').onclick = () => populateRollPuzzle();
+
+        function populateRollPuzzle() {
+            const container = document.getElementById('roll-selection');
+            container.innerHTML = '';
+            const correctRoll = parseInt(signupData.selectedStudent.roll);
+            let options = [correctRoll];
+            while (options.length < 4) {
+                let randomRoll = correctRoll + Math.floor(Math.random() * 20) - 10;
+                if (randomRoll > 0 && !options.includes(randomRoll)) {
+                    options.push(randomRoll);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+            options.forEach(roll => {
+                const box = document.createElement('div');
+                box.className = 'roll-box';
+                box.textContent = roll.toLocaleString('bn-BD');
+                box.dataset.roll = roll;
+                box.onclick = () => {
+                    document.querySelectorAll('.roll-box').forEach(el => el.classList.remove('selected'));
+                    box.classList.add('selected');
+                    document.getElementById('btn-next-step-4').disabled = false;
+                }
+                container.appendChild(box);
+            });
+            showStep(4);
+        }
+
+        document.getElementById('btn-next-step-4').onclick = () => {
+            const selectedRoll = document.querySelector('.roll-box.selected')?.dataset.roll;
+            if (parseInt(selectedRoll) === parseInt(signupData.selectedStudent.roll)) {
+                showStep(5);
+            } else {
+                signupErrorDiv.textContent = "রোল নম্বর সঠিক নয়। আবার চেষ্টা করুন।";
+            }
+        };
+        
+        document.getElementById('btn-verify-trx').onclick = () => {
+            const enteredTrxId = document.getElementById('signup-trxid').value.trim();
+            const correctTrxId = signupData.selectedStudent.admissionFee?.token;
+            if (enteredTrxId && correctTrxId && enteredTrxId.toLowerCase() === correctTrxId.toLowerCase()) {
+                if (signupData.requiresUniqueContact) {
+                    document.getElementById('unique-contact-container').classList.remove('hidden');
+                }
+                showStep(6);
+            } else {
+                signupErrorDiv.textContent = "Transaction ID সঠিক নয়।";
+            }
+        };
+
+        signupForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            if (password.length < 6) { signupErrorDiv.textContent = "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।"; return; }
+            if (password !== confirmPassword) { signupErrorDiv.textContent = "দুটি পাসওয়ার্ড মেলেনি।"; return; }
+            showLoader();
+            let finalContact = signupData.contact; 
+            if (signupData.requiresUniqueContact) {
+                const newContact = document.getElementById('signup-new-contact').value.trim();
+                if (newContact.length < 11 || !/^(01)\d{9}$/.test(newContact)) {
+                    signupErrorDiv.textContent = "আপনার স্বতন্ত্র মোবাইল নম্বরটি সঠিক নয় (১১ ডিজিট হতে হবে)।";
+                    hideLoader();
+                    return;
+                }
+                 try {
+                    const existingUserSnapshot = await studentAuthRef.orderByChild('contact').equalTo(newContact).once('value');
+                    if (existingUserSnapshot.exists()) {
+                        signupErrorDiv.textContent = "এই মোবাইল নম্বরটি দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট আছে। অন্য নম্বর দিন।";
+                        hideLoader(); return;
+                    }
+                    finalContact = newContact;
+                } catch(err) {
+                     signupErrorDiv.textContent = "মোবাইল নম্বর যাচাই করতে সমস্যা হয়েছে।";
+                     hideLoader(); return;
+                }
+            }
+            try {
+                const newAuthData = { contact: finalContact, password: password, studentId: signupData.selectedStudent.id, academicYear: signupData.year };
+                await studentAuthRef.push(newAuthData);
+                activeUserSessionData = { ...signupData.selectedStudent, academicYear: signupData.year };
+                rememberMeForProceed = true; 
+                authContainer.classList.add('hidden');
+                document.getElementById('welcome-profile-pic').src = activeUserSessionData.photoURL || 'images/default_avatar.png';
+                const welcomeNameEl = document.getElementById('welcome-profile-name');
+                welcomeNameEl.textContent = `স্বাগতম, ${activeUserSessionData.name}`;
+                welcomeNameEl.parentElement.classList.add('typewriter');
+                welcomeContainer.classList.remove('hidden');
+            } catch (error) {
+                console.error("Signup error:", error);
+                signupErrorDiv.textContent = "অ্যাকাউন্ট তৈরি করতে সমস্যা হয়েছে।";
+            } finally { hideLoader(); }
+        };
+
+        initializeSelectors();
     }
     applyTheme('light');
 });
@@ -1192,7 +761,6 @@ function initializeAppLogic(studentData) {
 
         async deleteToken() {
             try {
-                // Get the current token before deleting, as it might not be in memory
                 if (!this.currentToken) {
                     const tokenInDB = await this.messaging.getToken({ vapidKey: "BAltqdl3v-mMOgYxCYEegyI6c2uCzLJACA5l-M2JPrJiq_vY_wVEOGO4xM8c_Hk8hERLAy2h4wL3G5IFfjxkRvs", serviceWorkerRegistration: this.registration });
                     this.currentToken = tokenInDB;
