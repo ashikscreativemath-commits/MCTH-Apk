@@ -1,0 +1,28 @@
+{
+  "name": "MCTH Student Portal",
+  "short_name": "MCTH Portal",
+  "start_url": "/portal.html",
+  "display": "standalone",
+  "background_color": "#e6eefa",
+  "theme_color": "#1f2b38",
+  "description": "The official student portal for Math Creative Teaching Home.",
+  "icons": [
+    {
+      "src": "/images/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/image2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/image2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
