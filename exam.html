@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মিরাকল পরীক্ষা ব্যবস্থাপনা</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+    <!-- FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        /* ======== Mobile-Optimized Styles ======== */
+        @font-face {
+          font-family: 'Kalpurush';
+          src: url('fonts/kalpurush.ttf') format('truetype');
+        }   
+
+        :root {
+            /* === THEME FROM INDEX.HTML START === */
+            --bg-main: #e8f5e9; --bg-section: #ffffff; --bg-header: #00695c; --bg-tab-container: var(--bg-main); --bg-tab: #e8f5e9; --bg-tab-active: #ffffff; --bg-input: #f1f8e9; --bg-input-disabled: #f5f5f5; --bg-subtle: #f1f8e9; --bg-scrollable: #ffffff; --bg-hover: #dcedc8; --bg-footer: #00695c; --text-primary: #212121; --text-secondary: #757575; --text-header: #ffffff; --text-tab: #424242; --text-tab-active: #ff9f43; --text-input-disabled: #bdbdbd; --text-footer: #e0f2f1; --text-footer-dev: #b2dfdb; --border-color: #e0e0e0; --border-accent: #ff9f43; --border-tab-active: #ffffff; --paid-color: rgba(46, 213, 115, 0.15); --due-color: rgba(255, 107, 107, 0.15); --paid-text: #27ae60; --due-text: #e74c3c; --not-applicable-color: #f5f5f5; --not-applicable-text: #9e9e9e; --toast-success-bg: #27ae60; --toast-error-bg: #e74c3c; --toast-info-bg: #3498db; --future-text: #6c757d;
+            /* === THEME FROM INDEX.HTML END === */
+            
+            /* === MAPPED/SPECIFIC VARS FOR EXAM.HTML === */
+            --accent-color: var(--border-accent);
+            --special-color: #6f42c1;
+            --olympiad-color: #8833ff;
+            --danger-color: var(--toast-error-bg);
+            --success-color: var(--toast-success-bg);
+            --warning-color: #ffc107;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+        }
+        
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Kalpurush', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; padding: 0; background-color: var(--bg-main); color: var(--text-primary); transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body[data-theme='dark'] {
+            /* === THEME FROM INDEX.HTML START === */
+            --bg-main: #121212; --bg-section: #1e1e1e; --bg-header: #1f2b38; --bg-tab-container: #121212; --bg-tab: #2a2a2a; --bg-tab-active: #1e1e1e; --bg-input: #252525; --bg-input-disabled: #3a3a3a; --bg-scrollable: #1e1e1e; --bg-hover: #333333; --bg-footer: #1f2b38; --text-primary: #e8eaed; --text-secondary: #9aa0a6; --text-header: #e8eaed; --text-tab: #e8eaed; --text-tab-active: #ff9f43; --text-input-disabled: #888888; --text-footer: #e8eaed; --text-footer-dev: #9aa0a6; --border-color: #3a3a34; --border-accent: #ff9f43; --border-tab-active: #1e1e1e; --paid-color: #143d26; --due-color: #4a1c21; --paid-text: #a3d9a5; --due-text: #f5c6cb; --not-applicable-color: #2c2c2c; --not-applicable-text: #666666;
+            /* === THEME FROM INDEX.HTML END === */
+        }
+        
+        /* Login Page Styles */
+        #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
+        .login-box { background-color: var(--bg-section); padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color); }
+        .login-logo { width: 80px; height: 80px; margin: 0 auto 15px; }
+        .login-box h1 { font-size: 1.5em; margin-bottom: 20px; }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input); color: var(--text-primary); box-sizing: border-box; }
+        .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
+        .login-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
+        .login-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--accent-color); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        #login-error-msg { color: var(--danger-color); margin-top: 15px; min-height: 20px; font-weight: bold; }
+        #app-container.hidden { display: none; }
+        
+        /* -- NEW LOGIN FOOTER STYLES (FROM INDEX.HTML) -- */
+        .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
+        .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
+        .developer-box {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            background-color: var(--bg-main);
+        }
+        .login-footer .developed-by-text {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .company-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .company-text {
+            text-align: left;
+            line-height: 1.5;
+        }
+        .company-text strong {
+            font-size: 1.2em;
+            color: var(--text-primary);
+        }
+        .company-text small {
+            font-size: 0.9em;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+        .social-icons a {
+            display: inline-block;
+            color: var(--text-secondary);
+            transition: color 0.3s, transform 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        .social-icons svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+        .login-footer .instruction-text {
+            font-size: 0.8em;
+            font-style: italic;
+            margin-top: 12px;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+        /* -- END OF NEW LOGIN FOOTER STYLES -- */
+
+        /* Main App Header Styles */
+        #app-container { display: flex; flex-direction: column; min-height: 100vh; }
+        #center-watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70vw; max-width: 300px; height: 100vh; background-image: url(images/image2.png); background-size: contain; background-repeat: no-repeat; background-position: center; opacity: .05; z-index: 999; pointer-events: none; }
+        body[data-theme='dark'] #center-watermark{ filter: invert(1) grayscale(1); opacity: 0.08; }
+        header { background-color: var(--bg-header); color: var(--text-header); padding: 8px 10px; position: sticky; top: 0; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); }
+        .header-left { display: flex; align-items: center; gap: 5px; }
+        .header-center { flex-grow: 1; text-align: center; font-weight: bold; font-size: 1.2em; }
+        .header-right { margin-left: auto; }
+        #year-management-controls { width: 100%; display: flex; justify-content: center; align-items: center; background-color: var(--bg-main); padding: 5px 10px; border-radius: 6px; font-size: 0.9em; border: 1px solid var(--border-color); visibility: hidden;}
+        #yearSelector { padding: 4px 8px; border-radius: 15px; border: 1px solid #5a6a7e; background-color: #334257; color: #e8eaed; font-size: 0.9em; cursor: pointer; -webkit-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat; background-position: right 5px top 50%; padding-right: 20px; }
+        #yearSelector:disabled { opacity: 0.7; cursor: not-allowed; }
+        .global-menu-btn, .nav-btn { background: none; border: none; color: var(--text-header); cursor: pointer; padding: 0; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s ease; }
+        .global-menu-btn:hover, .nav-btn:hover { background-color: rgba(255,255,255,0.1); }
+        .global-menu-btn:active, .nav-btn:active { background-color: rgba(255,255,255,0.2); transform: scale(0.9); }
+        .nav-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .global-menu-container { position: relative; }
+        .global-menu-btn { font-size: 24px; }
+        .global-menu-dropdown { display: none; position: absolute; top: 40px; right: 0; background-color: var(--bg-section); color: var(--text-primary); min-width: 220px; box-shadow: var(--shadow-md); z-index: 10000; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        .global-menu-dropdown.active { display: block; }
+        .global-menu-dropdown button { width: 100%; padding: 10px 15px; text-align: left; background: 0 0; border: none; cursor: pointer; font-size: 0.95em; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; }
+        #btnClearData { color: var(--danger-color); font-weight: bold; }
+        #btnOpenOlympiad { background: linear-gradient(45deg, var(--olympiad-color), #ff6b6b); color: white; font-weight: bold; }
+        .global-menu-dropdown hr { margin: 5px 0; border: none; border-top: 1px solid var(--border-color); opacity: 0.5; }
+        .backup-submenu{display:none;background-color:var(--bg-hover);padding-left:15px}.backup-submenu.open{display:block}.backup-submenu button{padding-left:25px}.arrow-icon{display:inline-block;transition:transform .2s ease-in-out}#btnBackupMenuToggle.open .arrow-icon{transform:rotate(90deg)}
+        
+        main{padding:15px;flex-grow:1;position:relative;z-index:1;}
+        .page-section{background-color:var(--bg-section);padding:15px;border-radius:8px;margin-bottom:15px;box-shadow:var(--shadow-sm);border:1px solid var(--border-color);}
+        .d-none { display: none !important; }
+        .page-header { display: flex; flex-direction: column; align-items: stretch; text-align: center; margin-bottom: 20px; gap: 10px; }
+        .page-header h2 { margin: 0; font-size: 1.3em; }
+        .page-header div button { width: 100%; margin: 0; font-size: 0.9em; padding: 10px; }
+
+        /* Button & Tab Styles */
+        button, .btn { border: none; cursor: pointer; border-radius: 6px; padding: 10px 15px; font-weight: 600; transition: all 0.2s ease-out; }
+        .btn-primary { background-color: var(--accent-color); color: #fff; }
+        .btn-secondary { background-color: #e4e6eb; color: #212121; }
+        body[data-theme='dark'] .btn-secondary { background-color: #3a3a34; color: #e8eaed; }
+        .btn-danger { background-color: var(--danger-color); color: #fff; }
+        .btn-special { background-color: var(--special-color); color: #fff; }
+        .btn-olympiad { background-color: var(--olympiad-color); color: #fff; }
+        .btn-restore { background-color: var(--success-color); color: #fff; }
+        .tab-container{display:flex;border-bottom:1px solid var(--border-color);margin-bottom:20px;flex-wrap:nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none;}
+        .tab-container::-webkit-scrollbar { display: none; }
+        .tab-button{padding:12px 18px;cursor:pointer;border:none;background-color:transparent;border-bottom:3px solid transparent;font-size:1em;color:var(--text-secondary); font-weight: 600; transition: all 0.2s ease; flex-shrink: 0;}
+        .tab-button.active{color:var(--accent-color);border-bottom-color:var(--accent-color);}
+
+        /* Exam List & Cards */
+        #exam-list-container, #olympiad-list-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .exam-card { position: relative; background-color: var(--bg-section); padding: 15px; cursor: pointer; transition: all .2s ease; border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .series-exam-card { border-left: 4px solid var(--special-color); }
+        .olympiad-card { border-left: 4px solid var(--olympiad-color); }
+        .series-exam-card h4 { color: var(--special-color); }
+        .olympiad-card h4 { color: var(--olympiad-color); }
+        .exam-card h4 { margin: 0 0 8px; font-size: 1.1em; }
+        .exam-card p { margin: 4px 0; font-size: 0.9em; color: var(--text-secondary); }
+        .exam-menu-container { position: absolute; top: 10px; right: 10px; }
+        .menu-toggle-btn { background: none; border: none; font-size: 24px; line-height: 1; padding: 5px; cursor: pointer; color: var(--text-secondary); border-radius: 50%; width: 32px; height: 32px; transition: background-color 0.2s; }
+        .exam-menu-dropdown { display: none; position: absolute; background-color: var(--bg-section); min-width: 120px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1; border: 1px solid var(--border-color); right: 0; top: 40px; border-radius: 8px; overflow: hidden; }
+        .exam-menu-dropdown.active { display: block; }
+        .exam-menu-dropdown button { display: flex; align-items: center; gap: 8px; width: 100%; justify-content: flex-start; }
+
+        /* Marks Entry & Result */
+        #quick-entry-panel, .search-and-add-panel { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;}
+        #quick-entry-panel input, #result-sheet-filter-container select, #resultSheetSearchInput, .search-and-add-panel input { padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--bg-input); color: var(--text-primary); font-size: 1em; box-sizing: border-box; width: 100%; }
+        #exam-stats { display: flex; justify-content: space-around; background: var(--bg-main); padding: 8px; border-radius: 6px; font-size: 0.9em; }
+        .stat-entered { color: var(--success-color); font-weight: bold; }
+        .stat-pending { color: var(--danger-color); font-weight: bold; }
+        .marks-table-container, #result-preview-container { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9em;}
+        td, th { padding: 10px 8px; border: 1px solid var(--border-color); text-align: left; white-space: nowrap; }
+        th { background-color:var(--bg-tab); }
+        #student-marks-tbody tr, #olympiad-participant-tbody tr, #olympiad-marks-tbody tr { cursor: pointer; transition: background-color 0.2s; }
+        #student-marks-tbody tr.selected-row { background-color: var(--accent-color) !important; color: #fff; }
+        #olympiad-marks-tbody tr.selected-row { background-color: var(--olympiad-color) !important; color: #fff; }
+        #student-marks-tbody tr.selected-row td, #olympiad-marks-tbody tr.selected-row td { color: #fff; }
+        .student-photo-cell { width: 45px; padding: 5px !important; } .student-photo-cell img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; } .hide-images .student-photo-cell { display: none; }
+        
+        /* Modals */
+        .modal-overlay{display:none;position:fixed;z-index:10001;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;}.modal-overlay.visible{display:flex}.modal-content{background-color:var(--bg-section);margin:auto;padding:20px;border-radius:12px;width:95%;max-width:500px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 5px 15px rgba(0,0,0,.3)}.modal-header{padding-bottom:15px;margin-bottom:15px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:1.4em}.modal-close-btn{background:none;border:none;font-size:2em;cursor:pointer;color:var(--text-secondary);line-height:1;padding:0 5px;}.modal-body{flex-grow:1;overflow-y:auto;}.form-grid{display:grid;grid-template-columns:1fr;gap:15px;}.form-group{margin-bottom:15px}.form-group label{font-weight:600;color:var(--text-secondary);display:block;margin-bottom:8px;font-size:0.9em}.form-group input, .form-group select{width:100%;padding:10px;border:1px solid var(--border-color);border-radius:6px;box-sizing:border-box;background-color:var(--bg-input);color:var(--text-primary);font-size:1em;}.modal-footer{padding-top:15px;margin-top:15px;border-top:1px solid var(--border-color);display:flex;flex-direction:column;gap:10px}.modal-footer button{width:100%; margin:0;}
+        .class-batch-selector { display: flex; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; height: 350px; flex-direction: column; }
+        .class-list { width: 100%; border-bottom: 1px solid var(--border-color); overflow-y: auto; background: var(--bg-main); height: 40%; }
+        .class-list-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color); font-size: 0.95em; }
+        .class-list-item.active { background-color: var(--accent-color); color: #fff; font-weight: bold; }
+        .batch-list { width: 100%; padding: 10px; overflow-y: auto; height: 60%; box-sizing: border-box; }
+        .exam-checkbox-label { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.9em;}
+        
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--accent-color);border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        #toast-container{position:fixed;bottom:20px;right:20px;z-index:10005;display:flex;flex-direction:column;gap:10px}.toast{padding:12px 15px;border-radius:8px;color:#fff;font-size:1em;box-shadow:0 2px 8px rgba(0,0,0,.15);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;max-width:300px}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--success-color)}.toast.error{background-color:var(--danger-color)}.toast.info{background-color:#0dcaf0}
+        
+        /* Footer */
+        .app-footer { background-color: var(--bg-footer); color: var(--text-footer); padding: 20px 15px; text-align: center; margin-top: auto; }
+        .footer-content p { margin: 5px 0; font-size: 0.9em; }
+        .footer-content a { color: var(--text-footer); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .footer-content a:hover { color: var(--accent-color); }
+        .footer-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 15px; margin-top: 10px; }
+        .footer-contact { margin-top: 10px; }
+        .footer-socials svg, .footer-contact svg { width: 16px; height: 16px; fill: currentColor; }
+
+        /* Print Styles */
+        #print-area { display: none; }
+        @media print {
+            body, html { margin: 0; padding: 0; background-color: #fff; -webkit-print-color-adjust: exact; }
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { display: block; position: absolute; left: 0; top: 0; width: 100%; padding: 10mm; box-sizing: border-box; }
+            .admit-card-container { width: 210mm; height: 297mm; padding: 5mm; box-sizing: border-box; display: flex; flex-direction: column; page-break-inside: avoid; }
+            .admit-card-copy { height: 140mm; box-sizing: border-box; position: relative; }
+            .admit-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; z-index: -1; width: 60%; }
+            .print-footer { position: fixed; bottom: 10mm; width: calc(100% - 20mm); display: flex; justify-content: space-between; font-size: 8pt; color: #555; }
+            table { font-size: 10pt; }
+            header, footer, .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div id="login-container">
+        <div class="login-box">
+            <img src="images/image2.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <h1>মিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="System Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                    <span id="password-toggle" class="password-toggle-icon">👁️</span>
+                </div>
+                <div class="login-options">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="remember-me"> Remember Me
+                    </label>
+                </div>
+                <button type="submit" class="login-button">Login to Software</button>
+                <div id="login-error-msg"></div>
+            </form>
+            <div class="login-footer">
+                <p class="copyright-text">&copy; Copyright by Miracle Cadet & Academic Institute 2026</p>
+                <div class="developer-box">
+                    <p class="developed-by-text">Developed by,</p>
+                    <div class="company-info">
+                        <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
+                        <div class="company-text">
+                            <strong>বিন্দুমাত্রা আইটি</strong><br>
+                            <small>CEO : Abdullah Al Rafi </small>
+                        </div>
+                    </div>
+                    <div class="social-icons">
+                        <a href="mailto:bindumatrait@gmail.com" title="Email Abdullah Al Rafi" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg>
+                        </a>
+                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg>
+                        </a>
+                    </div>
+                    <p class="instruction-text">click the icons to visit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <div id="center-watermark"></div>
+        <div id="loader-overlay"><div class="loader"></div></div>
+        <div id="toast-container"></div>
+        <input type="file" id="fileImporter" accept=".json" style="display:none">
+        
+        <header>
+            <div class="header-left">
+                <button id="btnNavBack" class="nav-btn" title="Back"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></button>
+                <button id="btnNavRefresh" class="nav-btn" title="Refresh"><svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path></svg></button>
+            </div>
+            <div class="header-center">মিরাকল পরীক্ষা ব্যবস্থাপনা</div>
+            <div class="header-right">
+                <div class="global-menu-container">
+                    <button id="globalMenuBtn" class="nav-btn global-menu-btn" title="Options">&#9776;</button>
+                    <div id="globalMenuDropdown" class="global-menu-dropdown">
+                        <button id="btnOpenOlympiad"><span>🏆 Open Olympiad</span></button>
+                        <hr>
+                        <button id="btnToggleTheme"><span>Change Theme</span><span id="themeIcon"></span></button>
+                        <button id="btnRecycleBin"><span>Recycle Bin</span></button>
+                        <div class="backup-menu-container">
+                            <button id="btnBackupMenuToggle"><span>Backup</span><span class="arrow-icon">▶</span></button>
+                            <div id="backupSubMenu" class="backup-submenu">
+                                <button id="btnExportData">💾 Export JSON</button>
+                                <button id="btnImportData">📤 Import JSON</button>
+                            </div>
+                        </div>
+                        <button id="btnClearData" class="admin-only"><span>⚠️ Clear Exam Data</span></button>
+                        <button id="btnAboutDev"><span>About Developer</span></button>
+                        <hr>
+                        <button id="btnLogout"><span>Logout</span></button>
+                    </div>
+                </div>
+            </div>
+            <div id="year-management-controls">
+                <select id="yearSelector"></select>
+            </div>
+        </header>
+
+        <main id="app-main-content"></main>
+        <div id="print-area"></div>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>&copy; Miracle Cadet & Academic Institute 2026</p>
+                <p>Developed by বিন্দুমাত্রা আইটি</p>
+                <div class="footer-socials">
+                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg>
+                        <span>Chat on Whatsapp</span>
+                    </a>
+                    <a href="mailto:bindumatrait@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>bindumatrait@gmail.com</span></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- ================================================================== -->
+    <!--                            TEMPLATES                             -->
+    <!-- ================================================================== -->
+    <template id="template-about-dev-modal">
+        <div id="aboutDeveloperModal" class="modal-overlay"> <div class="modal-content" style="max-width: 95%; padding: 15px;"> <div class="modal-header"> <h2>About the Developer</h2> <button class="modal-close-btn">&times;</button> </div> <div class="modal-body" style="padding:0;"> <img src="images/Abdullah-Al-Rafi-Digital-Card.png" alt="Developer Digital Card" style="width: 100%; height: auto; border-radius: 8px; display: block;" onerror="this.alt='Image not found.';"> </div> </div> </div>
+    </template>
+    <template id="template-main-view">
+        <div id="exam-list-view"> <div class="page-header"> <h2>পরীক্ষা ব্যবস্থাপনা</h2> <div> <button id="btnCreateSeriesExam" class="btn-special">📝 Create Series Exam</button> <button id="btnCreateExam" class="btn-primary">✨ নতুন পরীক্ষা তৈরি করুন</button> </div> </div> <div class="page-section" style="padding: 15px;"> <div id="exam-class-tabs" class="tab-container"></div> <div id="exam-filters" class="d-none" style="display: flex; gap: 15px; align-items: center; margin-top: 15px; flex-direction:column;"> <select id="classFilter"><option value="all">সকল ক্লাস</option></select> <select id="batchFilter"><option value="all">সকল ব্যাচ</option></select> </div> <div id="exam-list-container" style="margin-top:20px;"><p>লোড হচ্ছে...</p></div> </div> </div>
+        <div id="exam-details-view" class="d-none"> <div class="page-section"> <div style="display: flex; flex-direction: column; gap: 15px;" class="exam-details-container"> <div id="exam-details-header"><h2 id="detailsExamName"></h2><div id="detailsExamInfo"></div><div id="exam-stats"></div></div> <div id="quick-entry-panel"><input type="search" id="studentSearchInput" placeholder="রোল দিয়ে সার্চ করুন..."><span id="quickEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span><input type="number" id="quickEntryMarksInput" placeholder="নম্বর দিন" disabled></div> </div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"><div><button id="btnBackToList" class="btn-secondary">তালিকায় ফেরত যান</button><button id="btnViewResultSheet" class="btn-primary">View Result Sheet</button></div></div> <div class="marks-table-container"> <table> <thead><tr><th class="student-photo-cell">Photo</th><th class="col-serial">ক্রমিক</th><th class="col-name">নাম</th><th class="col-roll">রোল</th><th class="col-school">স্কুল</th><th class="col-marks">প্রাপ্ত নম্বর</th></tr></thead> <tbody id="student-marks-tbody"></tbody> </table> </div> </div> </div>
+        <div id="result-sheet-view" class="d-none"> <div class="page-section"> <div id="result-sheet-header" class="page-header"> <h2 id="resultSheetExamName"></h2> <div style="display: flex; gap: 15px; align-items: stretch; flex-direction: column; width:100%;"> <button id="btnToggleResultImages" class="btn-secondary">Hide Images</button> <input type="search" id="resultSheetSearchInput" placeholder="নাম বা রোল দিয়ে সার্চ করুন..."> <div id="result-sheet-filter-container"> <select id="resultBatchFilter"></select> </div> </div> </div> <div id="result-preview-container"><p style="text-align:center; color: var(--text-secondary);">ফলাফল লোড হচ্ছে...</p></div> <div class="page-header" style="justify-content: flex-end; margin-top: 20px;"> <div><button id="btnBackToView" class="btn-secondary">ফেরত যান</button><button id="btnPrintResult" class="btn-primary" disabled>🖨️ Print</button></div> </div> </div> </div>
+        <div id="createExamModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2 id="examModalTitle">নতুন পরীক্ষা তৈরি করুন</h2><button class="modal-close-btn">&times;</button></div> <form id="createExamForm"> <div class="modal-body"> <input type="hidden" id="examIdInput"> <div class="form-grid"> <div class="form-group"><label for="examNameInput">পরীক্ষার বিষয়/নাম (আবশ্যক)</label><input type="text" id="examNameInput" required></div> <div class="form-group"><label for="examDateInput">পরীক্ষার তারিখ (আবশ্যক)</label><input type="date" id="examDateInput" required></div> <div class="form-group"><label for="examTotalMarksInput">মোট নম্বর (আবশ্যক)</label><input type="number" id="examTotalMarksInput" required></div> </div> <div class="form-group" id="batchSelectorGroup"> <label>ক্লাস ও ব্যাচ নির্বাচন করুন (আবশ্যক)</label> <div class="class-batch-selector" id="class-batch-selector-container"> <div class="class-list"><p style="padding:10px; color:var(--text-secondary)">লোড হচ্ছে...</p></div> <div class="batch-list"><p style="padding:10px; color:var(--text-secondary)">প্রথমে উপর থেকে একটি ক্লাস সিলেক্ট করুন।</p></div> </div> </div> </div> <div class="modal-footer"><button type="button" class="btn-secondary" id="btnCancelCreateExam">বাতিল</button><button type="submit" class="btn-primary" id="examModalSubmitBtn">পরীক্ষা তৈরি করুন</button></div> </form> </div> </div>
+        <div id="seriesExamModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2>সিরিজ পরীক্ষা তৈরি করুন</h2><button class="modal-close-btn">&times;</button></div> <form id="createSeriesExamForm"> <div class="modal-body"> <div class="form-grid"> <div class="form-group"><label for="seriesNameInput">সিরিজের নাম (আবশ্যক)</label><input type="text" id="seriesNameInput" required></div> <div class="form-group"><label for="seriesClassSelect">ক্লাস নির্বাচন করুন</label><select id="seriesClassSelect"><option value="">-- ক্লাস সিলেক্ট --</option></select></div> </div> <div class="form-group"><label>পরীক্ষাগুলো নির্বাচন করুন (আবশ্যক)</label><div id="series-exam-selector-container" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border-color); padding: 15px; border-radius: 6px; background-color: var(--bg-main);"><p>ফলাফল ফিল্টার করতে ক্লাস নির্বাচন করুন।</p></div></div> </div> <div class="modal-footer"><button type="button" class="btn-secondary" id="btnCancelSeriesExam">বাতিল</button><button type="submit" class="btn-primary">সিরিজ ফলাফল তৈরি করুন</button></div> </form> </div> </div>
+    </template>
+    <template id="template-olympiad-main-view">
+        <div id="olympiad-list-view"> <div class="page-header"> <h2>🏆 Open Olympiads</h2> <button id="btnCreateOlympiad" class="btn-olympiad">✨ Create New Olympiad</button> </div> <div class="page-section"> <div id="olympiad-list-container"> <p>Loading olympiads...</p> </div> </div> </div>
+    </template>
+    <template id="template-olympiad-details-view">
+        <div id="olympiad-details-view" class="page-section"> <div id="olympiad-details-header" class="page-header"> <div> <h2 id="olympiadDetailsName" style="color: var(--olympiad-color);">Olympiad Name</h2> <p id="olympiadDetailsInfo" style="color: var(--text-secondary); margin: 5px 0;"></p> </div> <div> <button id="btnBackToOlympiadList" class="btn-secondary">Back to List</button> <button id="btnOlympiadMarksEntry" class="btn-primary">📝 নম্বর ইনপুট</button> <button id="btnOlympiadResult" class="btn-olympiad">📊 View Result</button> </div> </div> <div class="management-panel" style="background:var(--bg-main); padding: 15px; border-radius: 8px;"> <h3>Add Participants</h3> <div class="search-and-add-panel"> <label><b>Add Internal Student (Search by Roll)</b></label> <input type="search" id="olympiadInternalStudentSearch" placeholder="Enter roll number and press Enter..."> <div id="internal-student-search-results"></div> </div> <hr style="margin: 20px 0;"> <button id="btnAddExternalStudent" class="btn-primary" style="width: 100%;">👤 Add External Student</button> </div> <div class="marks-table-container" style="margin-top: 20px;"> <h3>Registered Participants <span id="participant-count" style="color: var(--olympiad-color); font-weight: bold;"></span></h3> <table> <thead> <tr><th>Reg. No</th><th>Name</th><th>School</th><th>Contact</th><th class="no-print">Action</th></tr> </thead> <tbody id="olympiad-participant-tbody"></tbody> </table> </div> </div>
+    </template>
+    <template id="template-olympiad-marks-entry-view">
+         <div id="olympiad-marks-entry-view" class="page-section"> <div class="page-header"> <div> <h2 id="marksOlympiadName" style="color: var(--olympiad-color);">Marks Entry</h2> <div id="olympiad-stats" class="stat-group" style="font-size: 0.85em; padding: 6px; gap: 10px;"></div> </div> <button id="btnBackToOlympiadDetails" class="btn-secondary">Back to Details</button> </div> <div id="quick-entry-panel"> <input type="search" id="marksEntrySearchInput" placeholder="Reg. No দিয়ে সার্চ করুন..."> <span id="marksEntryStudentInfo">তালিকা থেকে ছাত্র নির্বাচন করুন</span> <input type="number" id="marksEntryMarksInput" placeholder="নম্বর দিন" disabled> </div> <div class="marks-table-container"> <table> <thead> <tr><th>Reg. No</th><th>Name</th><th>School</th><th>Marks Obtained</th></tr> </thead> <tbody id="olympiad-marks-tbody"></tbody> </table> </div> </div>
+    </template>
+    <template id="template-recycle-bin-view">
+        <div id="recycle-bin-view" class="page-section"> <div class="page-header"> <h2>Recycle Bin</h2> <button id="btnBackFromRecycleBin" class="btn-secondary">Back</button> </div> <div class="recycle-bin-item"> <h3>Deleted Exams</h3> <div id="recycle-bin-exams-container"> <p>No deleted exams.</p> </div> </div> <hr style="margin: 25px 0;"> <div class="recycle-bin-item"> <h3>Deleted Olympiads</h3> <div id="recycle-bin-olympiads-container"> <p>No deleted olympiads.</p> </div> </div> </div>
+    </template>
+    <template id="template-create-olympiad-modal">
+        <div id="createOlympiadModal" class="modal-overlay"> <div class="modal-content"> <div class="modal-header"><h2 style="color: var(--olympiad-color);" id="olympiadModalTitle">Create New Olympiad</h2><button class="modal-close-btn">&times;</button></div> <form id="createOlympiadForm"> <div class="modal-body"> <input type="hidden" id="olympiadIdInput"> <div class="form-grid"> <div class="form-group"><label for="olympiadNameInput">Olympiad Name</label><input type="text" id="olympiadNameInput" required></div> <div class="form-group"><label for="olympiadDateInput">Date</label><input type="date" id="olympiadDateInput" required></div> <div class="form-group"><label for="olympiadTotalMarksInput">Total Marks</label><input type="number" id="olympiadTotalMarksInput" required></div><div class="form-group"><label for="olympiadVenueInput">Venue</label><input type="text" id="olympiadVenueInput" placeholder="e.g., Miracle Campus" required></div></div></div> <div class="modal-footer"><button type="button" class="btn-secondary modal-cancel-btn">Cancel</button><button type="submit" class="btn-olympiad" id="olympiadModalSubmitBtn">Create Olympiad</button></div> </form> </div> </div>
+    </template>
+    <template id="template-add-external-student-modal">
+        <div id="addExternalStudentModal" class="modal-overlay"> <div class="modal-content" style="max-width: 500px;"> <div class="modal-header"><h2>Add External Student</h2><button class="modal-close-btn">&times;</button></div> <form id="addExternalStudentForm"> <div class="modal-body"> <div class="form-group"><label for="externalStudentName">Full Name</label><input type="text" id="externalStudentName" required></div> <div class="form-group"><label for="externalStudentSchool">School Name</label><input type="text" id="externalStudentSchool" required></div> <div class="form-group"><label for="externalStudentContact">Contact Number</label><input type="tel" id="externalStudentContact" required></div> </div> <div class="modal-footer"><button type="button" class="btn-secondary modal-cancel-btn">Cancel</button><button type="submit" class="btn-primary">Add Student</button></div> </form> </div> </div>
+    </template>
+    <template id="template-admit-card">
+        <div class="admit-card-container">
+            <!-- Student's Copy -->
+            <div class="admit-card-copy" style="border: 2px solid #333; padding: 20px; text-align: center; font-family: sans-serif; display: flex; flex-direction: column;">
+                <img src="images/image2.png" class="admit-watermark" alt="Watermark">
+                <div style="flex-grow: 1;">
+                    <h4 style="margin:0; font-size: 14pt;">Student's Copy</h4>
+                    <h2 style="margin:5px 0; font-size: 20pt;">মিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</h2>
+                    <p style="margin: 0; font-size: 10pt;">জলেশ্বরীতলা, বগুড়া। ☎ ০১৫১৬৫৩৪২৩১</p>
+                    <h3 style="background: #333; color: white; padding: 5px; margin: 10px 0; font-size: 16pt;">ADMIT CARD</h3>
+                    <h1 style="margin:15px 0; font-size: 24pt; color: #8833ff;">##EXAM_NAME##</h1>
+                    <table style="width: 100%; text-align: left; margin-top: 25px; border-collapse: collapse; font-size: 12pt;">
+                        <tr><td style="padding: 8px; border: 1px solid #ccc; width: 30%;"><b>Registration No:</b></td><td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; font-size: 14pt;">##REG_NO##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Participant Name:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##STUDENT_NAME##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>School Name:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##SCHOOL_NAME##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Date:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##EXAM_DATE##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Venue:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##VENUE##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Total Marks:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##TOTAL_MARKS##</td></tr>
+                    </table>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; padding-top: 10px; border-top: 1px solid #eee;">
+                    <div style="font-size: 8pt; color: #555; text-align: left;">
+                        <span>© Miracle Cadet & Academic Institute 2026</span><br>
+                        <span>Software by: বিন্দুমাত্রা আইটি</span>
+                    </div>
+                    <p style="text-align: right; margin: 0;">__________________<br>Authority's Signature</p>
+                </div>
+            </div>
+            
+            <div style="border-top: 2px dashed #333; margin: 1.5mm 0;"></div>
+
+            <!-- Office Copy -->
+            <div class="admit-card-copy" style="border: 2px solid #333; padding: 20px; text-align: center; font-family: sans-serif; display: flex; flex-direction: column;">
+                <div style="flex-grow: 1;">
+                    <h4 style="margin:0; font-size: 14pt;">Office Copy</h4>
+                    <h2 style="margin:5px 0; font-size: 20pt;">মিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</h2>
+                    <p style="margin: 0; font-size: 10pt;">জলেশ্বরীতলা, বগুড়া। ☎ ০১৫১৬৫৩৪২৩১</p>
+                    <h3 style="background: #333; color: white; padding: 5px; margin: 10px 0; font-size: 16pt;">ADMIT CARD</h3>
+                    <h1 style="margin:15px 0; font-size: 24pt; color: #8833ff;">##EXAM_NAME##</h1>
+                     <table style="width: 100%; text-align: left; margin-top: 25px; border-collapse: collapse; font-size: 12pt;">
+                        <tr><td style="padding: 8px; border: 1px solid #ccc; width: 30%;"><b>Registration No:</b></td><td style="padding: 8px; border: 1px solid #ccc; font-weight: bold; font-size: 14pt;">##REG_NO##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Participant Name:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##STUDENT_NAME##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>School Name:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##SCHOOL_NAME##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Date:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##EXAM_DATE##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Venue:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##VENUE##</td></tr>
+                        <tr><td style="padding: 8px; border: 1px solid #ccc;"><b>Total Marks:</b></td><td style="padding: 8px; border: 1px solid #ccc;">##TOTAL_MARKS##</td></tr>
+                    </table>
+                </div>
+                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 30px; padding-top: 10px; border-top: 1px solid #eee;">
+                    <div style="font-size: 8pt; color: #555; text-align: left;">
+                        <span>© Miracle Cadet & Academic Institute 2026</span><br>
+                        <span>Software by: বিন্দুমাত্রা আইটি</span>
+                    </div>
+                    <p style="text-align: right; margin: 0;">__________________<br>Participant's Signature</p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+<script>
+// ================================================================== //
+//            FIREBASE CONFIGURATION AND INITIALIZATION             //
+// ================================================================== //
+const firebaseConfig = {
+  apiKey: "AIzaSyAnpbv9WhvOqV8nsbmVOQuBhKDF7D9-Ztc",
+  authDomain: "miracle-math-online-software.firebaseapp.com",
+  projectId: "miracle-math-online-software",
+  storageBucket: "miracle-math-online-software.firebasestorage.app",
+  messagingSenderId: "27829239296",
+  appId: "1:27829239296:web:108d6b86969c95cea2a2e5",
+  measurementId: "G-GSVFRCS9NR",
+  databaseURL: "https://miracle-math-online-software-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const credsRef = db.ref('credentials');
+
+// ================================================================== //
+//                LOGIN SCRIPT START                                //
+// ================================================================== //
+document.addEventListener('DOMContentLoaded', () => {
+    const REMEMBER_KEY = 'mcth_exam_rem_creds'; 
+    const SESSION_KEY = 'mcth_exam_is_logged_in';
+
+    const loginContainer = document.getElementById('login-container');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('password-toggle');
+    const rememberMeCheckbox = document.getElementById('remember-me');
+    const errorMsgDiv = document.getElementById('login-error-msg');
+    
+    if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+        loginContainer.style.display = 'none';
+        appContainer.classList.remove('hidden');
+        firebase.auth().signInAnonymously().then(() => {
+            initializeAppLogic();
+        }).catch(err => {
+            console.error("Anonymous sign-in failed on session restore:", err);
+            errorMsgDiv.textContent = 'Authentication session restore failed.';
+        });
+        return;
+    }
+
+    passwordToggle.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        passwordToggle.textContent = isPassword ? '🙈' : '👁️';
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        errorMsgDiv.textContent = ''; 
+
+        try {
+            await firebase.auth().signInAnonymously();
+            const snapshot = await credsRef.once('value');
+            const correctCreds = snapshot.exists() ? snapshot.val() : { username: "ashik'smathhome@602", password: "jaleswaritolamath25" };
+
+            if (username === correctCreds.username && password === correctCreds.password) {
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem(REMEMBER_KEY, JSON.stringify({ user: username, pass: password }));
+                } else {
+                    localStorage.removeItem(REMEMBER_KEY);
+                }
+                sessionStorage.setItem(SESSION_KEY, 'true'); 
+                
+                loginContainer.style.display = 'none';
+                appContainer.classList.remove('hidden');
+                initializeAppLogic();
+            } else {
+                errorMsgDiv.textContent = 'ইউজারনেম বা পাসওয়ার্ড সঠিক নয়।';
+                firebase.auth().signOut();
+            }
+        } catch (error) {
+            console.error("Firebase login error:", error);
+            errorMsgDiv.textContent = 'ডাটাবেস কানেক্ট করা যায়নি বা অনুমতি নেই।';
+            if (firebase.auth().currentUser) {
+                firebase.auth().signOut();
+            }
+        }
+    });
+
+    const rememberedCreds = localStorage.getItem(REMEMBER_KEY);
+    if (rememberedCreds) {
+        try {
+            const creds = JSON.parse(rememberedCreds);
+            usernameInput.value = creds.user;
+            passwordInput.value = creds.pass;
+            rememberMeCheckbox.checked = true;
+        } catch(e) {
+            localStorage.removeItem(REMEMBER_KEY);
+        }
+    }
+});
+
+// ================================================================== //
+//          MAIN APPLICATION SCRIPT START                               //
+// ================================================================== //
+function initializeAppLogic() {
+    let appData = {}, currentExamId = null, currentSeriesExamId = null, currentOlympiadId = null, fullResultData = [];
+    let viewedYear = new Date().getFullYear();
+    let activeYear = new Date().getFullYear();
+    let dataRef; 
+    let dataLoaded = false;
+    let isAdminMode = false;
+    let currentPassword = '';
+    let olympiadParticipantListener = null;
+
+    const mainContainer = document.getElementById('app-main-content');
+    const fileImporter = document.getElementById('fileImporter');
+    const VIEWED_YEAR_KEY = 'mcth_exam_viewed_year';
+
+    // --- Utility Functions ---
+    const showLoader = () => document.getElementById('loader-overlay').style.display = 'flex';
+    const hideLoader = () => document.getElementById('loader-overlay').style.display = 'none';
+    function showToast(message, type = 'info', duration = 3000) { const c = document.getElementById('toast-container'); if (!c) return; const t = document.createElement('div'); t.className = `toast ${type}`; t.textContent = message; c.appendChild(t); setTimeout(() => t.classList.add('show'), 10); setTimeout(() => { t.classList.remove('show'); t.addEventListener('transitionend', () => t.remove()); }, duration); }
+    const showView = (viewId) => { document.querySelectorAll('#app-main-content > div').forEach(div => div.classList.add('d-none')); document.getElementById(viewId)?.classList.remove('d-none'); };
+    function getOrdinal(n) { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+    function applyTheme(theme) { document.body.setAttribute('data-theme', theme); localStorage.setItem('examAppTheme', theme); }
+    function toggleTheme() { const currentTheme = document.body.getAttribute('data-theme') || 'light'; const newTheme = currentTheme === 'light' ? 'dark' : 'light'; applyTheme(newTheme); }
+    const getDbRefForYear = (year) => db.ref(`academicYears/${year}/data`);
+
+    function findBatchById(batchId) {
+        for (const day of (appData.batchSchedule || [])) {
+            for (const cls of (day.classes || [])) {
+                const batch = (cls.batches || []).find(b => b.id === batchId);
+                if (batch) {
+                    const classInfo = (appData.mainClassCategories || []).find(c => c.id === cls.classId);
+                    return { ...batch, dayName: day.dayName, className: classInfo?.name || 'Unknown' };
+                }
+            }
+        }
+        return null;
+    }
+
+    function updateYearSelectorUI() {
+        const yearSelector = document.getElementById('yearSelector');
+        yearSelector.innerHTML = '';
+        const calendarYear = new Date().getFullYear();
+        const years = Array.from(new Set([activeYear, viewedYear, calendarYear, calendarYear - 1, calendarYear + 1])).sort((a,b) => b-a);
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = `${year}${year == activeYear ? ' (Active)' : ''}`;
+            if (year == viewedYear) {
+                option.selected = true;
+            }
+            yearSelector.appendChild(option);
+        });
+        document.getElementById('year-management-controls').style.visibility = 'visible';
+    }
+
+    // --- Navigation & Global Menu ---
+    function handleNavBack() {
+        if(olympiadParticipantListener) {
+            db.ref(`data/openOlympiads/${currentOlympiadId}`).off('value', olympiadParticipantListener);
+            olympiadParticipantListener = null;
+        }
+        const currentView = document.querySelector('#app-main-content > div:not(.d-none)');
+        if (!currentView) { renderMainView(); return; }
+        
+        const viewId = currentView.id;
+        if (viewId === 'olympiad-marks-entry-view' || (viewId === 'result-sheet-view' && currentOlympiadId)) {
+            renderOlympiadDetailsView(currentOlympiadId);
+        } else if (viewId === 'olympiad-details-view') {
+            showOlympiadListView();
+        } else if (viewId === 'exam-details-view' || (viewId === 'result-sheet-view' && (currentExamId || currentSeriesExamId))) {
+            renderMainView();
+        } else if (viewId === 'olympiad-list-view' || viewId === 'recycle-bin-view') {
+            renderMainView();
+        } else {
+            renderMainView();
+        }
+    }
+    function setupGlobalMenu() { const menuBtn = document.getElementById('globalMenuBtn'); const dropdown = document.getElementById('globalMenuDropdown'); menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('active'); }); document.body.addEventListener('click', () => dropdown.classList.remove('active')); }
+    function showRecycleBin() { mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-recycle-bin-view').content.cloneNode(true)); document.getElementById('btnBackFromRecycleBin').onclick = () => { renderMainView(); }; renderRecycleBinContent(); }
+    function renderRecycleBinContent() { 
+        const examsContainer = document.getElementById('recycle-bin-exams-container');
+        const olympiadsContainer = document.getElementById('recycle-bin-olympiads-container');
+        examsContainer.innerHTML = '';
+        olympiadsContainer.innerHTML = '';
+
+        const deletedExams = Object.entries(appData.exams || {}).filter(([,exam]) => exam.deletedAt);
+        if (deletedExams.length === 0) { examsContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No deleted exams.</p>'; }
+        else {
+            const fragment = document.createDocumentFragment();
+            deletedExams.sort(([,a],[,b]) => new Date(b.deletedAt) - new Date(a.deletedAt)).forEach(([id, exam]) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'recycle-bin-item';
+                itemDiv.innerHTML = `<div><strong>${exam.name}</strong><br><small>Deleted: ${new Date(exam.deletedAt).toLocaleString()}</small></div><div><button class="btn-restore" data-id="${id}" data-type="exam">Restore</button><button class="btn-danger" data-id="${id}" data-type="exam" data-action="delete-perm">Delete Permanently</button></div>`;
+                fragment.appendChild(itemDiv);
+            });
+            examsContainer.appendChild(fragment);
+        }
+        
+        const deletedOlympiads = Object.entries(appData.openOlympiads || {}).filter(([,olymp]) => olymp.deletedAt);
+        if (deletedOlympiads.length === 0) { olympiadsContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No deleted olympiads.</p>'; }
+        else {
+            const fragment = document.createDocumentFragment();
+            deletedOlympiads.sort(([,a],[,b]) => new Date(b.deletedAt) - new Date(a.deletedAt)).forEach(([id, olymp]) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'recycle-bin-item';
+                itemDiv.innerHTML = `<div><strong>${olymp.name} (Olympiad)</strong><br><small>Deleted: ${new Date(olymp.deletedAt).toLocaleString()}</small></div><div><button class="btn-restore" data-id="${id}" data-type="olympiad">Restore</button><button class="btn-danger" data-id="${id}" data-type="olympiad" data-action="delete-perm">Delete Permanently</button></div>`;
+                fragment.appendChild(itemDiv);
+            });
+            olympiadsContainer.appendChild(fragment);
+        }
+        
+        mainContainer.addEventListener('click', e => {
+            const button = e.target.closest('button.btn-restore, button[data-action="delete-perm"]');
+            if (!button) return;
+            const id = button.dataset.id;
+            const type = button.dataset.type;
+            const path = type === 'exam' ? `academicYears/${viewedYear}/data/exams/${id}` : `data/openOlympiads/${id}`;
+
+            if (button.classList.contains('btn-restore')) {
+                db.ref(path).child('deletedAt').remove().then(() => showToast('Item restored.', 'success'));
+            } else if (button.dataset.action === 'delete-perm') {
+                if (confirm('Permanently delete this item? This cannot be undone.')) {
+                    db.ref(path).remove().then(() => showToast('Item permanently deleted.', 'info'));
+                }
+            }
+        });
+    }
+
+    // --- Backup & Restore ---
+    function handleExport(){ if (!appData) return showToast('No data to export.', 'error'); try { const dataStr = JSON.stringify(appData, null, 2); const dataBlob = new Blob([dataStr], { type: 'application/json' }); const url = URL.createObjectURL(dataBlob); const link = document.createElement('a'); link.href = url; link.download = `exam_backup_${viewedYear}_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); showToast("Data exported successfully.", 'success'); } catch (e) { showToast('Error exporting data.', 'error'); } }
+    function handleImport(event){ const file = event.target.files[0]; if (!file) return; if (!confirm(`Are you sure you want to replace all data for ${viewedYear} with this file? This action cannot be undone.`)) { event.target.value = ''; return; } const reader = new FileReader(); reader.onload = (e) => { try { const importedData = JSON.parse(e.target.result); if (importedData) { dataRef.set(importedData).then(() => showToast('Data imported and synced successfully.', 'success')); } else { showToast('Invalid data file format.', 'error'); } } catch (error) { showToast('Failed to read the file.', 'error'); } finally { event.target.value = ''; } }; reader.readAsText(file); }
+    
+    // --- Helper Functions ---
+    function getClassNameForExam(examId) { const exam = appData.exams[examId]; if (!exam) return "Unknown Class"; const classIds = new Set(); (exam.selectedBatches || []).forEach(batchId => { (appData.batchSchedule || []).forEach(day => { (day.classes || []).forEach(cls => { if ((cls.batches || []).some(b => b.id === batchId)) classIds.add(cls.classId); }); }); }); if (classIds.size === 0) return "No Class Assigned"; return [...classIds].map(id => (appData.mainClassCategories || []).find(c => c.id === id)?.name || id).join(', '); }
+    function findClassInfoForExam(exam) { const classIds = new Set(); (exam.selectedBatches || []).forEach(batchId => { for (const day of (appData.batchSchedule || [])) { for (const cls of (day.classes || [])) { if ((cls.batches || []).some(b => b.id === batchId)) classIds.add(cls.classId); } } }); return [...classIds]; }
+    
+    // --- Main View Renderer ---
+    const renderMainView = () => {
+        currentOlympiadId = null; currentExamId = null; currentSeriesExamId = null;
+        mainContainer.innerHTML = '';
+        mainContainer.appendChild(document.getElementById('template-main-view').content.cloneNode(true));
+        renderExamTabs();
+    };
+    
+    // --- Main Exam Functions ---
+    function renderExamTabs() {
+        const examClassTabs = document.getElementById('exam-class-tabs'); if (!examClassTabs) return; examClassTabs.innerHTML = '';
+        const allClassesWithExams = new Set(); Object.values(appData.exams || {}).filter(e => !e.deletedAt).forEach(exam => { findClassInfoForExam(exam).forEach(classId => allClassesWithExams.add(classId)); });
+        const sortedClassIds = [...allClassesWithExams].sort((a, b) => ((appData.mainClassCategories || []).find(c => c.id === a)?.name || '').localeCompare((appData.mainClassCategories || []).find(c => c.id === b)?.name || ''));
+        const createTab = (text, value) => { const tab = document.createElement('button'); tab.className = 'tab-button'; tab.textContent = text; tab.dataset.classId = value; tab.addEventListener('click', () => { examClassTabs.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active')); tab.classList.add('active'); renderFilters(value); renderExamList(value); }); return tab; };
+        sortedClassIds.forEach(classId => { const classInfo = (appData.mainClassCategories || []).find(c => c.id === classId); if (classInfo) examClassTabs.appendChild(createTab(classInfo.name, classId)); });
+        
+        const seriesTab = createTab('Series Exams', 'series');
+        seriesTab.style.marginLeft = 'auto'; 
+        examClassTabs.appendChild(seriesTab);
+        examClassTabs.appendChild(createTab('সকল পরীক্ষা', 'all'));
+        
+        const firstTab = examClassTabs.querySelector('.tab-button'); if (firstTab) firstTab.click(); else renderExamList('all');
+    }
+    function renderFilters(tabId) { const filterContainer = document.getElementById('exam-filters'), classFilter = document.getElementById('classFilter'), batchFilter = document.getElementById('batchFilter'); if (!filterContainer || !classFilter || !batchFilter) return; if (tabId === 'series') { filterContainer.classList.remove('d-none'); classFilter.innerHTML = '<option value="all">সকল ক্লাস</option>'; batchFilter.innerHTML = '<option value="all">সকল ব্যাচ</option>'; (appData.mainClassCategories || []).forEach(c => { if(!c.deletedAt) classFilter.add(new Option(c.name, c.id)); }); classFilter.onchange = () => { const selectedClass = classFilter.value; batchFilter.innerHTML = '<option value="all">সকল ব্যাচ</option>'; if (selectedClass !== 'all') { const batchesInClass = new Map(); (appData.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c.classId === selectedClass).forEach(cs => (cs.batches || []).forEach(b => { if (!b.deletedAt && !batchesInClass.has(b.id)) batchesInClass.set(b.id, `${day.dayName} (${b.time})`); }))); batchesInClass.forEach((text, id) => batchFilter.add(new Option(text, id))); } renderExamList(tabId); }; } else if (tabId === 'all') { filterContainer.classList.add('d-none'); } else { filterContainer.classList.remove('d-none'); classFilter.classList.add('d-none'); batchFilter.innerHTML = '<option value="all">সকল ব্যাচ</option>'; const batchesInClass = new Map(); (appData.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c.classId === tabId).forEach(cs => (cs.batches || []).forEach(b => { if (!b.deletedAt && !batchesInClass.has(b.id)) batchesInClass.set(b.id, `${day.dayName} (${b.time})`); }))); batchesInClass.forEach((text, id) => batchFilter.add(new Option(text, id))); } }
+    function renderExamList(tabId) { const listContainer = document.getElementById('exam-list-container'); if (!listContainer) return; listContainer.innerHTML = ''; if (tabId === 'series') { renderSeriesExamList(); return; } const selectedBatchId = document.getElementById('batchFilter')?.value; const allExams = Object.entries(appData.exams || {}).sort(([,a],[,b]) => new Date(b.date) - new Date(a.date)); const filteredExams = allExams.filter(([, exam]) => !exam.deletedAt && (tabId === 'all' || findClassInfoForExam(exam).includes(tabId)) && (!selectedBatchId || selectedBatchId === 'all' || (exam.selectedBatches || []).includes(selectedBatchId))); if (filteredExams.length === 0) { listContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1 / -1;">No exams found.</p>'; return; } const fragment = document.createDocumentFragment(); filteredExams.forEach(([examId, exam]) => { const card = document.createElement('div'); card.className = 'exam-card'; card.dataset.examId = examId; card.innerHTML = `<div class="exam-menu-container"><button class="menu-toggle-btn">&vellip;</button><div class="exam-menu-dropdown"><button class="btn-secondary btn-edit-exam" data-id="${examId}">Edit</button><button class="btn-danger btn-delete-exam" data-id="${examId}">Delete</button></div></div><h4>${exam.name}</h4><p><strong>Date:</strong> ${new Date(exam.date).toLocaleDateString('bn-BD', { year:'numeric', month:'long', day:'numeric' })}</p><p><strong>Total Marks:</strong> ${exam.totalMarks}</p>`; card.addEventListener('click', (e) => { if (!e.target.closest('.exam-menu-container')) { currentExamId = examId; renderExamDetails(examId); } }); card.querySelector('.menu-toggle-btn').addEventListener('click', e => { e.stopPropagation(); document.querySelectorAll('.exam-menu-dropdown.active').forEach(d => d.classList.remove('active')); card.querySelector('.exam-menu-dropdown').classList.toggle('active'); }); card.querySelector('.btn-delete-exam').addEventListener('click', e => { e.stopPropagation(); if (confirm(`Move '${exam.name}' to recycle bin?`)) { dataRef.child(`exams/${examId}/deletedAt`).set(new Date().toISOString()).then(() => showToast('Exam moved to recycle bin.', 'success')); } }); card.querySelector('.btn-edit-exam').addEventListener('click', (e) => { e.stopPropagation(); openCreateExamModal(examId); }); fragment.appendChild(card); }); listContainer.appendChild(fragment); document.body.addEventListener('click', () => document.querySelectorAll('.exam-menu-dropdown.active').forEach(d => d.classList.remove('active')), true); }
+    function renderSeriesExamList() { const listContainer = document.getElementById('exam-list-container'); listContainer.innerHTML = ''; const selectedClassId = document.getElementById('classFilter').value; const selectedBatchId = document.getElementById('batchFilter').value; const allSeriesExams = Object.entries(appData.seriesExams || {}); let filteredSeriesExams = allSeriesExams.filter(([, seriesExam]) => (selectedClassId === 'all' || seriesExam.classId === selectedClassId)); if (selectedBatchId !== 'all') { filteredSeriesExams = filteredSeriesExams.filter(([, seriesExam]) => seriesExam.sourceExamIds.map(id => appData.exams[id]).filter(Boolean).some(ex => ex.selectedBatches?.includes(selectedBatchId))); } const fragment = document.createDocumentFragment(); filteredSeriesExams.sort(([,a],[,b]) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(([id, seriesExam]) => { const card = document.createElement('div'); card.className = 'exam-card series-exam-card'; card.dataset.seriesExamId = id; card.innerHTML = `<h4>${seriesExam.name} (Series)</h4><p><strong>Created:</strong> ${new Date(seriesExam.createdAt).toLocaleDateString('bn-BD')}</p><p><strong>Total Marks:</strong> ${seriesExam.totalMarks}</p><p><strong>Source Exams:</strong> ${seriesExam.sourceExamIds.map(exId => appData.exams[exId]?.name || 'Unknown').join(', ')}</p>`; card.addEventListener('click', () => { renderResultSheet(false, id, true); }); fragment.appendChild(card); }); if (filteredSeriesExams.length === 0) { listContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1 / -1;">No series exams found.</p>'; } else { listContainer.appendChild(fragment); } }
+    
+    // --- Create/Edit Exam Modal & Logic ---
+    function openCreateExamModal(examId = null) {
+        const modal = document.getElementById('createExamModal');
+        const form = modal.querySelector('form');
+        form.reset();
+        
+        const title = modal.querySelector('#examModalTitle');
+        const submitBtn = modal.querySelector('#examModalSubmitBtn');
+        const idInput = modal.querySelector('#examIdInput');
+        const batchSelector = modal.querySelector('#batchSelectorGroup');
+
+        if (examId) { // Edit Mode
+            const exam = appData.exams[examId];
+            title.textContent = 'Edit Exam';
+            submitBtn.textContent = 'Save Changes';
+            idInput.value = examId;
+            modal.querySelector('#examNameInput').value = exam.name;
+            modal.querySelector('#examDateInput').value = exam.date;
+            modal.querySelector('#examTotalMarksInput').value = exam.totalMarks;
+            batchSelector.style.display = 'none';
+        } else { // Create Mode
+            title.textContent = 'নতুন পরীক্ষা তৈরি করুন';
+            submitBtn.textContent = 'পরীক্ষা তৈরি করুন';
+            idInput.value = '';
+            batchSelector.style.display = 'block';
+            
+            const classListDiv = modal.querySelector('.class-list'), batchListDiv = modal.querySelector('.batch-list');
+            classListDiv.innerHTML = ''; 
+            (appData.mainClassCategories||[]).filter(c=>!c.deletedAt).forEach(c=>{
+                const relevantBatches = (appData.batchSchedule||[]).flatMap(day => (day.classes||[]).filter(cls => cls.classId === c.id && !cls.deletedAt).flatMap(cls => (cls.batches||[]).filter(b => !b.deletedAt).map(b => ({...b, dayName: day.dayName}))));
+                if (relevantBatches.length > 0) {
+                    const classItem = document.createElement('div'); classItem.className = 'class-list-item'; classItem.textContent = c.name; classItem.dataset.classId = c.id;
+                    classListDiv.appendChild(classItem);
+                    classItem.addEventListener('click', () => {
+                        document.querySelectorAll('.class-list-item.active').forEach(i => i.classList.remove('active'));
+                        classItem.classList.add('active');
+                        batchListDiv.innerHTML = '';
+                        relevantBatches.forEach(b => { batchListDiv.innerHTML += `<label class="batch-list-item"><input type="checkbox" name="selectedBatches" value="${b.id}"> ${b.dayName} (${b.time})</label>`; });
+                    });
+                }
+            });
+        }
+        modal.classList.add('visible');
+    }
+
+    function handleSaveExam(e){
+        e.preventDefault();
+        const modal = document.getElementById('createExamModal');
+        const submitBtn = modal.querySelector('#examModalSubmitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Saving...';
+        
+        const examId = modal.querySelector('#examIdInput').value;
+        const name = modal.querySelector('#examNameInput').value.trim();
+        const date = modal.querySelector('#examDateInput').value;
+        const totalMarks = modal.querySelector('#examTotalMarksInput').value;
+        
+        if (!name || !date || !totalMarks) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = examId ? 'Save Changes' : 'পরীক্ষা তৈরি করুন';
+            return showToast("Please fill all required fields.", 'error');
+        }
+
+        const examData = { name, date, totalMarks: parseInt(totalMarks) };
+        showLoader();
+
+        let dbOperation;
+        if (examId) { // Update existing exam
+            dbOperation = dataRef.child(`exams/${examId}`).update(examData);
+        } else { // Create new exam
+            const selectedBatches = [...modal.querySelectorAll('input[name="selectedBatches"]:checked')].map(e => e.value);
+            if (selectedBatches.length === 0) {
+                hideLoader();
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'পরীক্ষা তৈরি করুন';
+                return showToast("Please select at least one batch.", 'error');
+            }
+            examData.selectedBatches = selectedBatches;
+            examData.results = {};
+            const newExamId = `exm_${Date.now()}`;
+            dbOperation = dataRef.child(`exams/${newExamId}`).set(examData);
+        }
+
+        dbOperation.then(() => {
+            showToast(examId ? "Exam updated successfully." : "Exam created successfully.", 'success');
+            modal.classList.remove('visible');
+        }).catch(err => {
+            showToast(`Error: ${err.message}`, 'error');
+        }).finally(() => {
+            hideLoader();
+            submitBtn.disabled = false;
+            submitBtn.textContent = examId ? 'Save Changes' : 'পরীক্ষা তৈরি করুন';
+        });
+    }
+    
+    function openSeriesExamModal() { const modal = document.getElementById('seriesExamModal'); modal.classList.add('visible'); modal.querySelector('form').reset(); const classSelect = modal.querySelector('#seriesClassSelect'), examContainer = modal.querySelector('#series-exam-selector-container'); classSelect.innerHTML = '<option value="">-- ক্লাস সিলেক্ট --</option>'; (appData.mainClassCategories || []).forEach(c => { if (!c.deletedAt) classSelect.add(new Option(c.name, c.id)); }); const updateExamList = () => { const selectedClassId = classSelect.value; examContainer.innerHTML = ''; if (!selectedClassId) { examContainer.innerHTML = '<p>Select a class to see exams.</p>'; return; } const relevantExams = Object.entries(appData.exams || {}).filter(([, exam]) => findClassInfoForExam(exam).includes(selectedClassId) && !exam.deletedAt).sort(([,a],[,b]) => new Date(b.date) - new Date(a.date)); if (relevantExams.length === 0) { examContainer.innerHTML = '<p>No exams found for this class.</p>'; return; } relevantExams.forEach(([id, exam]) => { const label = document.createElement('label'); label.className = 'exam-checkbox-label'; label.innerHTML = `<input type="checkbox" name="selectedSeriesExams" value="${id}"> <span>${exam.name} (${new Date(exam.date).toLocaleDateString('bn-BD')}) - ${exam.totalMarks} Marks</span>`; examContainer.appendChild(label); }); }; classSelect.onchange = updateExamList; updateExamList(); }
+    function handleSaveSeriesExam(e) { e.preventDefault(); const modal = document.getElementById('seriesExamModal'); const name = modal.querySelector('#seriesNameInput').value.trim(), classId = modal.querySelector('#seriesClassSelect').value, selectedExamIds = [...modal.querySelectorAll('input[name="selectedSeriesExams"]:checked')].map(cb => cb.value); if (!name || !classId || selectedExamIds.length < 2) return showToast("Please provide a name, class, and select at least two exams.", "error"); showLoader(); let totalMarks = 0; const allStudentIds = new Set(); selectedExamIds.forEach(examId => { const exam = appData.exams[examId]; if (exam) { totalMarks += Number(exam.totalMarks) || 0; Object.keys(exam.results || {}).forEach(studentId => allStudentIds.add(studentId)); } }); const finalResults = {}; allStudentIds.forEach(studentId => { let totalScore = 0; selectedExamIds.forEach(examId => totalScore += appData.exams[examId]?.results?.[studentId] || 0); finalResults[studentId] = totalScore; }); const seriesExamId = `series_${Date.now()}`; dataRef.child(`seriesExams/${seriesExamId}`).set({ id: seriesExamId, name, classId, createdAt: new Date().toISOString(), sourceExamIds: selectedExamIds, totalMarks, results: finalResults }).then(() => { showToast("Series exam created!", 'success'); modal.classList.remove('visible'); hideLoader(); }).catch(err => { showToast("Failed to create series exam.", "error"); hideLoader(); }); }
+    
+    // --- Exam Details & Result Sheet ---
+    function renderExamDetails(examId){ currentSeriesExamId = null; currentExamId = examId; const exam=appData.exams[examId];if(!exam){showToast("Exam not found.","error");showView('exam-list-view');return;} showView('exam-details-view'); document.getElementById('detailsExamName').textContent=exam.name; const studentIdsInExam=new Set,batchDetailsMap=new Map;exam.selectedBatches.forEach(batchId=>{for(const day of appData.batchSchedule||[])for(const cls of day.classes||[]){const foundBatch=(cls.batches||[]).find(b=>b.id===batchId);if(foundBatch){(foundBatch.studentIds||[]).forEach(sid=>studentIdsInExam.add(sid));const classInfo=(appData.mainClassCategories||[]).find(c=>c.id===cls.classId);if(!batchDetailsMap.has(classInfo?.name))batchDetailsMap.set(classInfo?.name,[]);batchDetailsMap.get(classInfo?.name).push(`${day.dayName} (${foundBatch.time})`)}}}); const allStudents=[...studentIdsInExam].map(id=>(appData.students||[]).find(s=>s.id===id)).filter(Boolean).sort((a,b)=>(parseInt(a.roll)||0)-(parseInt(b.roll)||0)); document.getElementById('detailsExamInfo').innerHTML=`<p><strong>Date:</strong> ${new Date(exam.date).toLocaleDateString('bn-BD',{year:'numeric',month:'long',day:'numeric'})} | <strong>Total Marks:</strong> ${exam.totalMarks}</p>${[...batchDetailsMap.entries()].map(([className,batches])=>`<p><strong>Class & Batch:</strong> ${className} (${batches.join(', ')})</p>`).join('')}`; document.getElementById('exam-stats').innerHTML=`<span>Total: ${allStudents.length}</span><span class="stat-entered">Entered: ${Object.keys(exam.results||{}).length}</span><span class="stat-pending">Pending: ${allStudents.length - Object.keys(exam.results||{}).length}</span>`; const tableBody=document.getElementById('student-marks-tbody'); tableBody.innerHTML=''; const fragment = document.createDocumentFragment(); allStudents.forEach((student,index)=>{const tr=document.createElement('tr'); tr.dataset.studentId=student.id; const savedMark=exam.results?.[student.id]??''; tr.innerHTML=`<td class="student-photo-cell">${student.photoURL ? `<img src="${student.photoURL}" alt="${student.name}" onerror="this.onerror=null; this.src='images/default_avatar.png';">` : `<img src="images/default_avatar.png" alt="Default">`}</td><td>${index+1}</td><td>${student.name}</td><td>${student.roll}</td><td>${student.schoolName||'N/A'}</td><td>${savedMark}</td>`; tr.addEventListener('click',()=>handleRowClick(student.id,tr,savedMark)); fragment.appendChild(tr);}); tableBody.appendChild(fragment); }
+    function handleRowClick(studentId,rowElement,currentMark){document.querySelectorAll('#student-marks-tbody tr.selected-row').forEach(row=>row.classList.remove('selected-row'));rowElement.classList.add('selected-row');const student=(appData.students||[]).find(s=>s.id===studentId);if(student){document.getElementById('quickEntryStudentInfo').textContent=`${student.name} (Roll: ${student.roll})`;const marksInput=document.getElementById('quickEntryMarksInput');marksInput.value=currentMark;marksInput.disabled=false;marksInput.focus()}}
+    async function saveQuickEntryMark() { if (!currentExamId) return; const selectedRow = document.querySelector('#student-marks-tbody tr.selected-row'); const studentId = selectedRow?.dataset.studentId; if (!studentId) return; const marksInput = document.getElementById('quickEntryMarksInput'); const marksStr = marksInput.value, totalMarks = appData.exams[currentExamId].totalMarks; let marksToSave = null; if (marksStr.trim() !== '') { const marksNum = parseFloat(marksStr); if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error'); marksToSave = marksNum; } const studentRef = dataRef.child(`exams/${currentExamId}/results/${studentId}`); if (marksToSave !== null) await studentRef.set(marksToSave); else await studentRef.remove(); selectedRow.cells[5].textContent = marksToSave ?? ''; showToast('Marks saved.', 'success', 1500); }
+    
+    function renderResultSheet(isOlympiad, id, isSeries = false) { currentExamId = !isOlympiad && !isSeries ? id : null; currentOlympiadId = isOlympiad ? id : null; currentSeriesExamId = isSeries ? id : null; const exam = isOlympiad ? appData.openOlympiads[id] : (isSeries ? appData.seriesExams[id] : appData.exams[id]); if (!exam) return showToast('Exam data not found.', 'error'); let participantsData; if(isOlympiad) { participantsData = Object.values(exam.participants || {}).map(p => ({ student: { id: p.regNo, name: p.isInternal && p.internalStudentRoll ? `${p.name} (Roll: ${p.internalStudentRoll})` : p.name, roll: p.regNo, schoolName: p.school, photoURL: p.isInternal ? (appData.students.find(s=>s.id===p.internalStudentId)?.photoURL) : null }, marks: p.marks })); } else if (isSeries) { participantsData = Object.keys(exam.results || {}).map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results[studentId] })).filter(item => item.student); } else { const studentIdsForExam = new Set(); (exam.selectedBatches || []).forEach(batchId => { const batch = findBatchById(batchId); (batch?.studentIds || []).forEach(sId => studentIdsForExam.add(sId)); }); participantsData = [...studentIdsForExam].map(studentId => ({ student: (appData.students || []).find(s => s.id === studentId), marks: exam.results?.[studentId] })).filter(item => item.student); } fullResultData = participantsData.sort((a, b) => (b.marks ?? -1) - (a.marks ?? -1)); mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-main-view').content.cloneNode(true)); showView('result-sheet-view'); document.getElementById('resultSheetExamName').textContent = `Result: ${exam.name}`; const filterContainer = document.getElementById('result-sheet-filter-container'); filterContainer.classList.toggle('d-none', isOlympiad || isSeries); if (!isOlympiad && !isSeries) { const batchFilterSelect = document.getElementById('resultBatchFilter'); batchFilterSelect.innerHTML = '<option value="all">All Batches</option>'; const batchMap = new Map(); (appData.batchSchedule||[]).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if ((exam.selectedBatches || []).includes(b.id)) batchMap.set(b.id, `${day.dayName} (${b.time})`); }))); batchMap.forEach((text, id) => batchFilterSelect.add(new Option(text, id))); document.getElementById('btnToggleResultImages').addEventListener('click', toggleResultSheetImages); } else { document.getElementById('btnToggleResultImages').style.display = 'none'; } displayFilteredResults(); }
+    function toggleResultSheetImages(e) { const container = document.getElementById('result-preview-container'); container.classList.toggle('hide-images'); e.target.textContent = container.classList.contains('hide-images') ? 'Show Images' : 'Hide Images'; }
+    function displayFilteredResults() { const isOlympiad = currentOlympiadId != null; const isSeries = currentSeriesExamId != null; const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]); if (!exam) return; let filteredData = [...fullResultData]; if (!isOlympiad && !isSeries) { const batchId = document.getElementById('resultBatchFilter').value; if (batchId !== 'all') { let studentIdsInBatch = new Set(); (appData.batchSchedule || []).forEach(day => day.classes?.forEach(cls => cls.batches?.forEach(b => { if (b.id === batchId) (b.studentIds || []).forEach(sid => studentIdsInBatch.add(sid)); }))); filteredData = fullResultData.filter(item => studentIdsInBatch.has(item.student.id)); } } const searchTerm = document.getElementById('resultSheetSearchInput').value.toLowerCase(); if (searchTerm) { filteredData = filteredData.filter(item => item.student.name.toLowerCase().includes(searchTerm) || String(item.student.roll).toLowerCase().includes(searchTerm)); } let rank = 1, lastMark = -Infinity, rankCounter = 0; const processedData = filteredData.map(item => { const currentMark = item.marks; if (currentMark === undefined || currentMark === null) return { ...item, rank: null }; rankCounter++; if (currentMark !== lastMark) { rank = rankCounter; lastMark = currentMark; } return { ...item, rank: rank }; }); let tableHeader = isOlympiad ? `<th>SL</th><th>Name</th><th>Reg. No</th><th>School</th><th>Marks</th><th>Place</th>` : `<th class="student-photo-cell">Photo</th><th>SL</th><th>Name</th><th>Roll</th><th>School</th><th>Marks</th><th>Place</th>`; let tableHTML = `<table><thead><tr>${tableHeader}</tr></thead><tbody>`; if (processedData.length === 0) { tableHTML += `<tr><td colspan="${isOlympiad ? 6 : 7}" style="text-align:center;">No results found.</td></tr>`; } else { processedData.forEach((item, index) => { const place = item.rank === null ? `<span style="color:var(--danger-color); font-weight:bold;">Absent</span>` : getOrdinal(item.rank); const photoCell = isOlympiad ? '' : `<td class="student-photo-cell">${item.student.photoURL ? `<img src="${item.student.photoURL}" alt="${item.student.name}" onerror="this.parentElement.innerHTML = '❓'">` : '❓'}</td>`; tableHTML += `<tr>${photoCell}<td>${index + 1}</td><td>${item.student.name}</td><td>${item.student.roll}</td><td>${item.student.schoolName || ''}</td><td>${item.marks ?? 'N/A'} / ${exam.totalMarks}</td><td>${place}</td></tr>`; }); } tableHTML += '</tbody></table>'; document.getElementById('result-preview-container').innerHTML = tableHTML; document.getElementById('btnPrintResult').disabled = processedData.length === 0; }
+    function handlePrint() { const printArea = document.getElementById('print-area'); const resultContainer = document.getElementById('result-preview-container'); const isOlympiad = currentOlympiadId != null; const isSeries = currentSeriesExamId != null; const exam = isOlympiad ? appData.openOlympiads[currentOlympiadId] : (isSeries ? appData.seriesExams[currentSeriesExamId] : appData.exams[currentExamId]); if (!exam) return showToast('Cannot find exam data to print.', 'error'); let headerHTML = `<div style="text-align: center; margin-bottom: 20px;"><h2 style="margin:0; font-size: 16pt;">মিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট</h2><h1 style="margin:5px 0; font-size: 20pt; font-weight: bold;">${exam.name}</h1>`; if (isOlympiad) { headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`; } else if (isSeries) { headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Total Marks: ${exam.totalMarks}</p>`; } else { let selectedBatchText = ''; const filterSelect = document.getElementById('resultBatchFilter'); const isFiltered = filterSelect && filterSelect.value !== 'all'; if (isFiltered) selectedBatchText = filterSelect.options[filterSelect.selectedIndex].text; const className = getClassNameForExam(currentExamId); headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Class: ${className}</p>`; if (isFiltered) headerHTML += `<p style="margin:5px 0; font-size: 12pt;">Batch: ${selectedBatchText}</p>`; headerHTML += `<p style="margin:5px 0; font-size: 10pt;">Date: ${new Date(exam.date).toLocaleDateString('en-GB')} | Total Marks: ${exam.totalMarks}</p>`; } headerHTML += '</div>'; const footerHTML = `<div class="print-footer"><span>© Miracle Cadet & Academic Institute 2026</span><span>Software by: বিন্দুমাত্রা আইটি</span></div>`; const tempContainer = document.createElement('div'); tempContainer.innerHTML = resultContainer.innerHTML; if(resultContainer.classList.contains('hide-images')) { tempContainer.querySelectorAll('.student-photo-cell').forEach(cell => cell.style.display = 'none'); } printArea.innerHTML = headerHTML + tempContainer.innerHTML + footerHTML; window.print(); printArea.innerHTML = ''; }
+
+    // --- Open Olympiad Functions ---
+    function showOlympiadListView() { currentOlympiadId = null; mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-olympiad-main-view').content.cloneNode(true)); document.getElementById('btnCreateOlympiad').addEventListener('click', () => openCreateOlympiadModal()); renderOlympiadList(); }
+    function renderOlympiadList() { const container = document.getElementById('olympiad-list-container'); if (!container) return; container.innerHTML = ''; const olympiads = Object.entries(appData.openOlympiads || {}).filter(([,o]) => !o.deletedAt).sort(([,a],[,b]) => new Date(b.date) - new Date(a.date)); if (olympiads.length === 0) { container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No Olympiads found. Create one to get started!</p>'; return; } const fragment = document.createDocumentFragment(); olympiads.forEach(([id, data]) => { const card = document.createElement('div'); card.className = 'exam-card olympiad-card'; card.dataset.olympiadId = id; const participantCount = Object.keys(data.participants || {}).length; card.innerHTML = `<div class="exam-menu-container"><button class="menu-toggle-btn">&vellip;</button><div class="exam-menu-dropdown"><button class="btn-secondary btn-edit-olympiad" data-id="${id}">Edit</button><button class="btn-danger btn-delete-olympiad" data-id="${id}">Delete</button></div></div><h4>${data.name}</h4><p><strong>Date:</strong> ${new Date(data.date).toLocaleDateString('bn-BD')}</p><p><strong>Venue:</strong> ${data.venue || 'N/A'}</p><p><strong>Participants:</strong> ${participantCount}</p>`; card.addEventListener('click', e => { if (!e.target.closest('.exam-menu-container')) renderOlympiadDetailsView(id) }); card.querySelector('.menu-toggle-btn').addEventListener('click', e => { e.stopPropagation(); document.querySelectorAll('.exam-menu-dropdown.active').forEach(d => d.classList.remove('active')); card.querySelector('.exam-menu-dropdown').classList.toggle('active'); }); card.querySelector('.btn-edit-olympiad').addEventListener('click', e => { e.stopPropagation(); openCreateOlympiadModal(id); }); card.querySelector('.btn-delete-olympiad').addEventListener('click', e => { e.stopPropagation(); if (confirm(`Move '${data.name}' to recycle bin?`)) { db.ref(`data/openOlympiads/${id}/deletedAt`).set(new Date().toISOString()).then(() => showToast('Olympiad moved to recycle bin.', 'success')); } }); fragment.appendChild(card); }); container.appendChild(fragment); }
+    function openCreateOlympiadModal(olympiadId = null) { if (!document.getElementById('createOlympiadModal')) document.body.appendChild(document.getElementById('template-create-olympiad-modal').content.cloneNode(true)); const modal = document.getElementById('createOlympiadModal'); const form = modal.querySelector('form'); form.reset(); const title = modal.querySelector('#olympiadModalTitle'), submitBtn = modal.querySelector('#olympiadModalSubmitBtn'), idInput = modal.querySelector('#olympiadIdInput'); if (olympiadId) { const olympiad = appData.openOlympiads[olympiadId]; title.textContent = 'Edit Olympiad'; submitBtn.textContent = 'Save Changes'; idInput.value = olympiadId; modal.querySelector('#olympiadNameInput').value = olympiad.name; modal.querySelector('#olympiadDateInput').value = olympiad.date; modal.querySelector('#olympiadTotalMarksInput').value = olympiad.totalMarks; modal.querySelector('#olympiadVenueInput').value = olympiad.venue; } else { title.textContent = 'Create New Olympiad'; submitBtn.textContent = 'Create Olympiad'; idInput.value = ''; } form.onsubmit = handleSaveOlympiad; modal.querySelector('.modal-close-btn').onclick = () => modal.classList.remove('visible'); modal.querySelector('.modal-cancel-btn').onclick = () => modal.classList.remove('visible'); modal.classList.add('visible'); }
+    function handleSaveOlympiad(e) { e.preventDefault(); const modal = document.getElementById('createOlympiadModal'); const olympiadId = modal.querySelector('#olympiadIdInput').value; const name = modal.querySelector('#olympiadNameInput').value.trim(); const date = modal.querySelector('#olympiadDateInput').value; const totalMarks = modal.querySelector('#olympiadTotalMarksInput').value; const venue = modal.querySelector('#olympiadVenueInput').value.trim(); if (!name || !date || !totalMarks || !venue) return showToast('Please fill all fields.', 'error'); const olympiadData = { name, date, venue, totalMarks: parseInt(totalMarks) }; const ref = db.ref('data/openOlympiads'); if (olympiadId) { ref.child(olympiadId).update(olympiadData).then(() => { showToast('Olympiad updated!', 'success'); modal.classList.remove('visible'); }); } else { olympiadData.participants = {}; const newOlympiadId = `olymp_${Date.now()}`; ref.child(newOlympiadId).set(olympiadData).then(() => { showToast('Olympiad created!', 'success'); modal.classList.remove('visible'); }); } }
+    function renderOlympiadDetailsView(olympiadId) { currentOlympiadId = olympiadId; mainContainer.innerHTML = ''; mainContainer.appendChild(document.getElementById('template-olympiad-details-view').content.cloneNode(true)); if (olympiadParticipantListener) db.ref(`data/openOlympiads/${olympiadId}`).off('value', olympiadParticipantListener); olympiadParticipantListener = db.ref(`data/openOlympiads/${olympiadId}`).on('value', snapshot => { const olympiad = snapshot.val(); if (!olympiad) { showToast('Olympiad not found.', 'error'); showOlympiadListView(); return; } appData.openOlympiads[olympiadId] = olympiad; document.getElementById('olympiadDetailsName').textContent = olympiad.name; document.getElementById('olympiadDetailsInfo').textContent = `Date: ${new Date(olympiad.date).toLocaleDateString('en-GB')} | Venue: ${olympiad.venue} | Total Marks: ${olympiad.totalMarks}`; renderOlympiadParticipantList(olympiad.participants || {}); }); document.getElementById('btnBackToOlympiadList').addEventListener('click', showOlympiadListView); document.getElementById('btnAddExternalStudent').addEventListener('click', openAddExternalStudentModal); document.getElementById('btnOlympiadResult').addEventListener('click', () => renderResultSheet(true, currentOlympiadId)); document.getElementById('btnOlympiadMarksEntry').addEventListener('click', () => renderOlympiadMarksEntryView(currentOlympiadId)); const searchInput = document.getElementById('olympiadInternalStudentSearch'); searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const roll = e.target.value.trim(); if (!roll) return; const student = (appData.students || []).find(s => s.roll === roll && !s.deletedAt); const resultsDiv = document.getElementById('internal-student-search-results'); resultsDiv.innerHTML = ''; if (student) { const alreadyAdded = Object.values(appData.openOlympiads[currentOlympiadId].participants || {}).some(p => p.internalStudentId === student.id); resultsDiv.innerHTML = `<div class="search-result-item"><span>${student.name} - ${student.schoolName || 'N/A'}</span><button class="btn-primary" data-student-id="${student.id}" ${alreadyAdded ? 'disabled' : ''}>${alreadyAdded ? 'Added' : 'Add'}</button></div>`; resultsDiv.querySelector('button').addEventListener('click', (ev) => { ev.currentTarget.disabled = true; ev.currentTarget.textContent = 'Adding...'; handleAddInternalParticipant(ev.currentTarget.dataset.studentId); }); } else { resultsDiv.innerHTML = `<p style="color: var(--danger-color);">No student found with roll: ${roll}</p>`; } } }); }
+    function renderOlympiadParticipantList(participants) { if (!currentOlympiadId) return; const tbody = document.getElementById('olympiad-participant-tbody'); const participantCount = Object.keys(participants).length; document.getElementById('participant-count').textContent = `(${participantCount})`; tbody.innerHTML = ''; if (participantCount === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No participants registered yet.</td></tr>`; return; } const fragment = document.createDocumentFragment(); Object.values(participants).sort((a,b) => a.regNo - b.regNo).forEach(p => { const tr = document.createElement('tr'); const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name; tr.innerHTML = `<td><b>${p.regNo}</b></td><td>${displayName}</td><td>${p.school}</td><td>${p.contact || 'N/A'}</td><td class="no-print"><button class="btn-secondary" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Admit</button><button class="btn-danger" style="padding: 5px 10px;" data-reg-no="${p.regNo}">Del</button></td>`; tr.querySelector('.btn-secondary').addEventListener('click', (e) => handlePrintAdmitCard(e.currentTarget.dataset.regNo)); tr.querySelector('.btn-danger').addEventListener('click', (e) => { if(confirm(`Remove ${p.name} from this olympiad?`)) { db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${p.regNo}`).remove().then(() => showToast('Participant removed.', 'info')); } }); fragment.appendChild(tr); }); tbody.appendChild(fragment); }
+    async function generateNewRegNo() { const yearPrefix = new Date().getFullYear().toString().substring(2); let maxReg = 0; const snapshot = await db.ref(`data/openOlympiads/${currentOlympiadId}/participants`).once('value'); const participants = snapshot.val() || {}; for (const regNo in participants) { if (regNo.startsWith(yearPrefix)) { const numPart = parseInt(regNo.substring(2)); if (numPart > maxReg) maxReg = numPart; } } return `${yearPrefix}${(maxReg + 1).toString().padStart(3, '0')}`; }
+    async function handleAddInternalParticipant(studentId) { const student = (appData.students || []).find(s => s.id === studentId); if (!student) return showToast('Student not found!', 'error'); const regNo = await generateNewRegNo(); const participantData = { regNo, name: student.name, school: student.schoolName || 'N/A', contact: student.parentContact || 'N/A', isInternal: true, internalStudentId: student.id, internalStudentRoll: student.roll }; db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData).then(() => { showToast(`${student.name} added with Reg. No: ${regNo}`, 'success'); document.getElementById('internal-student-search-results').innerHTML = ''; document.getElementById('olympiadInternalStudentSearch').value = ''; }); }
+    function openAddExternalStudentModal() { if(document.getElementById('addExternalStudentModal')) document.getElementById('addExternalStudentModal').remove(); const template = document.getElementById('template-add-external-student-modal'); document.body.appendChild(template.content.cloneNode(true)); const modal = document.getElementById('addExternalStudentModal'); modal.querySelector('form').addEventListener('submit', handleSaveExternalStudent); modal.querySelector('.modal-close-btn').addEventListener('click', () => modal.remove()); modal.querySelector('.modal-cancel-btn').addEventListener('click', () => modal.remove()); modal.classList.add('visible'); }
+    async function handleSaveExternalStudent(e) { e.preventDefault(); const modal = document.getElementById('addExternalStudentModal'); const name = modal.querySelector('#externalStudentName').value.trim(); const school = modal.querySelector('#externalStudentSchool').value.trim(); const contact = modal.querySelector('#externalStudentContact').value.trim(); if (!name || !school || !contact) return showToast('Please fill all fields.', 'error'); const regNo = await generateNewRegNo(); const participantData = { regNo, name, school, contact, isInternal: false }; db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}`).set(participantData).then(() => { showToast(`External student added with Reg. No: ${regNo}`, 'success'); modal.remove(); }); }
+    function handlePrintAdmitCard(regNo) { const olympiad = appData.openOlympiads[currentOlympiadId]; const participant = olympiad.participants[regNo]; if (!participant) return showToast('Participant not found', 'error'); const printArea = document.getElementById('print-area'); let admitCardHTML = document.getElementById('template-admit-card').innerHTML; const displayName = participant.isInternal && participant.internalStudentRoll ? `${participant.name} (Roll: ${participant.internalStudentRoll})` : participant.name; admitCardHTML = admitCardHTML.replaceAll('##EXAM_NAME##', olympiad.name).replaceAll('##REG_NO##', participant.regNo).replaceAll('##STUDENT_NAME##', displayName).replaceAll('##SCHOOL_NAME##', participant.school).replaceAll('##EXAM_DATE##', new Date(olympiad.date).toLocaleDateString('en-GB')).replaceAll('##VENUE##', olympiad.venue).replaceAll('##TOTAL_MARKS##', olympiad.totalMarks); printArea.innerHTML = admitCardHTML; window.print(); printArea.innerHTML = ''; }
+    function renderOlympiadMarksEntryView(olympiadId) { mainContainer.innerHTML = ''; const template = document.getElementById('template-olympiad-marks-entry-view'); if (!template) return; mainContainer.appendChild(template.content.cloneNode(true)); const olympiad = appData.openOlympiads[olympiadId]; document.getElementById('marksOlympiadName').textContent = `Marks Entry: ${olympiad.name}`; document.getElementById('btnBackToOlympiadDetails').addEventListener('click', () => renderOlympiadDetailsView(olympiadId)); const participants = Object.values(olympiad.participants || {}); const total = participants.length; const entered = participants.filter(p => p.marks !== undefined && p.marks !== null).length; const pending = total - entered; document.getElementById('olympiad-stats').innerHTML = `<div class="stat-item"><div class="count total">${total}</div><div class="label">Total</div></div><div class="stat-item"><div class="count entered">${entered}</div><div class="label">Entered</div></div><div class="stat-item"><div class="count pending">${pending}</div><div class="label">Pending</div></div>`; const tbody = document.getElementById('olympiad-marks-tbody'); tbody.innerHTML = ''; const fragment = document.createDocumentFragment(); participants.sort((a,b) => a.regNo - b.regNo).forEach(p => { const tr = document.createElement('tr'); tr.dataset.regNo = p.regNo; const displayName = p.isInternal && p.internalStudentRoll ? `${p.name} <span style="color:var(--text-secondary); font-size:0.9em;">(Roll: ${p.internalStudentRoll})</span>` : p.name; tr.innerHTML = `<td>${p.regNo}</td><td>${displayName}</td><td>${p.school}</td><td>${p.marks ?? ''}</td>`; tr.addEventListener('click', () => { document.querySelectorAll('#olympiad-marks-tbody tr.selected-row').forEach(r => r.classList.remove('selected-row')); tr.classList.add('selected-row'); document.getElementById('marksEntryStudentInfo').textContent = `${p.name} (Reg: ${p.regNo})`; const marksInput = document.getElementById('marksEntryMarksInput'); marksInput.value = p.marks ?? ''; marksInput.disabled = false; marksInput.focus(); }); fragment.appendChild(tr); }); tbody.appendChild(fragment); const searchInput = document.getElementById('marksEntrySearchInput'); const marksInput = document.getElementById('marksEntryMarksInput'); searchInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const regNo = e.target.value.trim(); const row = tbody.querySelector(`tr[data-reg-no="${regNo}"]`); if(row) { row.click(); row.scrollIntoView({behavior: 'smooth', block: 'center'}); } else { showToast(`Participant with Reg. No ${regNo} not found.`, 'error'); } } }); marksInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); saveOlympiadMark(); } }); }
+    async function saveOlympiadMark() { const selectedRow = document.querySelector('#olympiad-marks-tbody tr.selected-row'); if (!selectedRow) return showToast('Please select a student first.', 'error'); const regNo = selectedRow.dataset.regNo; const marksInput = document.getElementById('marksEntryMarksInput'); const marksStr = marksInput.value; const totalMarks = appData.openOlympiads[currentOlympiadId].totalMarks; let marksToSave = null; if (marksStr.trim() !== '') { const marksNum = parseFloat(marksStr); if (isNaN(marksNum) || marksNum < 0 || marksNum > totalMarks) return showToast(`Marks must be between 0 and ${totalMarks}.`, 'error'); marksToSave = marksNum; } const markRef = db.ref(`data/openOlympiads/${currentOlympiadId}/participants/${regNo}/marks`); if (marksToSave !== null) { await markRef.set(marksToSave); } else { await markRef.remove(); } selectedRow.cells[3].textContent = marksToSave ?? ''; showToast('Marks saved!', 'success', 1500); const nextRow = selectedRow.nextElementSibling; if (nextRow) { nextRow.click(); nextRow.scrollIntoView({behavior: 'smooth', block: 'center'}); } else { marksInput.disabled = true; document.getElementById('marksEntryStudentInfo').textContent = "Select a student from the list"; } }
+    
+    // --- Data Loading ---
+    function loadAppData(yearToLoad) { 
+        showLoader(); 
+        viewedYear = yearToLoad;
+        localStorage.setItem(VIEWED_YEAR_KEY, viewedYear);
+        dataRef = getDbRefForYear(yearToLoad);
+
+        if (dataRef.off) dataRef.off();
+
+        dataRef.on('value', (snapshot) => { 
+            appData = snapshot.exists() ? snapshot.val() : {}; 
+            
+            db.ref('data/openOlympiads').once('value', (olympSnap) => {
+                appData.openOlympiads = olympSnap.val() || {};
+                if (!appData.exams) appData.exams = {}; 
+                if (!appData.seriesExams) appData.seriesExams = {};
+                currentPassword = appData.currentPassword || 'ashik@602';
+                
+                if (!dataLoaded) {
+                    dataLoaded = true;
+                    renderMainView();
+                } else {
+                    const currentView = mainContainer.querySelector('div:not(.d-none)');
+                    if(!currentView || currentView.id === 'exam-list-view') renderMainView();
+                    // other views will be refreshed by their respective listeners or nav actions
+                }
+                updateYearSelectorUI();
+                hideLoader();
+            });
+        }, (error) => { 
+            console.error("Firebase read failed: ", error); 
+            showToast("Cannot connect to database.", "error"); 
+            hideLoader(); 
+        }); 
+    }
+    
+    // --- Event Listeners Setup ---
+    function setupHeaderEventListeners() {
+        const yearSelector = document.getElementById('yearSelector');
+        document.getElementById('btnOpenOlympiad').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); showOlympiadListView(); });
+        document.getElementById('btnToggleTheme').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); toggleTheme(); });
+        document.getElementById('btnRecycleBin').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); showRecycleBin(); });
+        document.getElementById('btnAboutDev').addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); const template = document.getElementById('template-about-dev-modal'); if (template) { const modal = template.content.cloneNode(true); document.body.appendChild(modal); const modalElement = document.getElementById('aboutDeveloperModal'); const closeBtn = modalElement.querySelector('.modal-close-btn'); const closeModal = () => modalElement.remove(); closeBtn.onclick = closeModal; modalElement.onclick = (e) => { if (e.target === modalElement) closeModal(); }; setTimeout(() => modalElement.classList.add('visible'), 10); } });
+        document.getElementById('btnNavBack').addEventListener('click', handleNavBack);
+        document.getElementById('btnNavRefresh').addEventListener('click', () => location.reload());
+        document.getElementById('btnLogout').addEventListener('click', () => { if (confirm('আপনি কি লগআউট করতে চান?')) { sessionStorage.clear(); localStorage.removeItem('mcth_exam_rem_creds'); localStorage.removeItem(VIEWED_YEAR_KEY); location.reload(); } });
+        document.getElementById('btnBackupMenuToggle')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('backupSubMenu').classList.toggle('open'); e.currentTarget.classList.toggle('open'); });
+        document.getElementById('btnExportData')?.addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); handleExport(); });
+        document.getElementById('btnImportData')?.addEventListener('click', () => { document.getElementById('globalMenuDropdown').classList.remove('active'); const pin = prompt("ডেটা ইম্পোর্ট করতে, অনুগ্রহ করে আপনার পিন দিন:"); if (pin === '13913') { setTimeout(() => { fileImporter.click(); }, 100); } else if (pin !== null) { showToast('ভুল পিন!', 'error'); } });
+        fileImporter.addEventListener('change', handleImport);
+        document.getElementById('btnClearData')?.addEventListener('click', handleClearExamData);
+
+        yearSelector.addEventListener('change', (e) => {
+            const selectedYear = parseInt(e.target.value);
+            if (selectedYear !== viewedYear) {
+                const pass = prompt(`শিক্ষাবর্ষ পরিবর্তন করতে অ্যাডমিন পাসওয়ার্ড দিন:`);
+                if (pass === currentPassword) {
+                    dataLoaded = false;
+                    loadAppData(selectedYear);
+                } else {
+                    if (pass !== null) showToast('ভুল পাসওয়ার্ড!', 'error');
+                    yearSelector.value = viewedYear; // ভুল পাসওয়ার্ড দিলে আগের বছরে ফেরত যাবে
+                }
+            }
+        });
+        setupGlobalMenu();
+    }
+
+    function handleClearExamData() {
+        if (!confirm(`WARNING!\n\nAre you sure you want to permanently delete ALL exam data for the year ${viewedYear}?\n\nTHIS ACTION CANNOT BE UNDONE.`)) return;
+        
+        const pass = prompt('To confirm, please enter the admin password:');
+        if (pass === currentPassword) {
+            showLoader();
+            Promise.all([
+                dataRef.child('exams').remove(),
+                dataRef.child('seriesExams').remove()
+            ]).then(() => {
+                showToast(`All exam data for ${viewedYear} has been deleted.`, 'success');
+                setTimeout(() => location.reload(), 1500);
+            }).catch(err => {
+                showToast(`Error clearing data: ${err.message}`, 'error');
+                hideLoader();
+            });
+        } else if (pass) {
+            showToast('Incorrect password. Data was not deleted.', 'error');
+        }
+    }
+
+    function setupAppEventListeners() {
+        mainContainer.addEventListener('click', e => {
+            const button = e.target.closest('button');
+            if (!button) return;
+            if (button.id === 'btnCreateExam') openCreateExamModal();
+            else if (button.id === 'btnCreateSeriesExam') openSeriesExamModal();
+            else if (button.id === 'btnBackToList' || button.id === 'btnBackToView') handleNavBack();
+            else if (button.id === 'btnViewResultSheet') renderResultSheet(false, currentExamId);
+            else if (button.id === 'btnPrintResult') handlePrint();
+            else if (button.classList.contains('modal-close-btn') || button.id === 'btnCancelCreateExam' || button.id === 'btnCancelSeriesExam') {
+                button.closest('.modal-overlay').classList.remove('visible');
+            }
+        });
+        mainContainer.addEventListener('submit', e => {
+            e.preventDefault();
+            if (e.target.id === 'createExamForm') handleSaveExam(e);
+            if (e.target.id === 'createSeriesExamForm') handleSaveSeriesExam(e);
+        });
+        mainContainer.addEventListener('input', e => {
+            if (e.target.id === 'resultSheetSearchInput' || e.target.id === 'resultBatchFilter') {
+                displayFilteredResults();
+            }
+        });
+        mainContainer.addEventListener('keydown', e => {
+            if (e.target.id === 'studentSearchInput' && e.key === 'Enter') { e.preventDefault(); const t=e.target.value.trim(); if(!t)return; let a=null; document.querySelectorAll('#student-marks-tbody tr').forEach(row=>{if(row.style.display!=='none'&&row.cells[3].textContent.trim()===t){a=row}}); a?a.click():showToast(`Student with roll '${t}' not found.`,'error'); }
+            if (e.target.id === 'quickEntryMarksInput' && e.key === 'Enter') { e.preventDefault(); saveQuickEntryMark(); }
+        });
+    }
+
+    // --- Initial Load ---
+    applyTheme(localStorage.getItem('examAppTheme') || 'light');
+    setupHeaderEventListeners();
+    setupAppEventListeners();
+    
+    db.ref('systemSettings/activeYear').once('value').then(snapshot => {
+        activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear();
+        const lastViewedYear = localStorage.getItem('mcth_viewed_year');
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear;
+        loadAppData(viewedYear);
+    }).catch(err => {
+        console.error("Could not fetch active year, defaulting.", err);
+        activeYear = new Date().getFullYear();
+        const lastViewedYear = localStorage.getItem('mcth_viewed_year');
+        viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear;
+        loadAppData(viewedYear);
+    });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Panel - MCTH Management</title>
+    
+    <!-- FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    
+    <style>
+        @font-face {
+          font-family: 'Kalpurush';
+          src: url('kalpurush.ttf') format('truetype');
+        }   
+        :root {
+            /* Green Theme from exam.html */
+            --accent-color: #28a745; --accent-color-dark: #1faf3f; --special-color: #6f42c1; --special-color-dark: #5a349b; --footer-bg: #1d3557; --footer-text: #f1faee;
+            --bg-main-light: #f0f2f5; --bg-section-light: #ffffff; --bg-header-light: #ffffff; --text-primary-light: #1c1e21; --text-secondary-light: #606770; --border-color-light: #dddfe2; --danger-color: #fa383e; --success-color: #31a24c; --warning-color: #ffc107; --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1); --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+            --bg-main-dark: #18191a; --bg-section-dark: #242526; --bg-header-dark: #242526; --text-primary-dark: #e4e6eb; --text-secondary-dark: #b0b3b8; --border-color-dark: #3a3b3c;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            --bg-main: var(--bg-main-light); --bg-section: var(--bg-section-light); --bg-header: var(--bg-header-light); --text-primary: var(--text-primary-light); --text-secondary: var(--text-secondary-light); --border-color: var(--border-color-light);
+            font-family: 'Kalpurush', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; padding: 0; background-color: var(--bg-main); color: var(--text-primary); transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme {
+            --bg-main: var(--bg-main-dark); --bg-section: var(--bg-section-dark); --bg-header: var(--bg-header-dark); --text-primary: var(--text-primary-dark); --text-secondary: var(--text-secondary-dark); --border-color: var(--border-color-dark);
+            --footer-bg: #242526; --footer-text: #e4e6eb;
+        }
+        #center-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:50vw;max-width:500px;height:100vh;background-image:url(images/image2.png);background-size:contain;background-repeat:no-repeat;background-position:center;opacity:.05;z-index:-1;pointer-events:none}
+        body[data-theme='dark'] #center-watermark { filter: brightness(0) invert(1); }
+        
+        /* Login Page Styles */
+        #login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; box-sizing: border-box; }
+        .login-box { background-color: var(--bg-section); padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-color); }
+        .login-logo { width: 80px; height: 80px; margin: 0 auto 15px; }
+        .login-box h1 { font-size: 1.5em; margin-bottom: 20px; }
+        .input-group { position: relative; margin-bottom: 15px; }
+        .input-group input { width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 1em; background-color: var(--bg-input, #fff); color: var(--text-primary); box-sizing: border-box; }
+        .password-toggle-icon { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); }
+        .login-options { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 25px; }
+        .login-button { width: 100%; padding: 12px; border: none; border-radius: 8px; background-color: var(--accent-color); color: white; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        .login-button:hover { background-color: var(--accent-color-dark); }
+        #login-error-msg { color: var(--danger-color); margin-top: 15px; min-height: 20px; font-weight: bold; }
+        #app-container.hidden { display: none; }
+        
+        .login-footer { margin-top: 25px; font-size: 0.85em; color: var(--text-secondary); text-align: center; }
+        .login-footer .copyright-text { font-size: 0.9em; margin-bottom: 15px; }
+        .developer-box {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            background-color: var(--bg-main);
+        }
+        .login-footer .developed-by-text {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .company-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        .company-text {
+            text-align: left;
+            line-height: 1.5;
+        }
+        .company-text strong {
+            font-size: 1.2em;
+            color: var(--text-primary);
+        }
+        .company-text small {
+            font-size: 0.9em;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+        .social-icons a {
+            display: inline-block;
+            color: var(--text-secondary);
+            transition: color 0.3s, transform 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        .social-icons svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+        .login-footer .instruction-text {
+            font-size: 0.8em;
+            font-style: italic;
+            margin-top: 12px;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Main App Header Styles */
+        .branding-tag-wrapper { display: flex; align-items: center; background-color: var(--bg-header); color: var(--text-primary); padding: 0 15px; border-bottom: 1px solid var(--border-color); box-shadow: var(--shadow-sm); gap: 5px; position: sticky; top: 0; z-index: 1000; }
+        .branding-tag{display:flex;flex-grow:1;justify-content:space-between;align-items:center;padding:12px 0;padding-left:10px;user-select:none;font-size:1em}
+        .branding-center{font-weight:700;font-size:1.4em;text-align:center}.branding-right, .branding-left{ color: var(--text-secondary); }
+        .global-menu-container { position: relative; }
+        .global-menu-btn, .nav-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s, transform 0.1s ease; }
+        .global-menu-btn:hover, .nav-btn:hover { background-color: var(--bg-main); }
+        .nav-btn svg { width: 22px; height: 22px; }
+        .global-menu-btn { font-size: 28px; }
+        .global-menu-dropdown { display: none; position: absolute; top: 50px; left: 0; background-color: var(--bg-section); color: var(--text-primary); min-width: 220px; box-shadow: var(--shadow-md); z-index: 1000; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; animation: fadeInDown 0.3s ease-out; }
+        .global-menu-dropdown.active { display: block; }
+        .global-menu-dropdown button { width: 100%; text-align: left; background: none; border: none; padding: 12px 16px; font-size: 15px; cursor: pointer; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .global-menu-dropdown button:hover { background-color: var(--bg-main); }
+        #btnClearData { color: var(--danger-color); font-weight: bold; }
+        .header-right-controls { margin-left: auto; display: flex; align-items: center; gap: 15px; }
+        #year-management-controls { display: flex; align-items: center; gap: 12px; visibility: hidden; }
+        #yearSelector { padding: 7px 15px; border-radius: 20px; border: 1px solid #5a6a7e; background-color: #334257; color: #e8eaed; font-weight: bold; font-size: 0.9em; cursor: pointer; -webkit-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat; background-position: right 10px top 50%; padding-right: 35px; transition: all 0.25s ease-in-out; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        #sms-credit-display { background: linear-gradient(45deg, var(--special-color), #4a86e8); color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9em; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; position: relative; }
+        #sms-credit-display.low-credit { background: linear-gradient(45deg, var(--danger-color), var(--warning-color)); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(250, 56, 62, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(250, 56, 62, 0); } 100% { box-shadow: 0 0 0 0 rgba(250, 56, 62, 0); } }
+        #sms-credit-display:hover .tooltip { visibility: visible; opacity: 1; }
+        #sms-credit-display .tooltip { visibility: hidden; width: 160px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; bottom: 125%; right: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        
+        main{padding:25px;min-height:calc(100vh - 250px);position:relative; max-width: 1400px; margin: 0 auto; }
+        .page-section{background-color:var(--bg-section);padding:25px;border-radius:12px;margin-bottom:25px; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); animation: fadeInUp 0.5s ease-out; }
+        .tab-container{display:flex;border-bottom:1px solid var(--border-color);margin-bottom:25px;flex-wrap:nowrap; overflow-x: auto;}
+        .tab-button{padding:14px 24px;cursor:pointer;border:none;background-color:transparent;border-bottom:3px solid transparent;font-size:16px;margin-right:4px;color:var(--text-secondary); font-weight: 600; transition: all 0.2s ease; flex-shrink: 0;}
+        .tab-button.active{color:var(--accent-color);border-bottom-color:var(--accent-color);}
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+
+        /* Two-column layout */
+        .sms-layout-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; }
+        .control-panel { display: flex; flex-direction: column; gap: 20px; }
+        
+        /* NEW Box View Styles */
+        .box-view-container { display: flex; flex-direction: column; gap: 20px; }
+        .box-button {
+            padding: 25px; text-align: center; font-size: 1.3em; font-weight: bold;
+            border-radius: 12px; cursor: pointer; transition: all 0.2s ease-in-out;
+            position: relative; border: 2px solid;
+        }
+        .box-button:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .box-button .count-badge {
+            position: absolute; top: 10px; right: 10px; background-color: var(--danger-color);
+            color: white; border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.7em; font-weight: bold;
+        }
+        .box-button.pending { background-color: var(--bg-main); color: var(--warning-color); border-color: var(--warning-color);}
+        .box-button.sent { background-color: var(--bg-main); color: var(--success-color); border-color: var(--success-color); }
+        .box-button.sent .count-badge { background-color: var(--success-color); }
+        
+        .box-list-view { display: none; /* Initially hidden */ }
+        .box-list-header { display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .box-list-header h3 { margin: 0; }
+        .filters { display: flex; gap: 10px; align-items: center; }
+        .filters select { padding: 6px 10px; border-radius: 4px; border: 1px solid var(--border-color); background-color: var(--bg-main); color: var(--text-primary); }
+        .box-list { max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .list-item { background-color: var(--bg-main); padding: 15px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .list-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .list-item.pending { border-left-color: var(--warning-color); }
+        .list-item.sent { border-left-color: var(--success-color); }
+        .list-item-header { display: flex; justify-content: space-between; font-size: 0.9em; color: var(--text-secondary); margin-bottom: 8px; }
+        .list-item-body p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-item { display:flex; align-items:center; gap: 10px; }
+        .list-item-content { flex-grow: 1; }
+        .select-all-container { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .select-all-container label { font-weight: bold; }
+
+        /* UI Components */
+        .form-group label { font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 8px; }
+        .form-group select, .form-group textarea, .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; background-color: var(--bg-main); color: var(--text-primary); font-size: 1em; }
+        .form-group textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
+        .form-group input[type=number] { width: 80px; text-align: center; }
+        .switch-container { display: flex; align-items: center; justify-content: space-between; background-color: var(--bg-main); padding: 15px; border-radius: 8px; }
+        .switch-container label { font-size: 1.1em; font-weight: bold; }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .tag-buttons button { background-color: var(--bg-main); color: var(--text-primary); border: 1px solid var(--border-color); padding: 5px 10px; margin: 0 5px 5px 0; font-size: 0.9em; cursor: pointer; border-radius: 4px; }
+        .char-counter { text-align: right; font-size: 0.9em; color: var(--text-secondary); margin-top: 5px; }
+        
+        .recipient-list-container { border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; max-height: 200px; overflow-y: auto; background-color: var(--bg-main); }
+        .recipient-item { display: flex; align-items: center; gap: 10px; padding: 5px; }
+        
+        button, .btn { border: none; cursor: pointer; border-radius: 6px; padding: 12px 20px; font-weight: 600; transition: all 0.2s ease-out; }
+        .btn-primary { background-color: var(--accent-color); color: #fff; }
+        .btn-primary:hover:not(:disabled) { background-color: var(--accent-color-dark); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+        .btn-primary:disabled { background-color: #999; cursor: not-allowed; }
+        .btn-danger { background-color: var(--danger-color); color: #fff; }
+        .btn-secondary { background-color: #e4e6eb; color: #1c1e21; }
+        body.dark-theme .btn-secondary { background-color: #3a3b3c; color: #e4e6eb; }
+        .btn-sm { padding: 8px 12px; font-size: 14px; }
+        
+        /* Modals */
+        .modal-overlay{display:none;position:fixed;z-index:10001;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center;animation:fadeIn 0.4s ease}.modal-overlay.visible{display:flex}.modal-content{background-color:var(--bg-section);margin:auto;padding:30px;border:none;border-radius:12px;width:90%;max-width:800px;max-height:90vh;display:flex;flex-direction:column;box-shadow:var(--shadow-md); animation: slideInUp 0.5s ease-out;}.modal-header{padding-bottom:15px;margin-bottom:20px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}.modal-header h2{margin:0;font-size:1.6em}.modal-close-btn{background:none;border:none;font-size:2.2em;cursor:pointer;color:var(--text-secondary);line-height:1;padding:0 5px;}.modal-body{flex-grow:1;overflow-y:auto;}.modal-footer{padding-top:20px;margin-top:20px;border-top:1px solid var(--border-color);display:flex;justify-content:flex-end;gap:10px}
+        
+        /* Animations, loader, toast (copied) */
+        #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:10006;display:none;align-items:center;justify-content:center}.loader{border:8px solid #f3f3f3;border-top:8px solid var(--accent-color);border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        #toast-container{position:fixed;bottom:20px;right:20px;z-index:10005;display:flex;flex-direction:column;gap:10px}.toast{padding:15px 20px;border-radius:8px;color:#fff;font-size:16px;box-shadow:var(--shadow-md);opacity:0;transform:translateY(20px);transition:opacity .3s,transform .3s;max-width:350px}.toast.show{opacity:1;transform:translateY(0)}.toast.success{background-color:var(--success-color)}.toast.error{background-color:var(--danger-color)}.toast.info{background-color:#0dcaf0}
+        .toast.warning { background: linear-gradient(45deg, var(--warning-color), #f39c12); }
+        .toast button { margin-left: 15px; padding: 6px 10px; background-color: rgba(255,255,255,0.2); border: 1px solid #fff; color: #fff; font-size: 14px; }
+        
+        /* Footer (copied from exam.html) */
+        .app-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 30px 20px; text-align: center; border-top-left-radius: 15px; border-top-right-radius: 15px; margin: 25px auto 0; max-width: 1400px; }
+        .footer-content { max-width: 1000px; margin: 0 auto; line-height: 1.7; }
+        .footer-content p { margin: 5px 0; }
+        .footer-content a { color: var(--footer-text); text-decoration: none; transition: color 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+        .footer-content a:hover { color: var(--accent-color); }
+        .footer-socials { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 20px; }
+        .footer-contact { margin-top: 10px; }
+        .footer-socials svg, .footer-contact svg { width: 18px; height: 18px; fill: currentColor; }
+
+        @media (max-width: 900px) {
+            .sms-layout-grid { grid-template-columns: 1fr; }
+            .sent-box-panel, .box-view-container { margin-top: 25px; }
+            .branding-tag-wrapper { flex-wrap: wrap; }
+            .header-right-controls { width: 100%; justify-content: center; order: -1; margin: 0 0 10px 0; }
+            .branding-center { position: static; transform: none; width: 100%; order: -2; padding-bottom: 10px;}
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <div class="login-box">
+            <img src="images/image2.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <h1>MCTH SMS Panel</h1>
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="ইউজারনেম" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
+                    <span id="password-toggle" class="password-toggle-icon">👁️</span>
+                </div>
+                <div class="login-options">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="checkbox" id="remember-me"> Remember Me
+                    </label>
+                </div>
+                <button type="submit" class="login-button">Login to Panel</button>
+                <div id="login-error-msg"></div>
+            </form>
+            <div class="login-footer">
+                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2026</p>
+                <div class="developer-box">
+                    <p class="developed-by-text">Developed by,</p>
+                    <div class="company-info">
+                        <img src="images/image5.png" alt="Bindumatra IT Logo" class="company-logo">
+                        <div class="company-text">
+                            <strong>বিন্দুমাত্রা আইটি</strong><br>
+                            <small>CEO : Abdullah Al Rafi </small>
+                        </div>
+                    </div>
+                    <div class="social-icons">
+                        <a href="mailto:bindumatrait@gmail.com" title="Email Abdullah Al Rafi" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=61580476801857" title="Facebook Page" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7.02H7.97v-2.89h2.47V9.9c0-2.45 1.44-3.8 3.65-3.8 1.06 0 2.16.19 2.16.19v2.47h-1.27c-1.2 0-1.56.72-1.56 1.5v1.84h2.78l-.45 2.89h-2.33v7.02c4.78-.75 8.44-4.9 8.44-9.9C22 6.53 17.5 2.04 12 2.04z"/></svg>
+                        </a>
+                        <a href="https://wa.me/8801745938158" title="Contact on WhatsApp" target="_blank">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.655 4.357 1.846 6.167l-1.117 4.082 4.162-1.085zM9.06 7.426c.14-.364.44-1.13.56-1.293.12-.162.28-.192.42-.192.14 0 .28.096.42.364.14.268.56 1.32.62 1.42.06.1.12.18.2.3.08.12.14.24.26.36s.24.22.4.32c.16.1.34.16.5.24.16.08.3.12.42.14.12.02.26 0 .38-.08.12-.08.5-1.25.62-1.47.12-.22.24-.28.4-.28.16 0 .3.04.42.12.12.08.56 1.13.66 1.31.1.18.18.28.2.32.02.04.04.1.02.18s-.08.24-.16.32c-.08.08-.18.1-.28.14s-.2.08-.32.1c-.12.02-.26.02-.4.02s-.68-.08-1.02-.22c-.34-.14-.7-.34-1.08-.62s-.68-.62-.94-.96c-.26-.34-.48-.74-.62-1.18s-.18-.9-.18-1.46c0-.56.08-1.04.22-1.46z"/></svg>
+                        </a>
+                    </div>
+                    <p class="instruction-text">click the icons to visit</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <div id="loader-overlay"><div class="loader"></div></div>
+        <div id="toast-container"></div>
+        <div id="center-watermark"></div>
+        
+        <header class="branding-tag-wrapper">
+            <div class="global-menu-container">
+                <button id="globalMenuBtn" class="global-menu-btn" title="Options">&#9776;</button>
+                <div id="globalMenuDropdown" class="global-menu-dropdown">
+                    <button id="btnApiSettings"><span>⚙️ API Settings</span></button>
+                    <hr style="margin: 5px 0; border-top: 1px solid var(--border-color)">
+                    <button id="btnToggleTheme"><span>Change Theme</span><span id="themeIcon"></span></button>
+                    <button id="btnAboutDev"><span>About Developer</span></button>
+                    <button id="btnClearData"><span>⚠️ Clear SMS Data</span></button>
+                    <hr style="margin: 5px 0; border-top: 1px solid var(--border-color)">
+                    <button id="btnLogout"><span>Logout</span></button>
+                </div>
+            </div>
+            <div class="branding-tag">
+                <span class="branding-left">☎ 01747019383</span>
+                <span class="branding-center">SMS ম্যানেজমেন্ট</span>
+                <span class="branding-right">📍 Jaleswaritola, Bogura</span>
+            </div>
+            <div class="header-right-controls">
+                 <div id="year-management-controls">
+                    <select id="yearSelector"></select>
+                </div>
+                <div id="sms-credit-display">
+                    <span>Credit: </span><span id="credit-count">--</span>
+                    <span class="tooltip">Click to refresh credits.</span>
+                </div>
+            </div>
+        </header>
+
+        <main id="app-main-content">
+            <div class="page-section">
+                <div id="sms-class-tabs" class="tab-container">
+                    <button class="tab-button active" data-tab="attendance">অ্যাটেনডেন্স</button>
+                    <button class="tab-button" data-tab="payment">পেমেন্ট</button>
+                    <button class="tab-button" data-tab="due-reminder">বকেয়া রিমাইন্ডার</button>
+                    <button class="tab-button" data-tab="exam">পরীক্ষা</button>
+                    <button class="tab-button" data-tab="custom">কাস্টম নোটিশ</button>
+                    <button class="tab-button" data-tab="drafts" style="color: var(--special-color);">Drafts</button>
+                </div>
+
+                <!-- ATTENDANCE TAB -->
+                <div id="tab-content-attendance" class="tab-content active">
+                    <div class="sms-layout-grid">
+                        <div class="control-panel">
+                            <div class="switch-container">
+                                <label for="attendance-auto-sms-switch">স্বয়ংক্রিয় অনুপস্থিতি SMS</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="attendance-auto-sms-switch">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Message Template</label>
+                                <textarea readonly rows="6">সম্মানিত অভিভাবক, আপনার সন্তান [নাম] (রোল: [রোল]) আজ [তারিখ] তারিখে ক্লাসে অনুপস্থিত ছিল।
+
+ধন্যবাদ,
+আশিক স্যার
+গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
+                            </div>
+                        </div>
+                        <div id="attendance-box-container">
+                            <!-- This will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAYMENT CONFIRMATION TAB -->
+                <div id="tab-content-payment" class="tab-content">
+                     <div class="sms-layout-grid">
+                        <div class="control-panel">
+                            <div class="switch-container">
+                                <label for="payment-auto-sms-switch">স্বয়ংক্রিয় পেমেন্ট কনফার্মেশন</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="payment-auto-sms-switch">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                             <div class="form-group">
+                                <label>Message Template</label>
+                                <textarea readonly rows="6">প্রিয় [নাম] (রোল: [রোল]), আপনার [মাস] মাসের [টাকা] টাকা পেমেন্ট সফলভাবে সম্পন্ন হয়েছে। Trnx ID: [trnx_id]।
+
+ধন্যবাদ,
+আশিক স্যার
+গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
+                            </div>
+                        </div>
+                        <div id="payment-box-container">
+                             <!-- This will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- DUE REMINDER TAB -->
+                <div id="tab-content-due-reminder" class="tab-content">
+                     <div class="sms-layout-grid">
+                        <div class="control-panel">
+                             <div class="form-group">
+                                <label>মাসের যে তারিখে SMS পাঠাতে চান</label>
+                                 <div style="display: flex; align-items: center; gap: 10px;">
+                                     <input type="number" id="due-reminder-day" min="1" max="28" value="16">
+                                     <button id="save-reminder-day-btn" class="btn-primary" style="padding: 12px 15px;">Save Day</button>
+                                 </div>
+                             </div>
+                             <div class="form-group">
+                                <label>Message Template</label>
+                                <textarea readonly rows="6">সম্মানিত অভিভাবক, আপনার সন্তান [নাম] (রোল: [রোল]) এর মাসিক বেতন বকেয়া রয়েছে। অনুগ্রহ করে দ্রুত পরিশোধ করুন।
+
+ধন্যবাদ,
+আশিক স্যার
+গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
+                            </div>
+                            <hr>
+                            <button id="send-due-reminders-now-btn" class="btn-danger" style="width: 100%;">Send Due Reminders Manually to All (This Year)</button>
+                        </div>
+                        <div class="box-list-view" id="due-reminder-sent-box-view">
+                            <div class="box-list-header">
+                                <h3>Sent Box (Due Reminders)</h3>
+                                <div class="filters">
+                                    <button class="btn-danger btn-sm" data-action="clear-sent" data-type="due-reminder">Clear Box</button>
+                                </div>
+                            </div>
+                            <div class="box-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXAM TAB -->
+                <div id="tab-content-exam" class="tab-content">
+                    <div class="sms-layout-grid">
+                        <div class="control-panel">
+                            <div class="form-group">
+                                <label for="exam-select">পরীক্ষা নির্বাচন করুন (শুধুমাত্র বর্তমান শিক্ষাবর্ষ)</label>
+                                <select id="exam-select"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Message Template</label>
+                                <textarea readonly rows="8">প্রিয় [নাম] (রোল: [রোল]),
+[পরীক্ষার নাম] পরীক্ষার ফলাফল:
+প্রাপ্ত নম্বর: [প্রাপ্ত নম্বর]/[মোট নম্বর]
+পজিশন: [পজিশন]
+সর্বোচ্চ নম্বর: [সর্বোচ্চ নম্বর]
+
+ধন্যবাদ,
+আশিক স্যার
+গণিত ক্রিয়েটিভ টিচিং হোম</textarea>
+                            </div>
+                            <button id="send-exam-sms-btn" class="btn-primary" disabled>Send Result to All Participants</button>
+                        </div>
+                         <div class="box-list-view" id="exam-sent-box-view">
+                            <div class="box-list-header">
+                                <h3>Sent Box (by Exam)</h3>
+                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="exam">Clear Box</button>
+                            </div>
+                            <div class="box-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CUSTOM NOTICE TAB -->
+                <div id="tab-content-custom" class="tab-content">
+                    <div class="sms-layout-grid">
+                        <div class="control-panel">
+                             <div class="form-group">
+                                <label>প্রাপক নির্বাচন করুন (শুধুমাত্র বর্তমান শিক্ষাবর্ষ)</label>
+                                <div class="recipient-list-container" id="custom-recipient-selector"></div>
+                             </div>
+                             <div class="form-group">
+                                <label>মেসেজ লিখুন</label>
+                                <div class="tag-buttons">
+                                    <button data-tag="[নাম]">নাম</button>
+                                    <button data-tag="[রোল]">রোল</button>
+                                </div>
+                                <textarea id="custom-sms-textarea" placeholder="এখানে আপনার মেসেজ লিখুন..."></textarea>
+                                <div class="char-counter"><span id="char-count">0</span>/160 (1 SMS)</div>
+                             </div>
+                             <button id="send-custom-sms-btn" class="btn-primary" disabled>Send Notice</button>
+                        </div>
+                        <div class="box-list-view" id="custom-sent-box-view">
+                             <div class="box-list-header">
+                                <h3>Sent Box (Custom Notices)</h3>
+                                <button class="btn-danger btn-sm" data-action="clear-sent" data-type="custom">Clear Box</button>
+                            </div>
+                            <div class="box-list"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DRAFTS TAB -->
+                <div id="tab-content-drafts" class="tab-content">
+                    <div class="box-list-view" id="drafts-box-view" style="display:block;">
+                        <div class="box-list-header">
+                            <h3>Draft Box (Failed to Send)</h3>
+                            <div class="filters">
+                                 <button class="btn-danger btn-sm" data-action="delete-selected" data-type="drafts">Delete Selected</button>
+                                <button class="btn-primary btn-sm" data-action="send-selected" data-type="drafts">Retry Sending</button>
+                            </div>
+                        </div>
+                        <div class="select-all-container">
+                            <label><input type="checkbox" class="select-all-checkbox" data-type="drafts"> Select All</label>
+                        </div>
+                        <div class="box-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>© Math Creative Teaching Home 2026</p>
+                <p>Developed by বিন্দুমাত্রা আইটি</p>
+                <div class="footer-socials">
+                    <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg><span>Chat on Whatsapp</span></a>
+                    <a href="https://www.facebook.com/profile.php?id=61580476801857" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"></path></svg><span>Bindumatra IT</span></a>
+                    <a href="https://www.instagram.com/abdullah_al.rafi" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.902 4.902 0 011.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122s-.013 3.056-.06 4.122c-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 01-1.153 1.772 4.915 4.915 0 01-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06s-3.056-.013-4.122-.06c-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 01-1.772-1.153 4.904 4.904 0 01-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12s.013-3.056.06-4.122c.05-1.065.217-1.79.465-2.428a4.884 4.884 0 011.153-1.772A4.902 4.902 0 016.344 2.525c.637-.248 1.363-.415 2.428-.465C9.844 2.013 10.183 2 12 2zm0 1.8a9.137 9.137 0 00-4.043.06 2.908 2.908 0 00-1.685.43c-.47.18-.86.41-1.2.75-.34.34-.57.73-.75 1.2a2.908 2.908 0 00-.43 1.685c-.046 1.02-.06 1.344-.06 3.96s.014 2.94.06 3.96c.05 1.01.212 1.58.43 1.685.18.47.41.86.75 1.2.34.34.73.57 1.2.75-.52-.204-1.1-.384-1.685-.43C14.94 3.814 14.616 3.8 12 3.8zm0 3.39a4.81 4.81 0 100 9.62 4.81 4.81 0 000-9.62zM12 15a3 3 0 110-6 3 3 0 010 6zm6.406-9.69a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4z"></path></svg><span>Executive Director</span></a>
+                </div>
+                <div class="footer-contact">
+                    <a href="mailto:bindumatrait@gmail.com"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path></svg><span>bindumatrait@gmail.com</span></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- TEMPLATES -->
+    <template id="template-box-view">
+        <div class="box-view-container">
+            <button class="box-button pending">
+                Pending Box <span class="count-badge">0</span>
+            </button>
+            <button class="box-button sent">
+                Sent Box <span class="count-badge">0</span>
+            </button>
+        </div>
+        <div class="box-list-view">
+            <div class="box-list-header">
+                <h3></h3>
+                <div class="filters">
+                    <select class="class-filter"></select>
+                    <select class="batch-filter"></select>
+                    <button class="btn-secondary btn-sm" data-action="back-to-boxes">Back</button>
+                </div>
+            </div>
+            <div class="select-all-container" style="display:none;">
+                <label><input type="checkbox" class="select-all-checkbox"> Select All</label>
+            </div>
+            <div class="box-list"></div>
+            <div class="modal-footer" style="display:none; padding-top: 15px; margin-top: 15px; border-top: 1px solid var(--border-color);">
+                <button class="btn-danger btn-sm" data-action="delete-selected">Delete Selected</button>
+                <button class="btn-primary btn-sm" data-action="send-selected">Send Selected</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="template-api-settings-modal">
+        <div id="apiSettingsModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>SMS Gateway API Settings</h2>
+                    <button class="modal-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="color: var(--text-secondary); font-size: 0.9em;">
+                        আপনার SMS প্রোভাইডারের API তথ্য এখানে যোগ করুন।
+                    </p>
+                    <div class="form-group">
+                        <label for="api-base-url-input">Base API URL</label>
+                        <input type="text" id="api-base-url-input" placeholder="e.g., https://api.bdbulksms.net/api.php">
+                        <small>URL-এর শেষে `?` (প্রশ্নবোধক চিহ্ন) পর্যন্ত অংশটি দিন। সিস্টেম বাকিটা যোগ করে নেবে।</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="api-key-input">API Key / Token</label>
+                        <input type="password" id="api-key-input" placeholder="আপনার API Key বা Token এখানে পেস্ট করুন">
+                    </div>
+                     <div class="form-group">
+                        <label for="sender-id-input">Sender ID</label>
+                        <input type="text" id="sender-id-input" placeholder="e.g., 8809612443856 or Your Brand Name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary modal-cancel-btn">Cancel</button>
+                    <button type="button" id="btn-save-api-settings" class="btn-primary">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="template-about-dev-modal">
+        <div id="aboutDeveloperModal" class="modal-overlay"> <div class="modal-content" style="max-width: 850px; padding: 15px;"> <div class="modal-header" style="padding-bottom: 10px; margin-bottom: 10px;"> <h2>About the Developer</h2> <button class="modal-close-btn">&times;</button> </div> <div class="modal-body" style="padding:0;"> <img src="images/Abdullah-Al-Rafi-Digital-Card.png" alt="Developer Digital Card" style="width: 100%; height: auto; border-radius: 8px; display: block;" onerror="this.alt='Image not found.';"> </div> </div> </div>
+    </template>
+
+</body>
+<script>
+// ================================================================== //
+//            FIREBASE CONFIGURATION AND INITIALIZATION             //
+// ================================================================== //
+const firebaseConfig = {
+    apiKey: "AIzaSyBE0xJ1nvqSj6a9bXtrtrNTDh0bu7PMLnw",
+    authDomain: "math-creative-teaching-h-a86fd.firebaseapp.com",
+    projectId: "math-creative-teaching-h-a86fd",
+    storageBucket: "math-creative-teaching-h-a86fd.appspot.com",
+    messagingSenderId: "547365102808",
+    appId: "1:547365102808:web:45c46b74ffaaa945dda3ad",
+    databaseURL: "https://math-creative-teaching-h-a86fd-default-rtdb.asia-southeast1.firebasedatabase.app"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const credsRef = db.ref('credentials');
+const smsManagementRef = db.ref('smsManagement');
+
+// ================================================================== //
+//                LOGIN SCRIPT START                                //
+// ================================================================== //
+document.addEventListener('DOMContentLoaded', () => {
+    const REMEMBER_KEY = 'mcth_sms_rem_creds'; 
+    const SESSION_KEY = 'mcth_sms_is_logged_in';
+
+    const loginContainer = document.getElementById('login-container');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('password-toggle');
+    const rememberMeCheckbox = document.getElementById('remember-me');
+    const errorMsgDiv = document.getElementById('login-error-msg');
+    
+    if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+        loginContainer.style.display = 'none';
+        appContainer.classList.remove('hidden');
+        firebase.auth().signInAnonymously().then(() => {
+            initializeAppLogic();
+        }).catch(err => {
+            console.error("Anonymous sign-in failed on session restore:", err);
+            errorMsgDiv.textContent = 'Authentication session restore failed.';
+        });
+        return;
+    }
+
+    passwordToggle.addEventListener('click', () => {
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordToggle.textContent = passwordInput.type === 'password' ? '👁️' : '🙈';
+    });
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = usernameInput.value;
+        const password = passwordInput.value;
+        errorMsgDiv.textContent = '';
+
+        try {
+            await firebase.auth().signInAnonymously();
+            const snapshot = await credsRef.once('value');
+            const correctCreds = snapshot.exists() ? snapshot.val() : { username: "ashik'smathhome@602", password: "jaleswaritolamath25" };
+
+            if (username === correctCreds.username && password === correctCreds.password) {
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem(REMEMBER_KEY, JSON.stringify({ user: username, pass: password }));
+                } else {
+                    localStorage.removeItem(REMEMBER_KEY);
+                }
+                sessionStorage.setItem(SESSION_KEY, 'true'); 
+                
+                loginContainer.style.display = 'none';
+                appContainer.classList.remove('hidden');
+                initializeAppLogic();
+            } else {
+                errorMsgDiv.textContent = 'ইউজারনেম বা পাসওয়ার্ড সঠিক নয়।';
+                firebase.auth().signOut();
+            }
+        } catch (error) {
+            console.error("Firebase login error:", error);
+            errorMsgDiv.textContent = 'ডাটাবেস কানেক্ট করা যায়নি বা অনুমতি নেই।';
+            if (firebase.auth().currentUser) {
+                firebase.auth().signOut();
+            }
+        }
+    });
+
+    const rememberedCreds = localStorage.getItem(REMEMBER_KEY);
+    if (rememberedCreds) {
+        try {
+            const creds = JSON.parse(rememberedCreds);
+            usernameInput.value = creds.user;
+            passwordInput.value = creds.pass;
+            rememberMeCheckbox.checked = true;
+        } catch(e) { console.error(e); }
+    }
+});
+
+// ================================================================== //
+//          MAIN APPLICATION SCRIPT START                           //
+// ================================================================== //
+function initializeAppLogic() {
+    let allYearsData = {};
+    let smsManagementData = {};
+    let viewedYear = new Date().getFullYear();
+    let activeYear = new Date().getFullYear();
+    let currentPassword = '';
+
+    const mainContainer = document.getElementById('app-main-content'); 
+    const BENGALI_MONTHS=["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"];
+
+    // --- Utility Functions ---
+    const showLoader = () => document.getElementById('loader-overlay').style.display = 'flex';
+    const hideLoader = () => document.getElementById('loader-overlay').style.display = 'none';
+    function showToast(message, type = 'info', duration = 3000) { 
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { 
+            toast.classList.remove('show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, duration);
+    }
+    function applyTheme(theme) { 
+        document.body.classList.toggle('dark-theme', theme === 'dark'); 
+        localStorage.setItem('smsAppTheme', theme); 
+        const themeIcon = document.getElementById('themeIcon');
+        if(themeIcon) themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+    function toggleTheme() { const newTheme = document.body.classList.contains('dark-theme') ? 'light' : 'dark'; applyTheme(newTheme); }
+    function isStudentDue(student, year) {
+        if (!student || student.deletedAt) return false;
+        const admissionDate = student.createdAt ? new Date(student.createdAt) : new Date(year, 0, 1);
+        if (student.admissionFee?.status !== 'paid' && student.admissionFee?.amount > 0) return true;
+        const currentMonthIndex = new Date().getFullYear() === year ? new Date().getMonth() : 11;
+        for (let i = 0; i <= currentMonthIndex; i++) {
+            const monthDate = new Date(year, i, 1);
+            if (monthDate < new Date(admissionDate.getFullYear(), admissionDate.getMonth(), 1)) continue;
+            const monthName = BENGALI_MONTHS[i];
+            const payment = student.monthlyPayments?.[monthName];
+            const defaultFee = student.monthlyFeeDefault || 0;
+            if ((!payment || payment.status !== 'paid') && defaultFee > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // --- App & Data Initialization ---
+    function initializeApp() {
+        applyTheme(localStorage.getItem('smsAppTheme') || 'light');
+        setupEventListeners();
+        
+        db.ref('systemSettings/activeYear').once('value').then(snapshot => {
+            activeYear = snapshot.exists() ? snapshot.val() : new Date().getFullYear();
+            const lastViewedYear = localStorage.getItem('mcth_sms_viewed_year');
+            viewedYear = lastViewedYear ? parseInt(lastViewedYear) : activeYear;
+            loadAllData();
+        }).catch(err => {
+            console.error("Could not fetch active year, defaulting.", err);
+            activeYear = new Date().getFullYear();
+            viewedYear = activeYear;
+            loadAllData();
+        });
+    }
+
+    async function loadAllData() { 
+        showLoader();
+        localStorage.setItem('mcth_sms_viewed_year', viewedYear);
+        
+        const academicYearsRef = db.ref('academicYears');
+        
+        try {
+            const yearsSnapshot = await academicYearsRef.once('value');
+            allYearsData = yearsSnapshot.val() || {};
+            currentPassword = allYearsData[viewedYear]?.data?.currentPassword || 'ashik@602';
+
+            smsManagementRef.on('value', snapshot => { 
+                smsManagementData = snapshot.val() || { automation: {}, apiSettings: {}, logs: {}, pending: {}, drafts: {} };
+                if (!smsManagementData.pending) smsManagementData.pending = {};
+                if (!smsManagementData.drafts) smsManagementData.drafts = {};
+                if (!smsManagementData.automation) smsManagementData.automation = {};
+                if (!smsManagementData.logs) smsManagementData.logs = {};
+                
+                document.getElementById('attendance-auto-sms-switch').checked = smsManagementData.automation?.attendanceEnabled || false;
+                document.getElementById('payment-auto-sms-switch').checked = smsManagementData.automation?.paymentEnabled || false;
+                document.getElementById('due-reminder-day').value = smsManagementData.automation?.dueReminderDay || 16;
+                
+                renderAllBoxViews(); 
+            });
+
+            renderTabsAndControls();
+            updateCreditBalance();
+            updateYearSelectorUI();
+        } catch (error) {
+            console.error("Firebase read failed: ", error); 
+            showToast("Cannot connect to database.", "error"); 
+        } finally {
+            hideLoader();
+        }
+    }
+    
+    // --- API & SMS Sending ---
+    async function sendSmsApiCall(phone, message) {
+        if (!phone || typeof phone !== 'string' || phone.trim() === '' || phone.trim().toLowerCase() === 'n/a') {
+            return { success: false, error: "Phone number is not available." };
+        }
+        let sanitizedPhone = phone.replace(/[^0-9]/g, '');
+        if (sanitizedPhone.startsWith('01')) {
+            sanitizedPhone = '88' + sanitizedPhone;
+        } else if (!sanitizedPhone.startsWith('8801')) {
+             return { success: false, error: `Invalid phone number format: ${phone}` };
+        }
+        const { baseUrl, apiKey, senderId } = smsManagementData.apiSettings || {};
+        if (!baseUrl || !apiKey || !senderId) {
+            return { success: false, error: "API settings not configured." };
+        }
+        const creditCount = parseFloat(document.getElementById('credit-count').textContent);
+        if (isNaN(creditCount) || creditCount < 1) {
+            return { success: false, error: "Insufficient SMS credits." };
+        }
+        const encodedMessage = encodeURIComponent(message);
+        const finalUrl = `${baseUrl}?token=${apiKey}&to=${sanitizedPhone}&senderid=${senderId}&message=${encodedMessage}`;
+        try {
+            const response = await fetch(finalUrl);
+            const responseText = await response.text();
+            if (!response.ok) {
+                return { success: false, error: `API Error (Status: ${response.status}): ${responseText}` };
+            }
+            const successKeywords = ['success', 'sent', 'submitted', '1000', '1002', '1003', '1004'];
+            if (successKeywords.some(keyword => responseText.toLowerCase().includes(keyword))) {
+                updateCreditBalance();
+                return { success: true, response: responseText };
+            } else {
+                return { success: false, error: responseText || "Unknown API Error" };
+            }
+        } catch (error) {
+            console.error("SMS API Call failed:", error);
+            return { success: false, error: "Network error or API is unreachable." };
+        }
+    }
+    async function logSentMessage(type, details) {
+        const logEntry = { timestamp: new Date().toISOString(), ...details };
+        return smsManagementRef.child('logs').child(type).push(logEntry);
+    }
+    async function addMessageToBox(boxType, originalType, details) {
+        const id = `${boxType}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+        const entry = { id, timestamp: new Date().toISOString(), ...details, originalType };
+        await smsManagementRef.child(boxType).child(id).set(entry);
+        showToast(`SMS moved to ${boxType.charAt(0).toUpperCase() + boxType.slice(1)} Box.`, "warning");
+    }
+    async function updateCreditBalance() {
+        const creditCountEl = document.getElementById('credit-count');
+        creditCountEl.textContent = '...'; 
+        const { apiKey } = smsManagementData.apiSettings || {};
+        if (!apiKey) {
+            creditCountEl.textContent = 'N/A';
+            return;
+        }
+        const balanceApiUrl = `http://bulksmsbd.net/api/getBalanceApi?api_key=${apiKey}`; 
+        try {
+            const response = await fetch(balanceApiUrl);
+            const textResponse = await response.text();
+            if (!response.ok) throw new Error(`API Error (${response.status}): ${textResponse}`);
+            const creditMatch = textResponse.match(/[\d\.]+/); 
+            if (creditMatch && creditMatch[0]) {
+                const newCredit = parseFloat(creditMatch[0]);
+                creditCountEl.textContent = newCredit.toFixed(2);
+                const creditDisplay = document.getElementById('sms-credit-display');
+                if (newCredit < 100) {
+                    creditDisplay.classList.add('low-credit');
+                    showToast("SMS credit is low!", "warning");
+                } else {
+                    creditDisplay.classList.remove('low-credit');
+                }
+            } else {
+                throw new Error(`Could not parse balance from API response: "${textResponse}"`);
+            }
+        } catch (error) {
+            console.error("Error fetching credit balance:", error);
+            creditCountEl.textContent = 'Error';
+            showToast("Could not fetch SMS credit balance.", "error");
+        }
+    }
+
+    // --- UI Rendering & Event Listeners ---
+    function setupEventListeners() {
+        document.getElementById('globalMenuBtn').addEventListener('click', e => { e.stopPropagation(); document.getElementById('globalMenuDropdown').classList.toggle('active'); });
+        document.body.addEventListener('click', () => document.getElementById('globalMenuDropdown').classList.remove('active'));
+        document.getElementById('btnToggleTheme').addEventListener('click', toggleTheme);
+        document.getElementById('btnLogout').addEventListener('click', () => { if (confirm('আপনি কি লগআউট করতে চান?')) { sessionStorage.clear(); localStorage.removeItem('mcth_sms_rem_creds'); location.reload(); } });
+        document.getElementById('btnApiSettings').addEventListener('click', openApiSettingsModal);
+        document.getElementById('btnAboutDev').addEventListener('click', openAboutDevModal);
+        document.getElementById('btnClearData').addEventListener('click', handleClearSmsData);
+        document.getElementById('sms-credit-display').addEventListener('click', updateCreditBalance);
+        
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.dataset.tab;
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(`tab-content-${tab}`).classList.add('active');
+            });
+        });
+
+        document.getElementById('attendance-auto-sms-switch').addEventListener('click', handleAutomationSwitch);
+        document.getElementById('payment-auto-sms-switch').addEventListener('click', handleAutomationSwitch);
+        document.getElementById('save-reminder-day-btn').addEventListener('click', saveReminderDay);
+        document.getElementById('send-due-reminders-now-btn').addEventListener('click', () => findAndSendDueReminders(true));
+        
+        document.getElementById('send-exam-sms-btn').addEventListener('click', handleSendExamSms);
+        
+        document.getElementById('custom-sms-textarea').addEventListener('input', handleTextareaInput);
+        document.querySelectorAll('.tag-buttons button').forEach(btn => btn.addEventListener('click', insertTag));
+        document.getElementById('send-custom-sms-btn').addEventListener('click', handleSendCustomSms);
+
+        const yearSelector = document.getElementById('yearSelector');
+        yearSelector.addEventListener('change', (e) => {
+            const selectedYear = parseInt(e.target.value);
+            if (selectedYear !== viewedYear) {
+                const pass = prompt(`শিক্ষাবর্ষ পরিবর্তন করতে অ্যাডমিন পাসওয়ার্ড দিন:`);
+                if (pass === currentPassword) {
+                    viewedYear = selectedYear;
+                    loadAllData();
+                } else if(pass) {
+                    showToast('ভুল পাসওয়ার্ড!', 'error');
+                    yearSelector.value = viewedYear;
+                } else {
+                    yearSelector.value = viewedYear;
+                }
+            }
+        });
+    }
+
+    function updateYearSelectorUI() {
+        const yearSelector = document.getElementById('yearSelector');
+        yearSelector.innerHTML = '';
+        const years = Object.keys(allYearsData).length > 0 ? Object.keys(allYearsData).sort((a,b) => b-a) : [new Date().getFullYear()];
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = `${year}${year == activeYear ? ' (Active)' : ''}`;
+            if (year == viewedYear) option.selected = true;
+            yearSelector.appendChild(option);
+        });
+        document.getElementById('year-management-controls').style.visibility = 'visible';
+    }
+
+    function renderTabsAndControls() {
+        document.getElementById('attendance-auto-sms-switch').checked = smsManagementData.automation?.attendanceEnabled || false;
+        document.getElementById('payment-auto-sms-switch').checked = smsManagementData.automation?.paymentEnabled || false;
+        document.getElementById('due-reminder-day').value = smsManagementData.automation?.dueReminderDay || 16;
+        
+        const examSelect = document.getElementById('exam-select');
+        examSelect.innerHTML = '<option value="">-- পরীক্ষা নির্বাচন করুন --</option>';
+        const examsForYear = allYearsData[viewedYear]?.data?.exams || {};
+        Object.entries(examsForYear).filter(([,exam])=>exam && !exam.deletedAt)
+            .sort(([,a],[,b]) => new Date(b.date) - new Date(a.date))
+            .forEach(([id, exam]) => examSelect.add(new Option(`${exam.name} (${exam.date})`, id)));
+        examSelect.onchange = () => document.getElementById('send-exam-sms-btn').disabled = !examSelect.value;
+
+        const recipientContainer = document.getElementById('custom-recipient-selector');
+        recipientContainer.innerHTML = '';
+        const classesForYear = allYearsData[viewedYear]?.data?.mainClassCategories || [];
+        const scheduleForYear = allYearsData[viewedYear]?.data?.batchSchedule || [];
+        classesForYear.filter(c=>c && !c.deletedAt).forEach(c => {
+            const classDiv = document.createElement('div');
+            classDiv.innerHTML = `<b>${c.name}</b>`;
+            scheduleForYear.forEach(day => (day.classes || []).forEach(cls => {
+                if (cls.classId === c.id) (cls.batches || []).forEach(b => {
+                    if(b && !b.deletedAt) {
+                        const label = Object.assign(document.createElement('label'), { style: 'display: block; margin-left: 15px;', innerHTML: `<input type="checkbox" class="batch-checkbox" value="${b.id}"> ${day.dayName} (${b.time})` });
+                        classDiv.appendChild(label);
+                    }
+                });
+            }));
+            if(classDiv.children.length > 1) recipientContainer.appendChild(classDiv);
+        });
+        document.querySelectorAll('.batch-checkbox').forEach(cb => cb.addEventListener('change', updateCustomSendButtonState));
+    }
+    
+    // --- NEW UI Logic: Box Views ---
+    function renderAllBoxViews() {
+        ['attendance', 'payment'].forEach(type => {
+            const container = document.getElementById(`${type}-box-container`);
+            if (container) {
+                container.innerHTML = '';
+                const boxView = document.getElementById('template-box-view').content.cloneNode(true);
+                container.appendChild(boxView);
+                
+                const pendingCount = Object.keys(smsManagementData.pending?.[type] || {}).length;
+                const sentCount = Object.keys(smsManagementData.logs?.[type] || {}).length;
+                
+                const pendingBtn = container.querySelector('.box-button.pending');
+                const sentBtn = container.querySelector('.box-button.sent');
+                
+                pendingBtn.querySelector('.count-badge').textContent = pendingCount;
+                sentBtn.querySelector('.count-badge').textContent = sentCount;
+
+                pendingBtn.onclick = () => showBoxListView(type, 'pending', container);
+                sentBtn.onclick = () => showBoxListView(type, 'sent', container);
+            }
+        });
+        renderSimpleBoxListView('due-reminder', 'sent');
+        renderSimpleBoxListView('exam', 'sent');
+        renderSimpleBoxListView('custom', 'sent');
+        renderSimpleBoxListView('drafts', 'pending');
+    }
+
+    function showBoxListView(type, box, container) {
+        const boxView = container.querySelector('.box-view-container');
+        const listView = container.querySelector('.box-list-view');
+        
+        boxView.style.display = 'none';
+        listView.style.display = 'block';
+        
+        listView.dataset.type = type;
+        listView.dataset.box = box;
+
+        const title = listView.querySelector('h3');
+        title.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} - ${box.charAt(0).toUpperCase() + box.slice(1)} Box`;
+
+        const selectAllContainer = listView.querySelector('.select-all-container');
+        const footerActions = listView.querySelector('.modal-footer');
+        if (box === 'pending') {
+            selectAllContainer.style.display = 'block';
+            footerActions.style.display = 'flex';
+        } else {
+            selectAllContainer.style.display = 'none';
+            footerActions.style.display = 'none';
+        }
+
+        listView.querySelector('[data-action="back-to-boxes"]').onclick = () => {
+            boxView.style.display = 'flex';
+            listView.style.display = 'none';
+        };
+
+        const classFilter = listView.querySelector('.class-filter');
+        const batchFilter = listView.querySelector('.batch-filter');
+        
+        populateClassFilter(classFilter, type, box);
+        classFilter.onchange = () => populateBatchFilter(batchFilter, classFilter.value, type, box);
+        batchFilter.onchange = () => renderFilteredList(listView, type, box, classFilter.value, batchFilter.value);
+
+        listView.querySelector('.select-all-checkbox').dataset.type = type;
+        listView.querySelector('[data-action="delete-selected"]').dataset.type = type;
+        listView.querySelector('[data-action="send-selected"]').dataset.type = type;
+        
+        renderFilteredList(listView, type, box);
+    }
+
+    function renderSimpleBoxListView(type, box) {
+        let viewId, listContainerId;
+        if(type === 'drafts'){
+            viewId = 'drafts-box-view';
+        } else {
+            viewId = `${type}-${box}-box-view`;
+        }
+
+        const listView = document.getElementById(viewId);
+        if(!listView) return;
+
+        const listContainer = listView.querySelector('.box-list');
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : (type === 'drafts' ? smsManagementData.drafts : smsManagementData.logs?.[type]);
+
+        displayListItems(listContainer, data || {}, type, box);
+        
+        if (type === 'drafts') {
+            const selectAll = listView.querySelector('.select-all-checkbox');
+            selectAll.dataset.type = 'drafts';
+            selectAll.onchange = (e) => {
+                const isChecked = e.target.checked;
+                listContainer.querySelectorAll('.list-item-checkbox').forEach(cb => cb.checked = isChecked);
+            };
+            listView.querySelector('[data-action="delete-selected"]').onclick = () => handleDeleteSelected('drafts');
+            listView.querySelector('[data-action="send-selected"]').onclick = () => handleSendSelected('drafts');
+        } else {
+             listView.querySelector('[data-action="clear-sent"]').onclick = () => handleClearSentBox(type);
+        }
+    }
+
+    function renderFilteredList(listView, type, box, classId = '', batchId = '') {
+        const listContainer = listView.querySelector('.box-list');
+        const data = (box === 'pending') ? (smsManagementData.pending?.[type] || {}) : (smsManagementData.logs?.[type] || {});
+
+        let items = Object.values(data);
+        if(classId) {
+            items = items.filter(item => item.classId === classId);
+        }
+        if(batchId) {
+            items = items.filter(item => item.batchId === batchId);
+        }
+        items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        displayListItems(listContainer, items, type, box);
+    }
+    
+    function displayListItems(container, items, type, box) {
+        const itemsArray = Array.isArray(items) ? items : Object.values(items);
+        container.innerHTML = itemsArray.length === 0 ? `<p style="text-align:center; color: var(--text-secondary);">No messages found.</p>` : '';
+        
+        itemsArray.forEach(log => {
+            const student = findStudentInAllYears(log.studentId);
+            const item = document.createElement('div');
+            item.className = `list-item ${box}`;
+            
+            let title = `To: ${student ? `${student.name} (${student.roll})` : 'Unknown'}`;
+            let body = `<p>${(log.message || '').split('\n')[0]}</p>`;
+
+            const checkboxHTML = (box === 'pending' || type === 'drafts') ? `<input type="checkbox" class="list-item-checkbox" data-id="${log.id}">` : '';
+
+            item.innerHTML = `${checkboxHTML}
+            <div class="list-item-content">
+                <div class="list-item-header">
+                    <span>${title}</span><span>${new Date(log.timestamp).toLocaleString('bn-BD')}</span>
+                </div>
+                <div class="list-item-body">${body}</div>
+            </div>`;
+            item.addEventListener('click', (e) => { if (!e.target.matches('.list-item-checkbox')) openMessagePreviewModal(log); });
+            container.appendChild(item);
+        });
+    }
+
+    function populateClassFilter(selectElement, type, box) {
+        selectElement.innerHTML = '<option value="">All Classes</option>';
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : smsManagementData.logs?.[type];
+        if (!data) return;
+
+        const classIds = new Set(Object.values(data).map(item => item.classId).filter(Boolean));
+        classIds.forEach(id => {
+            const classInfo = (allYearsData[viewedYear]?.data?.mainClassCategories || []).find(c => c.id === id);
+            if (classInfo) {
+                selectElement.add(new Option(classInfo.name, id));
+            }
+        });
+    }
+
+    function populateBatchFilter(selectElement, classId, type, box) {
+        selectElement.innerHTML = '<option value="">All Batches</option>';
+        if (!classId) return;
+
+        const data = (box === 'pending') ? smsManagementData.pending?.[type] : smsManagementData.logs?.[type];
+        if (!data) return;
+
+        const batchIds = new Set(Object.values(data).filter(item => item.classId === classId).map(item => item.batchId).filter(Boolean));
+        batchIds.forEach(id => {
+            for (const year in allYearsData) {
+                const schedule = allYearsData[year]?.data?.batchSchedule;
+                if (schedule) {
+                    for (const day of schedule) {
+                        for (const cls of day.classes || []) {
+                           const batchInfo = (cls.batches || []).find(b => b.id === id);
+                           if (batchInfo) {
+                               selectElement.add(new Option(`${day.dayName} (${batchInfo.time})`, id));
+                               return;
+                           }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // --- Sending/Deleting Actions ---
+    async function handleSendSelected(type) {
+        const isDraftBox = type === 'drafts';
+        const container = isDraftBox ? document.getElementById('drafts-box-view') : document.querySelector(`.tab-content.active .box-list-view[data-type="${type}"]`);
+        if (!container) return;
+        const selectedIds = Array.from(container.querySelectorAll('.list-item-checkbox:checked')).map(cb => cb.dataset.id);
+
+        if (selectedIds.length === 0) return showToast("No messages selected.", "warning");
+        if (!confirm(`Send/Retry ${selectedIds.length} message(s)?`)) return;
+
+        showLoader();
+        let successCount = 0;
+        
+        for (const id of selectedIds) {
+            const msgData = isDraftBox ? smsManagementData.drafts[id] : smsManagementData.pending[type]?.[id];
+            if (msgData) {
+                const student = findStudentInAllYears(msgData.studentId);
+                if (student && student.parentContact) {
+                    const result = await sendSmsApiCall(student.parentContact, msgData.message);
+                    if (result.success) {
+                        await logSentMessage(msgData.originalType || type, msgData);
+                        successCount++;
+                    } else {
+                        msgData.error = result.error;
+                        await addMessageToBox('drafts', msgData.originalType || type, msgData);
+                    }
+                } else {
+                    msgData.error = "Student or contact number not found.";
+                    await addMessageToBox('drafts', msgData.originalType || type, msgData);
+                }
+                const sourcePath = isDraftBox ? `drafts/${id}` : `pending/${type}/${id}`;
+                await smsManagementRef.child(sourcePath).remove();
+            }
+        }
+        showToast(`${successCount} message(s) sent successfully. ${selectedIds.length - successCount} failed and moved to Drafts.`, successCount > 0 ? 'success' : 'error');
+        hideLoader();
+    }
+    
+    // MODIFIED: handleDeleteSelected to handle new UI and Drafts fix
+    async function handleDeleteSelected(type) {
+        const isDraftBox = type === 'drafts';
+        const container = isDraftBox ? document.getElementById('drafts-box-view') : document.querySelector(`.tab-content.active .box-list-view[data-type="${type}"]`);
+        if (!container) return;
+
+        const selectedIds = Array.from(container.querySelectorAll('.list-item-checkbox:checked')).map(cb => cb.dataset.id);
+        if (selectedIds.length === 0) return showToast("No messages selected.", "warning");
+        if (!confirm(`Delete ${selectedIds.length} selected message(s)? This cannot be undone.`)) return;
+
+        showLoader();
+        const updates = {};
+        const path = isDraftBox ? 'drafts' : `pending/${type}`;
+        selectedIds.forEach(id => { updates[`/${path}/${id}`] = null; });
+        await smsManagementRef.update(updates);
+        showToast(`${selectedIds.length} messages deleted.`, 'info');
+        hideLoader();
+    }
+    
+    async function handleClearSentBox(type) {
+        if (!confirm(`Are you sure you want to clear all sent messages for '${type}'?`)) return;
+        await smsManagementRef.child('logs').child(type).remove();
+        showToast(`Sent box for '${type}' cleared.`, 'info');
+    }
+
+    // --- Other handlers ---
+    function handleAutomationSwitch(event) {
+        event.preventDefault();
+        const typeMap = { 'attendance-auto-sms-switch': 'attendanceEnabled', 'payment-auto-sms-switch': 'paymentEnabled'};
+        const type = typeMap[event.target.id];
+        if(!type) return;
+        const switchElement = event.target;
+        const currentState = switchElement.checked;
+        const pass = prompt(`To change this setting, please enter the admin password:`);
+        if (pass === currentPassword) {
+            const newState = !currentState;
+            smsManagementRef.child('automation').child(type).set(newState)
+                .then(() => showToast(`Automation for ${type.replace('Enabled','')} has been ${newState ? 'ENABLED' : 'DISABLED'}.`, 'success'));
+        } else if (pass) {
+            showToast('Incorrect password.', 'error');
+            switchElement.checked = currentState;
+        } else {
+            switchElement.checked = currentState;
+        }
+    }
+    function saveReminderDay() {
+        const day = document.getElementById('due-reminder-day').value;
+        if (day < 1 || day > 28) return showToast("Please enter a day between 1 and 28.", "error");
+        smsManagementRef.child('automation/dueReminderDay').set(parseInt(day))
+            .then(() => showToast(`Reminder day saved to ${day}.`, 'success'));
+    }
+    async function findAndSendDueReminders(isManual = false) {
+        if (isManual && !confirm(`আপনি কি '${viewedYear}' শিক্ষাবর্ষের সকল বকেয়া থাকা ছাত্রকে এখনই রিমাইন্ডার পাঠাতে চান?`)) return;
+        showLoader();
+        const studentsForYear = allYearsData[viewedYear]?.data?.students || [];
+        const dueStudents = studentsForYear.filter(student => isStudentDue(student, viewedYear));
+        if (dueStudents.length === 0) {
+            hideLoader();
+            return showToast("No students with due payments found for this year.", 'info');
+        }
+        let successCount = 0;
+        const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
+        const messageTemplate = `সম্মানিত অভিভাবক, আপনার সন্তান [নাম] (রোল: [রোল]) এর মাসিক বেতন বকেয়া রয়েছে। অনুগ্রহ করে দ্রুত পরিশোধ করুন।`;
+        for(const student of dueStudents) {
+            if(student.parentContact) {
+                let message = `${messageTemplate.replace('[নাম]', student.name).replace('[রোল]', student.roll)}${footer}`;
+                const res = await sendSmsApiCall(student.parentContact, message);
+                if(res.success) {
+                    successCount++;
+                    await logSentMessage('due-reminder', { studentId: student.id, studentName: student.name, studentRoll: student.roll, message });
+                } else {
+                    await addMessageToBox('drafts', 'due-reminder', { studentId: student.id, message, studentName: student.name, error: res.error });
+                }
+            }
+        }
+        showToast(`${successCount} due reminders sent. ${dueStudents.length - successCount} failed.`, 'success');
+        hideLoader();
+    }
+    async function handleSendExamSms() {
+        const examId = document.getElementById('exam-select').value; if (!examId) return;
+        const exam = allYearsData[viewedYear]?.data?.exams[examId];
+        const results = exam.results || {};
+        const participants = Object.keys(results);
+        if (participants.length === 0) return showToast("No results found.", "warning");
+        if (!confirm(`Send results to ${participants.length} students?`)) return;
+        showLoader();
+        const sendBtn = document.getElementById('send-exam-sms-btn'); sendBtn.disabled = true;
+        const allStudentsOfYear = allYearsData[viewedYear]?.data?.students || [];
+        const highestMark = Math.max(0, ...Object.values(results));
+        const ranked = participants.map(id => ({ id, marks: results[id] })).sort((a,b) => (b.marks || 0) - (a.marks || 0));
+        let rank = 1, lastMark = -Infinity;
+        const finalData = ranked.map((item, index) => { if (item.marks !== lastMark) { rank = index + 1; lastMark = item.marks; } return { ...item, rank }; });
+        let success = 0;
+        const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
+        for (const item of finalData) {
+            const student = allStudentsOfYear.find(s => s.id === item.id);
+            if (student && student.parentContact) {
+                let message = `প্রিয় ${student.name} (রোল: ${student.roll}),\n${exam.name} পরীক্ষার ফলাফল:\nপ্রাপ্ত নম্বর: ${item.marks}/${exam.totalMarks}\nপজিশন: ${item.rank}\nসর্বোচ্চ নম্বর: ${highestMark}${footer}`;
+                const res = await sendSmsApiCall(student.parentContact, message);
+                if (res.success) {
+                    success++;
+                    await logSentMessage('exam', { examId, examName: exam.name, studentId: student.id, studentName: student.name, message });
+                } else {
+                    await addMessageToBox('drafts', 'exam', { studentId: student.id, message, studentName: student.name, error: res.error });
+                }
+            }
+        }
+        showToast(`${success} result SMS sent successfully.`, 'success');
+        hideLoader(); sendBtn.disabled = false;
+    }
+    function updateCustomSendButtonState() {
+        const anyBatchSelected = document.querySelectorAll('.batch-checkbox:checked').length > 0;
+        const messageExists = document.getElementById('custom-sms-textarea').value.trim().length > 0;
+        document.getElementById('send-custom-sms-btn').disabled = !(anyBatchSelected && messageExists);
+    }
+    function handleTextareaInput(e) {
+        const textarea = e.target;
+        const count = textarea.value.length;
+        const smsCount = Math.ceil(count / 160) || 1;
+        document.getElementById('char-count').parentElement.textContent = `${count}/160 (${smsCount} SMS)`;
+        updateCustomSendButtonState();
+    }
+    function insertTag(e) {
+        const textarea = document.getElementById('custom-sms-textarea');
+        const tag = e.target.dataset.tag;
+        textarea.value += ` ${tag} `;
+        textarea.focus();
+        handleTextareaInput({ target: textarea });
+    }
+    async function handleSendCustomSms() {
+        const batchIds = Array.from(document.querySelectorAll('.batch-checkbox:checked')).map(cb => cb.value);
+        const msgTpl = document.getElementById('custom-sms-textarea').value.trim();
+        const studentIds = new Set();
+        const studentsForYear = allYearsData[viewedYear]?.data?.students || [];
+        const scheduleForYear = allYearsData[viewedYear]?.data?.batchSchedule || [];
+        scheduleForYear.forEach(day => (day.classes || []).forEach(cls => (cls.batches || []).forEach(b => {
+            if (batchIds.includes(b.id)) (b.studentIds || []).forEach(sid => studentIds.add(sid));
+        })));
+        const recipients = Array.from(studentIds).map(id => studentsForYear.find(s => s.id === id)).filter(Boolean);
+        if(recipients.length === 0) return showToast("No students selected.", "warning");
+        if(!confirm(`Send notice to ${recipients.length} students?`)) return;
+        showLoader(); const sendBtn = document.getElementById('send-custom-sms-btn'); sendBtn.disabled = true;
+        let success = 0;
+        const footer = `\n\nধন্যবাদ,\nআশিক স্যার\nগণিত ক্রিয়েটিভ টিচিং হোম`;
+        for(const student of recipients) {
+            if(student.parentContact) {
+                let message = `${msgTpl.replace(/\[নাম\]/g, student.name).replace(/\[রোল\]/g, student.roll)}${footer}`;
+                const res = await sendSmsApiCall(student.parentContact, message);
+                if (res.success) {
+                    success++;
+                } else {
+                    await addMessageToBox('drafts', 'custom', { studentId: student.id, message, studentName: student.name, error: res.error });
+                }
+            }
+        }
+        if (success > 0) {
+            await logSentMessage('custom', { recipientCount: success, message: msgTpl, batches: batchIds });
+        }
+        showToast(`${success} notices sent! ${recipients.length - success} failed.`, 'success');
+        hideLoader(); sendBtn.disabled = false;
+    }
+    function findStudentInAllYears(studentId) {
+        for (const year in allYearsData) {
+            const student = (allYearsData[year]?.data?.students || []).find(s => s && s.id === studentId);
+            if (student) return {...student, year};
+        }
+        return null;
+    }
+    function openApiSettingsModal() {
+        document.body.insertAdjacentHTML('beforeend', document.getElementById('template-api-settings-modal').innerHTML);
+        const modal = document.getElementById('apiSettingsModal');
+        const baseUrlInput = modal.querySelector('#api-base-url-input');
+        const apiKeyInput = modal.querySelector('#api-key-input');
+        const senderIdInput = modal.querySelector('#sender-id-input');
+        
+        baseUrlInput.value = smsManagementData.apiSettings?.baseUrl || '';
+        apiKeyInput.value = smsManagementData.apiSettings?.apiKey || '';
+        senderIdInput.value = smsManagementData.apiSettings?.senderId || '';
+
+        modal.querySelector('#btn-save-api-settings').onclick = () => {
+            const settings = { 
+                baseUrl: baseUrlInput.value.trim(), 
+                apiKey: apiKeyInput.value.trim(),
+                senderId: senderIdInput.value.trim()
+            };
+            if(!settings.baseUrl || !settings.apiKey || !settings.senderId) return showToast("All API fields are required.", "error");
+            
+            smsManagementRef.child('apiSettings').set(settings).then(() => {
+                showToast("API Settings saved!", 'success'); 
+                modal.remove();
+            });
+        };
+        const closeModal = () => modal.remove();
+        modal.querySelector('.modal-close-btn').onclick = closeModal;
+        modal.querySelector('.modal-cancel-btn').onclick = closeModal;
+        modal.classList.add('visible');
+    }
+    function openMessagePreviewModal(log) {
+        const student = findStudentInAllYears(log.studentId);
+        const modalContent = `
+            <div class="modal-overlay visible">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Message Details</h2>
+                        <button class="modal-close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Recipient</label>
+                            <input type="text" readonly value="${student ? `${student.name} (${student.roll}) - Year: ${student.year}` : 'Unknown'}">
+                        </div>
+                        ${log.error ? `<div class="form-group"><label>Last Error</label><input type="text" readonly value="${log.error}"></div>` : ''}
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea readonly rows="8">${log.message}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        const modal = document.body.lastElementChild;
+        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
+        modal.onclick = (e) => { if(e.target === modal) modal.remove() };
+    }
+    function openAboutDevModal() {
+        const modalTemplate = document.getElementById('template-about-dev-modal'); if (!modalTemplate) return;
+        document.body.appendChild(modalTemplate.content.cloneNode(true));
+        const modal = document.getElementById('aboutDeveloperModal');
+        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
+        modal.classList.add('visible');
+    }
+    function handleClearSmsData() {
+        const pass = prompt('To clear all SMS data (pending, drafts, logs), please enter the admin password:');
+        if (pass === currentPassword) {
+            if (confirm('WARNING! This will permanently delete all pending, draft, and sent SMS logs. This action cannot be undone. Are you sure?')) {
+                showLoader();
+                const updates = { 'pending': null, 'drafts': null, 'logs': null };
+                smsManagementRef.update(updates).then(() => {
+                    showToast('All SMS data has been cleared.', 'success');
+                    hideLoader();
+                }).catch(err => {
+                    showToast(`Error: ${err.message}`, 'error');
+                    hideLoader();
+                });
+            }
+        } else if (pass) {
+            showToast('Incorrect password.', 'error');
+        }
+    }
+
+    // --- Initial Load ---
+    initializeApp();
+}
+</script>
+</html>
