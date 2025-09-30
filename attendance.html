@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মিরাকল অ্যাটেনডেন্স</title>
+    <title>MCTH Attendance - Mobile</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
 
     <!-- FIREBASE SDKs -->
@@ -238,7 +238,7 @@
                 <div id="login-error-msg"></div>
             </form>
             <div class="login-footer">
-                <p class="copyright-text">&copy; Copyright by Miracle Cadet & Academic Institute 2026</p>
+                <p class="copyright-text">&copy; Copyright by Math Creative Teaching Home 2026</p>
                 <div class="developer-box">
                     <p class="developed-by-text">Developed by,</p>
                     <div class="company-info">
@@ -279,7 +279,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm10-2v8h-6v-2h4v-4h-4V8h6zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"></path></svg>
                 </button>
             </div>
-            <div class="header-center">মিরাকল অ্যাটেনডেন্স</div>
+            <div class="header-center">MCTH Attendance</div>
             <div class="header-right">
                 <div class="global-menu-container">
                     <button id="globalMenuBtn" class="nav-btn global-menu-btn" title="Options">&#9776;</button>
@@ -316,7 +316,7 @@
 
         <footer class="app-footer">
             <div class="footer-content">
-                <p>&copy; Miracle Cadet & Academic Institute 2026</p>
+                <p>&copy; Math Creative Teaching Home 2026</p>
                 <p>Developed by বিন্দুমাত্রা আইটি</p>
                 <div class="footer-socials">
                     <a href="https://wa.me/8801745938158" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.61 15.31 3.48 16.76L2 22L7.43 20.48C8.82 21.3 10.39 21.81 12.04 21.81C17.5 21.81 21.95 17.36 21.95 11.9C21.95 9.27 20.92 6.81 19.05 4.94C17.18 3.07 14.72 2 12.04 2M12.04 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.71 20.28 11.91C20.28 16.47 16.6 20.15 12.04 20.15C10.56 20.15 9.15 19.71 7.96 18.9L7.54 18.64L3.8 19.77L4.95 16.11L4.68 15.68C3.78 14.43 3.32 12.96 3.32 11.91C3.32 7.35 6.99 3.67 12.04 3.67M16.57 14.45C16.37 14.35 15.28 13.81 15.08 13.73C14.88 13.65 14.73 13.61 14.59 13.86C14.44 14.11 13.99 14.65 13.84 14.8C13.69 14.95 13.54 14.96 13.34 14.86C13.14 14.76 12.28 14.47 11.27 13.59C10.49 12.91 9.96 12.06 9.81 11.81C9.66 11.56 9.79 11.45 9.91 11.33C10.02 11.22 10.16 11.03 10.29 10.88C10.41 10.73 10.46 10.61 10.54 10.43C10.61 10.26 10.56 10.11 10.51 10.01C10.46 9.91 10.03 8.82 9.83 8.32C9.64 7.82 9.44 7.86 9.29 7.85H9.01C8.86 7.85 8.64 7.9 8.44 8.1C8.24 8.3 7.79 8.75 7.79 9.76C7.79 10.77 8.48 11.73 8.58 11.88C8.68 12.03 10.03 14.16 12.11 14.99C12.59 15.18 12.95 15.29 13.25 15.38C13.78 15.53 14.28 15.49 14.68 15.43C15.12 15.36 16.11 14.81 16.31 14.71C16.51 14.61 16.57 14.55 16.57 14.45Z"></path></svg>
@@ -328,7 +328,9 @@
         </footer>
     </div>
     
-    <!-- TEMPLATES -->
+    <!-- ======================= -->
+    <!--       TEMPLATES       -->
+    <!-- ======================= -->
     <template id="template-about-dev-modal">
         <div id="aboutDeveloperModal" class="modal-overlay"> <div class="modal-content" style="max-width: 95%; padding: 15px;"> <div class="modal-header"> <h2>About the Developer</h2> <button class="modal-close-btn">&times;</button> </div> <div class="modal-body" style="padding:0;"> <img src="images/Abdullah-Al-Rafi-Digital-Card.png" alt="Developer Digital Card" style="width: 100%; height: auto; border-radius: 8px; display: block;" onerror="this.alt='Image not found.';"> </div> </div> </div>
     </template>
@@ -441,7 +443,6 @@
             </div>
         </div>
     </template>
-    <!-- NEW: ABSENT LIST MODAL TEMPLATE -->
     <template id="template-absent-list-modal">
         <div id="absentListModal" class="modal-overlay">
             <div class="modal-content">
@@ -469,20 +470,19 @@
             </div>
         </div>
     </template>
-    
+
 <script>
 // ================================================================== //
 //            FIREBASE CONFIGURATION AND INITIALIZATION             //
 // ================================================================== //
 const firebaseConfig = {
-  apiKey: "AIzaSyAnpbv9WhvOqV8nsbmVOQuBhKDF7D9-Ztc",
-  authDomain: "miracle-math-online-software.firebaseapp.com",
-  projectId: "miracle-math-online-software",
-  storageBucket: "miracle-math-online-software.firebasestorage.app",
-  messagingSenderId: "27829239296",
-  appId: "1:27829239296:web:108d6b86969c95cea2a2e5",
-  measurementId: "G-GSVFRCS9NR",
-  databaseURL: "https://miracle-math-online-software-default-rtdb.asia-southeast1.firebasedatabase.app"
+    apiKey: "AIzaSyBE0xJ1nvqSj6a9bXtrtrNTDh0bu7PMLnw",
+    authDomain: "math-creative-teaching-h-a86fd.firebaseapp.com",
+    projectId: "math-creative-teaching-h-a86fd",
+    storageBucket: "math-creative-teaching-h-a86fd.appspot.com",
+    messagingSenderId: "547365102808",
+    appId: "1:547365102808:web:45c46b74ffaaa945dda3ad",
+    databaseURL: "https://math-creative-teaching-h-a86fd-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -1220,7 +1220,7 @@ function initializeAppLogic() {
                                 studentsToMarkAbsent.forEach(student => {
                                     if (student.parentContact) {
                                         const dateStr = new Date().toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
-                                        const message = `সম্মানিত অভিভাবক, আপনার সন্তান ${student.name} (রোল: ${student.roll}) আজ ${dateStr} তারিখে ক্লাসে অনুপস্থিত ছিল।\n\nধন্যবাদ,\nমিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট`;
+                                        const message = `সম্মানিত অভিভাবক, আপনার সন্তান ${student.name} (রোল: ${student.roll}) আজ ${dateStr} তারিখে ক্লাসে অনুপস্থিত ছিল।\n\nধন্যবাদ,\nMath Creative Teaching Home`;
                                         const pendingId = `pending_att_${Date.now()}_${student.id}`;
                                         smsUpdates[`smsManagement/pending/attendance/${pendingId}`] = {
                                             id: pendingId, timestamp: new Date().toISOString(), studentId: student.id, message: message, batchId: batchId,
@@ -1320,7 +1320,7 @@ function initializeAppLogic() {
                     const student = (appData.students || []).find(s => s && s.id === studentId);
                     if (student && student.parentContact) {
                         const dateStr = new Date().toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' });
-                        const message = `সম্মানিত অভিভাবক, আপনার সন্তান ${student.name} (রোল: ${student.roll}) আজ ${dateStr} তারিখে ক্লাসে অনুপস্থিত ছিল।\n\nধন্যবাদ,\nমিরাকল ক্যাডেট অ্যান্ড একাডেমিক ইন্সটিটিউট`;
+                        const message = `সম্মানিত অভিভাবক, আপনার সন্তান ${student.name} (রোল: ${student.roll}) আজ ${dateStr} তারিখে ক্লাসে অনুপস্থিত ছিল।\n\nধন্যবাদ,\nMath Creative Teaching Home`;
                         const pendingId = `pending_att_${Date.now()}`;
                         const batchInfo = findBatchById(currentBatchId);
                         
@@ -1339,7 +1339,6 @@ function initializeAppLogic() {
         const batchDetails = findBatchById(batchId);
         if (!batchDetails) return;
 
-        // 1. Determine relevant date and records
         const schedule = appData.attendance?.schedules?.[batchId];
         const isHolidayToday = checkIsHoliday(getTodayDateString(), batchId);
         const { status } = getScheduleStatus(schedule);
@@ -1362,7 +1361,6 @@ function initializeAppLogic() {
             }
         }
         
-        // 2. Calculate absent students (not yet present)
         const allStudentIdsInBatch = new Set(batchDetails.studentIds || []);
         const presentStudentIds = new Set(
             Object.entries(attendanceForDate)
@@ -1376,7 +1374,6 @@ function initializeAppLogic() {
             .filter(Boolean)
             .sort((a, b) => parseInt(a.roll) - parseInt(b.roll));
 
-        // 3. Create and show modal
         if (document.getElementById('absentListModal')) document.getElementById('absentListModal').remove();
         const modalFragment = document.getElementById('template-absent-list-modal').content.cloneNode(true);
         document.body.appendChild(modalFragment);
@@ -1401,7 +1398,7 @@ function initializeAppLogic() {
                     <td>${student.schoolName || 'N/A'}</td>
                     <td>${contact}</td>
                     <td>
-                        ${canCall ? `<a href="tel:${contact}" class="action-button btn-primary" style="text-decoration: none;">Call</a>` : ''}
+                        ${canCall ? `<a href="tel:${contact}" class="btn-primary" style="text-decoration: none; padding: 4px 8px; font-size: 0.9em;">Call</a>` : ''}
                     </td>
                 `;
                 tableBody.appendChild(tr);
