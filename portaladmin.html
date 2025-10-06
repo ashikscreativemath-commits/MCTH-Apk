@@ -1,3 +1,6 @@
+--- START OF FILE portaladmin.html ---
+
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -126,8 +129,8 @@
         .modal-body { flex-grow: 1; overflow-y: auto; padding-right: 10px; }
         .modal-footer { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; }
         
-        /* Live Exam & Lottery Styles (Remain mostly unchanged) */
-        .exam-list-item, .lottery-batch-card { border: 1px solid var(--border-color); }
+        /* Live Exam Styles */
+        .exam-list-item { border: 1px solid var(--border-color); }
         
         /* General Helper Styles */
         #loader-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:10006;display:none;align-items:center;justify-content:center;color:white;flex-direction:column;}.loader{border:5px solid #f3f3f3;border-top:5px solid var(--border-accent);border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;margin-bottom:15px;}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
@@ -146,9 +149,48 @@
         .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
         .nav-overlay.is-active { display: block; }
         
-        /* ID Card & Other Specific Styles (Unchanged) */
+        /* ID Card Styles */
         #id-card-preview-area{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10005;background:rgba(0,0,0,.5);justify-content:center;align-items:center}.id-card-container{width:300px;aspect-ratio:54/86;position:relative;box-shadow:var(--shadow-md);border-radius:12px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;background-color:#fff}.id-card-container .bg-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}.id-card-photo{position:absolute;top:17.7%;left:50%;transform:translateX(-50%);width:50.75%;aspect-ratio:9.25/10;object-fit:cover;border-radius:15px}.id-card-details-container{position:absolute;top:53.5%;left:50%;width:50%;height:auto;color:#1c1c1c}.id-card-details-container p{font-family:'Kalpurush',sans-serif;margin:0;padding:0;font-size:12.3px;font-weight:700;line-height:1.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.id-card-qr-container{position:absolute;top:48.3%;left:50%;transform:translateX(-50%);width:28.5%;background:#fff;padding:4px;border-radius:2px}#id-card-generation-progress{margin-top:10px;font-weight:700;color:var(--info-color)}
-        #lottery-animation-screen{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#2c3e50,#34495e);z-index:20000;color:#fff;flex-direction:column;align-items:center;justify-content:center}#lottery-animation-screen.visible{display:flex}.reel-container{width:80%;height:150px;overflow:hidden;border:5px solid var(--border-accent);border-radius:10px;background:rgba(0,0,0,.3);margin-bottom:30px}.names-reel{text-align:center}.names-reel div{font-size:2.5em;font-weight:700;padding:20px;text-shadow:2px 2px 5px rgba(0,0,0,.5)}@keyframes reel-spin{from{transform:translateY(0)}to{transform:translateY(-90%)}}.winner-announcement-box{text-align:center;opacity:0;transform:scale(.5);transition:all .5s ease-out}.winner-announcement-box.show{opacity:1;transform:scale(1)}#winner-title{font-size:2em;color:var(--warning-color)}#winner-name{font-size:3.5em;font-weight:700;margin:10px 0 30px}#vip-winners-list{list-style:none;padding:0;text-align:center;font-size:1.2em}#save-lottery-btn{display:none;background-color:var(--success-color);font-size:1.2em;padding:15px 30px}
+        
+        /* === NEW LOTTERY STYLES START === */
+        .lottery-batch-card { background-color: #fff; border-radius: 8px; padding: 15px; box-shadow: var(--shadow-sm); border-left: 5px solid var(--info-color); transition: all 0.2s; }
+        .lottery-batch-card h4 { margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+        .lottery-batch-card .status { font-weight: bold; font-size: 0.9em; padding: 4px 10px; border-radius: 12px; }
+        .lottery-batch-card .status.status-ready { background-color: var(--warning-color); color: #333; }
+        .lottery-batch-card .status.status-completed { background-color: var(--success-color); color: white; cursor: pointer; }
+        .lottery-batch-card button { width: 100%; padding: 10px; font-size: 1em; margin-top: 10px; background-color: var(--border-accent); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .lottery-batch-card.completed { border-left-color: var(--success-color); }
+        .lottery-batch-card .winner-list { list-style: decimal inside; padding-left: 5px; font-size: 0.9em; display: none; }
+        
+        #lottery-animation-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, #0f0c29, #302b63, #24243e); z-index: 20000; color: white; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        #lottery-animation-screen.visible { display: flex; }
+        .reel-container { width: 80%; height: 150px; overflow: hidden; border: 5px solid var(--border-accent); border-radius: 10px; background: rgba(255, 255, 255, 0.05); margin-bottom: 30px; }
+        .names-reel { text-align: center; }
+        .names-reel div { font-size: 2.5em; font-weight: 700; padding: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,.7); }
+        @keyframes reel-spin { from { transform: translateY(0); } to { transform: translateY(-90%); } }
+        
+        .winner-announcement-box { text-align: center; opacity: 0; transform: scale(.5); transition: all .5s ease-out; z-index: 2; position: relative; }
+        .winner-announcement-box.show { opacity: 1; transform: scale(1); }
+        #winner-title { font-size: 2em; color: var(--warning-color); text-shadow: 0 0 10px var(--warning-color); }
+        #winner-name { font-size: 3.5em; font-weight: 700; margin: 10px 0 30px; }
+        #save-lottery-btn { display: none; background-color: var(--success-color); font-size: 1.2em; padding: 15px 30px; z-index: 2; }
+        
+        .winners-podium-container { display: none; margin-top: 30px; background: rgba(0, 0, 0, 0.4); border: 2px solid var(--border-accent); border-radius: 15px; padding: 20px; width: 90%; max-width: 500px; box-shadow: 0 0 20px rgba(255, 159, 67, 0.5); backdrop-filter: blur(5px); z-index: 2; }
+        .winners-podium-container h2 { margin-top: 0; text-align: center; color: var(--warning-color); }
+        #vip-winners-list { list-style: none; padding: 0; text-align: center; font-size: 1.3em; }
+        #vip-winners-list li { background: rgba(255, 255, 255, 0.1); margin-bottom: 10px; padding: 10px; border-radius: 8px; font-weight: bold; opacity: 0; transform: scale(0.8); animation: podium-entry 0.5s forwards; }
+        @keyframes podium-entry { to { opacity: 1; transform: scale(1); } }
+
+        /* Door Animation Styles */
+        .door { position: absolute; top: 0; width: 50.5vw; height: 100vh; background-color: #1a1a1a; z-index: 30000; transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1); background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232c2c2c"/><path d="M0 50 L50 0 L100 50 L50 100 Z" fill="none" stroke="%233a3a3a" stroke-width="2"/></svg>'); }
+        .left-door { left: 0; transform: translateX(-100%); }
+        .right-door { right: 0; transform: translateX(100%); }
+        #lottery-animation-screen.doors-closing .left-door { transform: translateX(0); }
+        #lottery-animation-screen.doors-closing .right-door { transform: translateX(0); }
+        #lottery-animation-screen.doors-opening .left-door { transform: translateX(-100%); }
+        #lottery-animation-screen.doors-opening .right-door { transform: translateX(100%); }
+        /* === NEW LOTTERY STYLES END === */
+
 
         /* Responsive Styles */
         @media (max-width: 992px) {
@@ -260,7 +302,7 @@
     <div id="id-card-preview-area"></div>
     <audio id="lottery-sound" src="songs/spinning-sound.mp3" preload="auto"></audio>
 
-    <!-- HTML TEMPLATES (Unchanged) -->
+    <!-- HTML TEMPLATES -->
     <template id="template-dashboard">
         <div class="page-header"><h1 id="dashboard-header">ড্যাশবোর্ড</h1></div>
         <div class="dashboard-grid">
@@ -469,6 +511,8 @@
 
     <template id="template-lottery-animation">
         <div id="lottery-animation-screen">
+            <div class="door left-door"></div>
+            <div class="door right-door"></div>
             <div class="reel-container">
                 <div class="names-reel"></div>
             </div>
@@ -476,10 +520,10 @@
                 <h2 id="winner-title"></h2>
                 <h1 id="winner-name"></h1>
             </div>
-            <button id="find-winner-btn" class="btn-primary" style="font-size: 1.2em; padding: 15px 30px;">Find Winner</button>
+            <button id="find-winner-btn" class="btn-primary" style="font-size: 1.2em; padding: 15px 30px; z-index: 2;">Find Winner</button>
             <button id="save-lottery-btn" class="btn-primary">ফলাফল সংরক্ষণ করুন</button>
-            <div style="margin-top: 20px; text-align:center;">
-                <h3>বিজয়ীর তালিকা</h3>
+            <div class="winners-podium-container">
+                <h2>🏆 বিজয়ীর তালিকা 🏆</h2>
                 <ul id="vip-winners-list"></ul>
             </div>
         </div>
@@ -1210,6 +1254,7 @@ function initializeAppLogic() {
         closeModalBtn.onclick = () => modal.remove();
     }
 
+    // MODIFIED LOTTERY ANIMATION FUNCTION
     async function startLotteryAnimation(batchId, month, participants, winnerCount) {
         if(document.getElementById('lottery-animation-screen')) document.getElementById('lottery-animation-screen').remove();
         const animationTemplate = document.getElementById('template-lottery-animation');
@@ -1220,6 +1265,7 @@ function initializeAppLogic() {
         const winnerBox = screen.querySelector('.winner-announcement-box');
         const winnerTitle = screen.querySelector('#winner-title');
         const winnerName = screen.querySelector('#winner-name');
+        const podiumContainer = screen.querySelector('.winners-podium-container');
         const vipList = screen.querySelector('#vip-winners-list');
         const findBtn = screen.querySelector('#find-winner-btn');
         const saveBtn = screen.querySelector('#save-lottery-btn');
@@ -1247,14 +1293,14 @@ function initializeAppLogic() {
 
         function getWeightedRandomWinner() {
             if (currentParticipants.length === 0) return null;
-            const weights = currentParticipants.map(p => pastWinnerIds.has(p.id) ? 0.8 : 1.0); // 20% luck reduction for past winners
+            const weights = currentParticipants.map(p => pastWinnerIds.has(p.id) ? 0.8 : 1.0); // 20% luck reduction
             const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
             let random = Math.random() * totalWeight;
             for (let i = 0; i < currentParticipants.length; i++) {
                 random -= weights[i];
                 if (random < 0) return currentParticipants[i];
             }
-            return currentParticipants[currentParticipants.length - 1]; // Fallback
+            return currentParticipants[currentParticipants.length - 1];
         }
         
         function updateFindButtonText() {
@@ -1270,6 +1316,10 @@ function initializeAppLogic() {
             lotterySound.currentTime = 0;
             lotterySound.play().catch(e => console.log("Audio play failed"));
             findBtn.disabled = true;
+
+            setTimeout(() => {
+                screen.classList.add('doors-closing');
+            }, 8500); // Close doors at 8.5s
 
             setTimeout(() => {
                 lotterySound.pause();
@@ -1291,10 +1341,21 @@ function initializeAppLogic() {
                 
                 winnerTitle.textContent = `${prizeText} বিজয়ী`;
                 winnerName.textContent = `${winner.name} (রোল: ${winner.roll})`;
-                winnerBox.classList.add('show');
+                
+                screen.classList.remove('doors-closing');
+                screen.classList.add('doors-opening');
+                
+                setTimeout(() => {
+                    winnerBox.classList.add('show');
+                    screen.classList.remove('doors-opening');
+                }, 750);
 
+                if (podiumContainer.style.display !== 'block') {
+                    podiumContainer.style.display = 'block';
+                }
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>${prizeText}:</strong> ${winner.name}`;
+                li.style.animationDelay = `${vipList.children.length * 0.1}s`;
+                li.innerHTML = `👑 ${prizeText}: <strong>${winner.name}</strong>`;
                 vipList.appendChild(li);
                 
                 findBtn.disabled = false;
@@ -1306,7 +1367,7 @@ function initializeAppLogic() {
                     updateFindButtonText();
                 }
 
-            }, 10000); // 10 seconds of spinning
+            }, 10000); // 10 seconds total
         };
 
         saveBtn.onclick = async () => {
@@ -1329,7 +1390,6 @@ function initializeAppLogic() {
 
         updateFindButtonText();
     }
-
     
     // --- Live Exam Logic ---
     function renderLiveExams() {
