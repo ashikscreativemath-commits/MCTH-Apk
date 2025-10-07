@@ -1,6 +1,3 @@
---- START OF FILE portaladmin.html ---
-
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -108,6 +105,7 @@
         .submit-button:disabled, .btn-primary:disabled { background: #bdbdbd; color: #757575; cursor: not-allowed; }
         .btn-secondary { background-color: #f1f8e9; color: var(--text-primary); border: 1px solid var(--border-color); padding: 12px 25px; font-size: 1.1em; cursor: pointer; transition: all .3s; }
         .btn-danger { background-color: var(--danger-color); color: white; padding: 12px 25px; font-size: 1.1em; cursor: pointer; transition: all .3s; }
+        .btn-success { background-color: var(--success-color); color: white; padding: 12px 25px; font-size: 1.1em; cursor: pointer; transition: all .3s; }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .stat-card { padding: 20px; border-radius: 8px; text-align: center; border-left: 5px solid; background-color: #f1f8e9; }
         .stat-card-label { font-size: 1.1em; color: var(--text-secondary); }
@@ -119,7 +117,8 @@
         .results-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .results-table th, .results-table td { padding: 12px; border: 1px solid var(--border-color); text-align: left; }
         .results-table thead { background-color: var(--bg-header); color: var(--text-header); }
-        .notice-history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); }
+        .notice-history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); gap: 10px; }
+        .notice-history-item .actions { display: flex; gap: 10px; }
         .modal-overlay { display: none; position: fixed; z-index: 10001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,.6); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
         .modal-overlay.visible { display: flex; }
         .modal-content { background-color: var(--bg-section); margin: auto; padding: 25px; border-radius: 12px; width: 95%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: var(--shadow-md); }
@@ -153,35 +152,42 @@
         #id-card-preview-area{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10005;background:rgba(0,0,0,.5);justify-content:center;align-items:center}.id-card-container{width:300px;aspect-ratio:54/86;position:relative;box-shadow:var(--shadow-md);border-radius:12px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;background-color:#fff}.id-card-container .bg-img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}.id-card-photo{position:absolute;top:17.7%;left:50%;transform:translateX(-50%);width:50.75%;aspect-ratio:9.25/10;object-fit:cover;border-radius:15px}.id-card-details-container{position:absolute;top:53.5%;left:50%;width:50%;height:auto;color:#1c1c1c}.id-card-details-container p{font-family:'Kalpurush',sans-serif;margin:0;padding:0;font-size:12.3px;font-weight:700;line-height:1.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.id-card-qr-container{position:absolute;top:48.3%;left:50%;transform:translateX(-50%);width:28.5%;background:#fff;padding:4px;border-radius:2px}#id-card-generation-progress{margin-top:10px;font-weight:700;color:var(--info-color)}
         
         /* === NEW LOTTERY STYLES START === */
-        .lottery-batch-card { background-color: #fff; border-radius: 8px; padding: 15px; box-shadow: var(--shadow-sm); border-left: 5px solid var(--info-color); transition: all 0.2s; }
-        .lottery-batch-card h4 { margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+        details.lottery-class-group { background: #fff; margin-bottom: 15px; border-radius: 8px; box-shadow: var(--shadow-sm); border-left: 5px solid var(--info-color); }
+        details.lottery-class-group summary { font-weight: bold; font-size: 1.2em; padding: 15px; cursor: pointer; }
+        .lottery-batch-grid { padding: 0 15px 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .lottery-batch-card { background-color: #f9f9f9; border-radius: 8px; padding: 15px; border: 1px solid var(--border-color); transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .lottery-batch-card h4 { margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1em; }
         .lottery-batch-card .status { font-weight: bold; font-size: 0.9em; padding: 4px 10px; border-radius: 12px; }
         .lottery-batch-card .status.status-ready { background-color: var(--warning-color); color: #333; }
-        .lottery-batch-card .status.status-completed { background-color: var(--success-color); color: white; cursor: pointer; }
-        .lottery-batch-card button { width: 100%; padding: 10px; font-size: 1em; margin-top: 10px; background-color: var(--border-accent); color: white; border: none; border-radius: 6px; cursor: pointer; }
-        .lottery-batch-card.completed { border-left-color: var(--success-color); }
-        .lottery-batch-card .winner-list { list-style: decimal inside; padding-left: 5px; font-size: 0.9em; display: none; }
+        .lottery-batch-card .status.status-completed { background-color: var(--success-color); color: white; }
+        .lottery-batch-card button { width: 100%; padding: 10px; font-size: 1em; margin-top: 10px; border: none; border-radius: 6px; cursor: pointer; color: white; }
+        .lottery-batch-card .btn-run-lottery { background-color: var(--border-accent); }
+        .lottery-batch-card .btn-see-winners { background-color: var(--success-color); }
+        .lottery-batch-card.completed { border-color: var(--success-color); }
         
-        #lottery-animation-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, #0f0c29, #302b63, #24243e); z-index: 20000; color: white; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        #lottery-animation-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom right, #0f0c29, #302b63, #24243e); z-index: 20000; color: white; flex-direction: column; align-items: center; justify-content: space-between; overflow: hidden; padding: 20px; box-sizing: border-box; }
         #lottery-animation-screen.visible { display: flex; }
-        .reel-container { width: 80%; height: 150px; overflow: hidden; border: 5px solid var(--border-accent); border-radius: 10px; background: rgba(255, 255, 255, 0.05); margin-bottom: 30px; }
+        .lottery-header { width: 100%; text-align: center; }
+        .lottery-header h1 { margin: 0; color: var(--border-accent); }
+        .lottery-header p { margin: 5px 0; font-size: 1.2em; }
+        .lottery-main-content { display: flex; width: 100%; flex: 1; align-items: center; justify-content: space-around; gap: 20px; }
+        .lottery-draw-area { flex-basis: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .reel-container { width: 100%; max-width: 400px; height: 150px; overflow: hidden; border: 5px solid var(--border-accent); border-radius: 10px; background: rgba(255, 255, 255, 0.05); margin-bottom: 30px; }
         .names-reel { text-align: center; }
         .names-reel div { font-size: 2.5em; font-weight: 700; padding: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,.7); }
+        .lottery-winner-area { flex-basis: 50%; display: flex; align-items: center; justify-content: center; }
+        .winner-announcement-box { text-align: center; background: rgba(0,0,0,0.4); border: 2px solid var(--border-accent); border-radius: 15px; padding: 30px; width: 100%; max-width: 500px; box-shadow: 0 0 20px rgba(255, 159, 67, 0.5); backdrop-filter: blur(5px); min-height: 250px; display: flex; flex-direction: column; justify-content: center; }
+        #winner-title { font-size: 2.2em; color: var(--warning-color); text-shadow: 0 0 10px var(--warning-color); opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out 0.2s; }
+        #winner-name { font-size: 3em; font-weight: 700; margin: 10px 0; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out 0.4s; }
+        #winner-roll { font-size: 1.5em; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out 0.6s; }
+        .winner-announcement-box.show #winner-title, .winner-announcement-box.show #winner-name, .winner-announcement-box.show #winner-roll { opacity: 1; transform: translateY(0); }
+        #winner-title-placeholder { font-size: 1.8em; color: #ccc; }
+        .lottery-controls { margin-top: 20px; display: flex; gap: 15px; }
+        #save-lottery-btn, #download-winner-jpg-btn { display: none; }
+        .lottery-footer { width: 100%; text-align: center; font-size: 0.9em; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .lottery-footer img { width: 30px; height: 30px; }
         @keyframes reel-spin { from { transform: translateY(0); } to { transform: translateY(-90%); } }
         
-        .winner-announcement-box { text-align: center; opacity: 0; transform: scale(.5); transition: all .5s ease-out; z-index: 2; position: relative; }
-        .winner-announcement-box.show { opacity: 1; transform: scale(1); }
-        #winner-title { font-size: 2em; color: var(--warning-color); text-shadow: 0 0 10px var(--warning-color); }
-        #winner-name { font-size: 3.5em; font-weight: 700; margin: 10px 0 30px; }
-        #save-lottery-btn { display: none; background-color: var(--success-color); font-size: 1.2em; padding: 15px 30px; z-index: 2; }
-        
-        .winners-podium-container { display: none; margin-top: 30px; background: rgba(0, 0, 0, 0.4); border: 2px solid var(--border-accent); border-radius: 15px; padding: 20px; width: 90%; max-width: 500px; box-shadow: 0 0 20px rgba(255, 159, 67, 0.5); backdrop-filter: blur(5px); z-index: 2; }
-        .winners-podium-container h2 { margin-top: 0; text-align: center; color: var(--warning-color); }
-        #vip-winners-list { list-style: none; padding: 0; text-align: center; font-size: 1.3em; }
-        #vip-winners-list li { background: rgba(255, 255, 255, 0.1); margin-bottom: 10px; padding: 10px; border-radius: 8px; font-weight: bold; opacity: 0; transform: scale(0.8); animation: podium-entry 0.5s forwards; }
-        @keyframes podium-entry { to { opacity: 1; transform: scale(1); } }
-
-        /* Door Animation Styles */
         .door { position: absolute; top: 0; width: 50.5vw; height: 100vh; background-color: #1a1a1a; z-index: 30000; transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1); background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232c2c2c"/><path d="M0 50 L50 0 L100 50 L50 100 Z" fill="none" stroke="%233a3a3a" stroke-width="2"/></svg>'); }
         .left-door { left: 0; transform: translateX(-100%); }
         .right-door { right: 0; transform: translateX(100%); }
@@ -189,23 +195,24 @@
         #lottery-animation-screen.doors-closing .right-door { transform: translateX(0); }
         #lottery-animation-screen.doors-opening .left-door { transform: translateX(-100%); }
         #lottery-animation-screen.doors-opening .right-door { transform: translateX(100%); }
+        
+        #winner-export-container { display: none; position: absolute; left: -9999px; padding: 20px; background: linear-gradient(to bottom right, #0f0c29, #302b63, #24243e); color: white; width: 800px; font-family: 'Kalpurush', sans-serif; }
+        #winner-export-container h2 { text-align: center; color: var(--border-accent); font-size: 2em; margin-bottom: 5px; }
+        #winner-export-container p { text-align: center; margin-top: 0; }
+        #winner-export-container ul { list-style: none; padding: 0; margin-top: 20px; }
+        #winner-export-container li { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 10px; text-align: center; font-size: 1.4em; font-weight: bold; }
+        #winner-export-container .export-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.3); font-size: 0.9em; }
+        #winner-export-container .export-footer img { width: 40px; }
         /* === NEW LOTTERY STYLES END === */
 
 
         /* Responsive Styles */
         @media (max-width: 992px) {
-            .side-nav {
-                transform: translateX(-100%);
-            }
-            .side-nav.is-open {
-                transform: translateX(0);
-            }
-            .content-wrapper {
-                margin-left: 0;
-            }
-            .menu-toggle {
-                display: block;
-            }
+            .side-nav { transform: translateX(-100%); }
+            .side-nav.is-open { transform: translateX(0); }
+            .content-wrapper { margin-left: 0; }
+            .menu-toggle { display: block; }
+            .lottery-main-content { flex-direction: column; }
         }
         @media (max-width: 768px) {
             main { padding: 15px; }
@@ -301,6 +308,8 @@
     <div id="toast-container"></div>
     <div id="id-card-preview-area"></div>
     <audio id="lottery-sound" src="songs/spinning-sound.mp3" preload="auto"></audio>
+    <div id="winner-export-container"></div>
+
 
     <!-- HTML TEMPLATES -->
     <template id="template-dashboard">
@@ -336,7 +345,33 @@
         <div class="page-section">
             <h2>পূর্ববর্তী নোটিশসমূহ</h2>
             <div id="notice-history-container"><p>লোড হচ্ছে...</p></div>
-            <div id="load-more-container"></div>
+            <div id="load-more-container" class="hidden" style="text-align: center; margin-top: 20px;">
+                <button id="load-more-notices-btn" class="btn-secondary">পুরানো নোটিশ দেখুন</button>
+            </div>
+        </div>
+    </template>
+    
+    <template id="template-edit-notice-modal">
+        <div class="modal-overlay visible" id="edit-notice-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>নোটিশ এডিট করুন</h2>
+                    <button class="modal-close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-notice-form">
+                        <input type="hidden" id="edit-notice-id">
+                        <div class="form-group"><label for="edit-notice-title">শিরোনাম</label><input type="text" id="edit-notice-title" required></div>
+                        <div class="form-group"><label for="edit-notice-content">বিস্তারিত</label><textarea id="edit-notice-content" required></textarea></div>
+                        <div class="form-group"><label for="edit-target-year">শিক্ষাবর্ষ</label><select id="edit-target-year"><option value="">সকল শিক্ষাবর্ষ</option></select></div>
+                        <div class="form-group"><label for="edit-target-class">ক্লাস</label><select id="edit-target-class" disabled><option value="">সকল ক্লাস</option></select></div>
+                        <div class="form-group"><label for="edit-target-batch">ব্যাচ</label><select id="edit-target-batch" disabled><option value="">সকল ব্যাচ</option></select></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-notice-changes-btn" class="btn-primary">পরিবর্তন সেভ করুন</button>
+                </div>
+            </div>
         </div>
     </template>
 
@@ -470,7 +505,7 @@
                     <select id="lottery-month-selector"></select>
                 </div>
             </div>
-            <div id="lottery-batch-grid-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div id="lottery-classes-container">
                 <p>মাস নির্বাচন করুন...</p>
             </div>
         </div>
@@ -513,19 +548,33 @@
         <div id="lottery-animation-screen">
             <div class="door left-door"></div>
             <div class="door right-door"></div>
-            <div class="reel-container">
-                <div class="names-reel"></div>
+            <header class="lottery-header">
+                <h1>ডিজিটাল লটারি by MCTH</h1>
+                <p id="lottery-context-info"></p>
+            </header>
+            <div class="lottery-main-content">
+                <div class="lottery-draw-area">
+                    <div class="reel-container"><div class="names-reel"></div></div>
+                    <div class="lottery-controls">
+                       <button id="find-winner-btn" class="btn-primary" style="font-size: 1.2em; padding: 15px 30px;"></button>
+                       <button id="save-lottery-btn" class="btn-success" style="font-size: 1.2em; padding: 15px 30px;">ফলাফল সেভ করুন</button>
+                       <button id="download-winner-jpg-btn" class="btn-secondary" style="font-size: 1.2em; padding: 15px 30px;">JPG ডাউনলোড</button>
+                    </div>
+                </div>
+                <div class="lottery-winner-area">
+                    <div class="winner-announcement-box">
+                        <h2 id="winner-title-placeholder">Waiting for the draw...</h2>
+                        <h2 id="winner-title"></h2>
+                        <h1 id="winner-name"></h1>
+                        <h3 id="winner-roll"></h3>
+                    </div>
+                </div>
             </div>
-            <div class="winner-announcement-box">
-                <h2 id="winner-title"></h2>
-                <h1 id="winner-name"></h1>
-            </div>
-            <button id="find-winner-btn" class="btn-primary" style="font-size: 1.2em; padding: 15px 30px; z-index: 2;">Find Winner</button>
-            <button id="save-lottery-btn" class="btn-primary">ফলাফল সংরক্ষণ করুন</button>
-            <div class="winners-podium-container">
-                <h2>🏆 বিজয়ীর তালিকা 🏆</h2>
-                <ul id="vip-winners-list"></ul>
-            </div>
+            <footer class="lottery-footer">
+                <span>© Math Creative Teaching Home 2026</span> | 
+                <span>Software by Bindumatra IT</span>
+                <img src="images/image5.png" alt="Bindumatra IT">
+            </footer>
         </div>
     </template>
     
@@ -564,12 +613,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const rememberMeCheckbox = document.getElementById('remember-me');
     const errorMsgDiv = document.getElementById('login-error-msg');
     
-    // Check for existing session first
     if (sessionStorage.getItem(SESSION_KEY) === 'true') {
         loginContainer.style.display = 'none';
         appContainer.classList.remove('hidden');
         firebase.auth().signInAnonymously().then(() => {
-            initializeAppLogic(); // Initialize app if session exists
+            initializeAppLogic();
         }).catch(err => {
             console.error("Anonymous sign-in failed on session restore:", err);
             errorMsgDiv.textContent = 'Authentication session restore failed.';
@@ -577,7 +625,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Handle form submission
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const username = usernameInput.value;
@@ -591,7 +638,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (snapshot.exists()) {
                 correctCreds = snapshot.val();
             } else {
-                // Fallback credentials if not found in DB
                 correctCreds = { username: "mcth@admin", password: "mcth_password" };
             }
 
@@ -605,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 loginContainer.style.display = 'none';
                 appContainer.classList.remove('hidden');
-                initializeAppLogic(); // Initialize app on successful login
+                initializeAppLogic();
             } else {
                 errorMsgDiv.textContent = 'ইউজারনেম বা পাসওয়ার্ড সঠিক নয়।';
                 firebase.auth().signOut();
@@ -619,7 +665,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Load remembered credentials
     const rememberedCreds = localStorage.getItem(REMEMBER_KEY);
     if (rememberedCreds) {
         try {
@@ -674,7 +719,6 @@ function initializeAppLogic() {
     }
     // --- End Mobile Navigation Toggle ---
 
-
     async function initialize() {
         showLoader('প্রয়োজনীয় তথ্য লোড হচ্ছে...');
         try {
@@ -698,8 +742,7 @@ function initializeAppLogic() {
             }
             liveExamsRef = db.ref(`academicYears/${viewedYear}/data/liveExams`);
             
-            await fetchDataForYear(viewedYear);
-            renderPage(currentPage);
+            renderPage(currentPage); // Initially render only the dashboard
         } catch (error) {
             console.error(error);
             showToast("প্রাথমিক তথ্য লোড করা সম্ভব হয়নি।", "error");
@@ -713,11 +756,9 @@ function initializeAppLogic() {
         if (selectedYear !== viewedYear) {
             viewedYear = selectedYear;
             localStorage.setItem('adminViewedYear', viewedYear);
-            fullDataCache[viewedYear] = null;
+            fullDataCache[viewedYear] = null; // Clear cache for the new year
             liveExamsRef = db.ref(`academicYears/${viewedYear}/data/liveExams`);
-            fetchDataForYear(viewedYear).then(() => {
-                renderPage(currentPage);
-            });
+            renderPage(currentPage); // Re-render the current page with new year's data
         }
     });
 
@@ -730,7 +771,6 @@ function initializeAppLogic() {
                 e.currentTarget.classList.add('active'); 
                 currentPage = page; 
                 renderPage(page); 
-                // Close nav on mobile after clicking a link
                 if (window.innerWidth <= 992 && sideNav.classList.contains('is-open')) {
                     toggleNav();
                 }
@@ -738,6 +778,7 @@ function initializeAppLogic() {
         }); 
     });
     
+    // MODIFIED: Fetches data only if not in cache.
     async function fetchDataForYear(year) { if (fullDataCache[year]) return fullDataCache[year]; showLoader(`শিক্ষাবর্ষ ${year} এর তথ্য লোড হচ্ছে...`); try { const snapshot = await academicYearsRef.child(year).child('data').once('value'); fullDataCache[year] = snapshot.val() || {}; return fullDataCache[year]; } catch (e) { showToast(`শিক্ষাবর্ষ ${year} এর তথ্য লোড করা যায়নি।`, 'error'); return null; } finally { hideLoader(); } }
     
     function renderPage(page) { 
@@ -774,32 +815,30 @@ function initializeAppLogic() {
         return null;
     }
     
+    // Renders dashboard using only required data, doesn't wait for full year data
     async function renderDashboard() {
         showLoader();
         try {
             document.getElementById('dashboard-header').textContent = `ড্যাশবোর্ড (শিক্ষাবর্ষ: ${viewedYear})`;
-            const yearData = await fetchDataForYear(viewedYear);
-            let totalStudents = 0, totalBatches = 0;
-            if(yearData && yearData.students) {
-                totalStudents = yearData.students.filter(s => s && !s.deletedAt).length;
-            }
-            if(yearData && yearData.batchSchedule) {
-                yearData.batchSchedule.forEach(day => {
+            const yearDataRef = academicYearsRef.child(viewedYear).child('data');
+            
+            const studentsSnap = await yearDataRef.child('students').once('value');
+            const totalStudents = (studentsSnap.val() || []).filter(s => s && !s.deletedAt).length;
+            
+            const batchScheduleSnap = await yearDataRef.child('batchSchedule').once('value');
+            let totalBatches = 0;
+            if (batchScheduleSnap.exists()) {
+                batchScheduleSnap.val().forEach(day => {
                     (day.classes || []).forEach(cls => {
                         totalBatches += (cls.batches || []).filter(b => b && !b.deletedAt).length;
                     });
                 });
             }
-            const noticesSnapshot = await noticesRef.once('value');
-            let totalNotices = 0;
-            if(noticesSnapshot.exists()){
-                noticesSnapshot.forEach(child => {
-                    const notice = child.val();
-                    if(!notice.targetYear || notice.targetYear == viewedYear){
-                        totalNotices++;
-                    }
-                });
-            }
+
+            const noticesSnapshot = await noticesRef.orderByChild('targetYear').equalTo(viewedYear).once('value');
+            const generalNoticesSnapshot = await noticesRef.orderByChild('targetYear').equalTo(null).once('value');
+            const totalNotices = noticesSnapshot.numChildren() + generalNoticesSnapshot.numChildren();
+            
             document.getElementById('total-students').textContent = totalStudents.toLocaleString('bn-BD');
             document.getElementById('total-batches').textContent = totalBatches.toLocaleString('bn-BD');
             document.getElementById('total-notices').textContent = totalNotices.toLocaleString('bn-BD');
@@ -807,6 +846,7 @@ function initializeAppLogic() {
         finally { hideLoader(); }
     }
 
+    // --- NOTICE PAGE LOGIC (UPDATED) ---
     async function renderNotices() {
         const yearSelect = document.getElementById('target-year');
         const classSelect = document.getElementById('target-class');
@@ -816,54 +856,168 @@ function initializeAppLogic() {
         const fileChosen = document.getElementById('file-chosen');
 
         fileInput.addEventListener('change', () => { fileChosen.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'কোনো ফাইল বাছাই করা হয়নি'; });
-
+        
         const yearsSnapshot = await academicYearsRef.once('value');
         const years = Object.keys(yearsSnapshot.val() || {}).sort((a,b) => b-a);
         years.forEach(y => yearSelect.add(new Option(y, y)));
-        
-        const lastSelectedNoticeYear = localStorage.getItem('lastSelectedNoticeYear');
-        if (lastSelectedNoticeYear && years.includes(lastSelectedNoticeYear)) {
-            yearSelect.value = lastSelectedNoticeYear;
-        } else {
-            yearSelect.value = viewedYear;
-        }
+        yearSelect.value = viewedYear;
 
-        yearSelect.onchange = async () => {
-            const year = yearSelect.value;
-            localStorage.setItem('lastSelectedNoticeYear', year);
-            classSelect.innerHTML = '<option value="">সকল ক্লাস</option>'; classSelect.disabled = !year;
-            batchSelect.innerHTML = '<option value="">সকল ব্যাচ</option>'; batchSelect.disabled = true;
+        const populateClassesAndBatches = async (year, classSel, batchSel, classId = null, batchId = null) => {
+            classSel.innerHTML = '<option value="">সকল ক্লাস</option>'; classSel.disabled = !year;
+            batchSel.innerHTML = '<option value="">সকল ব্যাচ</option>'; batchSel.disabled = true;
             if (!year) return;
             const data = await fetchDataForYear(year);
             if (data && data.mainClassCategories) {
-                (data.mainClassCategories || []).filter(c => c && !c.deletedAt).forEach(c => classSelect.add(new Option(c.name, c.id)));
+                (data.mainClassCategories || []).filter(c => c && !c.deletedAt).forEach(c => classSel.add(new Option(c.name, c.id)));
+                if(classId) classSel.value = classId;
+            }
+            
+            if (classSel.value) {
+                batchSel.disabled = false;
+                const batches = new Map();
+                (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classSel.value).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
+                batches.forEach((name, id) => batchSel.add(new Option(name, id)));
+                if(batchId) batchSel.value = batchId;
             }
         };
-        if (yearSelect.value) yearSelect.dispatchEvent(new Event('change'));
         
+        yearSelect.onchange = () => populateClassesAndBatches(yearSelect.value, classSelect, batchSelect);
         classSelect.onchange = async () => {
             const year = yearSelect.value; const classId = classSelect.value;
             batchSelect.innerHTML = '<option value="">সকল ব্যাচ</option>'; batchSelect.disabled = !classId;
             if (!year || !classId) return;
             const data = await fetchDataForYear(year);
-            if (data && data.batchSchedule) {
-                const batches = new Map();
-                (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
-                batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
-            }
+            const batches = new Map();
+            (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
+            batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
         };
+        populateClassesAndBatches(viewedYear, classSelect, batchSelect);
 
         noticeForm.onsubmit = async (e) => {
             e.preventDefault(); showLoader("নোটিশ পোস্ট করা হচ্ছে..."); let imageUrlAsBase64 = null;
             if (fileInput.files[0]) { try { imageUrlAsBase64 = await resizeAndEncodeImage(fileInput.files[0], 800, 500 * 1024); } catch (error) { showToast(error.message, "error"); hideLoader(); return; } }
-            const noticeData = { title: document.getElementById('notice-title').value, content: document.getElementById('notice-content').value, imageUrl: imageUrlAsBase64, timestamp: firebase.database.ServerValue.TIMESTAMP, targetYear: yearSelect.value || null, targetClassIds: classSelect.value ? [classSelect.value] : null, targetBatchIds: batchSelect.value ? [batchSelect.value] : null };
-            try { await noticesRef.push(noticeData); showToast("নোটিশ সফলভাবে পোস্ট করা হয়েছে!", "success"); noticeForm.reset(); fileChosen.textContent = 'কোনো ফাইল বাছাই করা হয়নি'; yearSelect.value = localStorage.getItem('lastSelectedNoticeYear') || viewedYear; yearSelect.dispatchEvent(new Event('change')); } catch (error) { showToast("নোটিশ পোস্ট করা যায়নি।", "error"); } finally { hideLoader(); }
+            const noticeData = { title: document.getElementById('notice-title').value, content: document.getElementById('notice-content').value, imageUrl: imageUrlAsBase64, timestamp: firebase.database.ServerValue.TIMESTAMP, targetYear: yearSelect.value || null, targetClassId: classSelect.value || null, targetBatchId: batchSelect.value || null };
+            try { await noticesRef.push(noticeData); showToast("নোটিশ সফলভাবে পোস্ট করা হয়েছে!", "success"); noticeForm.reset(); fileChosen.textContent = 'কোনো ফাইল বাছাই করা হয়নি'; } catch (error) { showToast("নোটিশ পোস্ট করা যায়নি।", "error"); } finally { hideLoader(); }
         };
 
         function resizeAndEncodeImage(file, maxWidth, maxSizeBytes) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (event) => { const img = new Image(); img.src = event.target.result; img.onload = () => { const canvas = document.createElement('canvas'); let width = img.width; let height = img.height; if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } canvas.width = width; canvas.height = height; canvas.getContext('2d').drawImage(img, 0, 0, width, height); let quality = 0.9; let dataUrl = canvas.toDataURL('image/jpeg', quality); while (dataUrl.length > maxSizeBytes && quality > 0.1) { quality -= 0.1; dataUrl = canvas.toDataURL('image/jpeg', quality); } if (dataUrl.length > maxSizeBytes) return reject(new Error('ছবি রিসাইজ করার পরেও ৫০০কেবি-র বেশি।')); resolve(dataUrl); }; img.onerror = () => reject(new Error('ছবি লোড করা সম্ভব হয়নি।')); }; reader.onerror = error => reject(error); }); }
         
         const historyContainer = document.getElementById('notice-history-container');
-        noticesRef.orderByChild('timestamp').limitToLast(50).on('value', snapshot => { historyContainer.innerHTML = ''; if(!snapshot.exists()){ historyContainer.innerHTML = '<p>কোনো নোটিশের ইতিহাস পাওয়া যায়নি।</p>'; return; } const notices = []; snapshot.forEach(child => notices.push({id: child.key, ...child.val()})); notices.reverse().forEach(notice => { const item = document.createElement('div'); item.className = 'notice-history-item'; item.innerHTML = `<div><strong>${notice.title}</strong><br><small>${new Date(notice.timestamp).toLocaleString('bn-BD')}</small></div><button class="btn-danger" style="padding: 5px 10px; font-size:0.9em; margin:0;" data-id="${notice.id}">ডিলিট</button>`; item.querySelector('button').addEventListener('click', async () => { if(confirm(`আপনি কি '${notice.title}' নোটিশটি মুছে ফেলতে চান?`)){ await noticesRef.child(notice.id).remove(); showToast('নোটিশ ডিলিট করা হয়েছে।', 'info'); } }); historyContainer.appendChild(item); }); });
+        const loadMoreContainer = document.getElementById('load-more-container');
+        const loadMoreBtn = document.getElementById('load-more-notices-btn');
+        let allNotices = [];
+        let displayedCount = 0;
+        const NOTICES_PER_PAGE = 5;
+        const INITIAL_LOAD = 3;
+
+        const renderNoticeHistory = (noticesToRender) => {
+            noticesToRender.forEach(notice => {
+                const item = document.createElement('div');
+                item.className = 'notice-history-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${notice.title}</strong><br>
+                        <small>${new Date(notice.timestamp).toLocaleString('bn-BD')}</small>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-secondary" style="padding: 5px 10px; font-size:0.9em; margin:0;" data-action="edit" data-id="${notice.id}">এডিট</button>
+                        <button class="btn-danger" style="padding: 5px 10px; font-size:0.9em; margin:0;" data-action="delete" data-id="${notice.id}">ডিলিট</button>
+                    </div>`;
+                historyContainer.appendChild(item);
+            });
+            displayedCount = historyContainer.children.length;
+            loadMoreContainer.classList.toggle('hidden', displayedCount >= allNotices.length);
+        };
+
+        noticesRef.orderByChild('timestamp').on('value', snapshot => { 
+            historyContainer.innerHTML = '';
+            if(!snapshot.exists()){ historyContainer.innerHTML = '<p>কোনো নোটিশের ইতিহাস পাওয়া যায়নি।</p>'; return; } 
+            
+            allNotices = [];
+            snapshot.forEach(child => allNotices.push({id: child.key, ...child.val()}));
+            allNotices.reverse();
+
+            renderNoticeHistory(allNotices.slice(0, INITIAL_LOAD));
+        });
+
+        loadMoreBtn.addEventListener('click', () => {
+            const nextNotices = allNotices.slice(displayedCount, displayedCount + NOTICES_PER_PAGE);
+            renderNoticeHistory(nextNotices);
+        });
+
+        historyContainer.addEventListener('click', async (e) => {
+            const button = e.target.closest('button[data-action]');
+            if (!button) return;
+
+            const noticeId = button.dataset.id;
+            const action = button.dataset.action;
+            const notice = allNotices.find(n => n.id === noticeId);
+
+            if (action === 'delete') {
+                if(confirm(`আপনি কি '${notice.title}' নোটিশটি মুছে ফেলতে চান?`)){ 
+                    await noticesRef.child(notice.id).remove(); 
+                    showToast('নোটিশ ডিলিট করা হয়েছে।', 'info'); 
+                }
+            } else if (action === 'edit') {
+                openEditNoticeModal(notice);
+            }
+        });
+        
+        const openEditNoticeModal = async (notice) => {
+            if(document.getElementById('edit-notice-modal')) document.getElementById('edit-notice-modal').remove();
+
+            const modalTemplate = document.getElementById('template-edit-notice-modal');
+            document.body.appendChild(modalTemplate.content.cloneNode(true));
+            const modal = document.getElementById('edit-notice-modal');
+            
+            modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
+            
+            document.getElementById('edit-notice-id').value = notice.id;
+            document.getElementById('edit-notice-title').value = notice.title;
+            document.getElementById('edit-notice-content').value = notice.content;
+
+            const editYear = document.getElementById('edit-target-year');
+            const editClass = document.getElementById('edit-target-class');
+            const editBatch = document.getElementById('edit-target-batch');
+
+            const yearsSnapshot = await academicYearsRef.once('value');
+            const years = Object.keys(yearsSnapshot.val() || {}).sort((a,b) => b-a);
+            years.forEach(y => editYear.add(new Option(y, y)));
+            editYear.value = notice.targetYear || "";
+
+            await populateClassesAndBatches(editYear.value, editClass, editBatch, notice.targetClassId, notice.targetBatchId);
+
+            editYear.onchange = () => populateClassesAndBatches(editYear.value, editClass, editBatch);
+            editClass.onchange = async () => {
+                const year = editYear.value; const classId = editClass.value;
+                editBatch.innerHTML = '<option value="">সকল ব্যাচ</option>'; editBatch.disabled = !classId;
+                if (!year || !classId) return;
+                const data = await fetchDataForYear(year);
+                const batches = new Map();
+                (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
+                batches.forEach((name, id) => editBatch.add(new Option(name, id)));
+            };
+            
+            document.getElementById('save-notice-changes-btn').onclick = async () => {
+                const updatedData = {
+                    title: document.getElementById('edit-notice-title').value,
+                    content: document.getElementById('edit-notice-content').value,
+                    targetYear: editYear.value || null,
+                    targetClassId: editClass.value || null,
+                    targetBatchId: editBatch.value || null,
+                };
+                showLoader('আপডেট করা হচ্ছে...');
+                try {
+                    await noticesRef.child(notice.id).update(updatedData);
+                    showToast('নোটিশ সফলভাবে আপডেট হয়েছে।', 'success');
+                    modal.remove();
+                } catch(err) {
+                    showToast('আপডেট করা যায়নি।', 'error');
+                } finally {
+                    hideLoader();
+                }
+            };
+        };
     }
 
     async function renderStudents() {
@@ -874,8 +1028,10 @@ function initializeAppLogic() {
         let currentStudentList = [];
 
         const data = await fetchDataForYear(viewedYear);
+        if (!data) return;
+
         classSelect.innerHTML = '<option value="">ক্লাস বাছাই</option>';
-        if (data && data.mainClassCategories) {
+        if (data.mainClassCategories) {
             (data.mainClassCategories || []).filter(c => c && !c.deletedAt).forEach(c => classSelect.add(new Option(c.name, c.id)));
         }
         
@@ -883,19 +1039,18 @@ function initializeAppLogic() {
             const classId = classSelect.value;
             batchSelect.innerHTML = '<option value="">ব্যাচ বাছাই</option>'; batchSelect.disabled = !classId;
             if (!classId) { tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ক্লাস বাছাই করুন</td></tr>'; return; }
-            if (data && data.batchSchedule) {
-                const batches = new Map();
-                (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
-                batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
-            }
+            const batches = new Map();
+            (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
+            batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
         };
 
         const displayStudents = () => { tableBody.innerHTML = ''; const searchTerm = searchInput.value.toLowerCase(); const filtered = currentStudentList.filter(s => s.name.toLowerCase().includes(searchTerm) || s.roll.toString().includes(searchTerm)); if (filtered.length === 0) { tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">কোনো ছাত্রছাত্রী পাওয়া যায়নি।</td></tr>'; return; } filtered.forEach(s => { tableBody.innerHTML += `<tr><td>${s.roll}</td><td>${s.name}</td><td>${s.className}</td><td>${s.parentContact || 'N/A'}</td></tr>`; }); };
+        
         batchSelect.onchange = async () => {
             const batchId = batchSelect.value; 
             tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">লোড হচ্ছে...</td></tr>';
             if (!batchId) { currentStudentList = []; tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ব্যাচ বাছাই করুন</td></tr>'; return; }
-            if (!data || !data.students) { tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">এই শিক্ষাবর্ষে ছাত্রছাত্রীর তথ্য নেই।</td></tr>'; return; }
+            if (!data.students) { tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">এই শিক্ষাবর্ষে ছাত্রছাত্রীর তথ্য নেই।</td></tr>'; return; }
             
             const batchInfo = findBatchById(batchId);
             const studentIds = batchInfo?.batch?.studentIds || [];
@@ -908,20 +1063,22 @@ function initializeAppLogic() {
     }
 
     // --- ID Card Logic ---
-    function renderIdCards() {
+    async function renderIdCards() {
         const classSelect = document.getElementById('filter-class-idcard');
         const batchSelect = document.getElementById('filter-batch-idcard');
         const tableBody = document.getElementById('idcard-student-list-body');
         const downloadAllBtn = document.getElementById('btn-download-batch-idcards');
         let currentBatchStudents = [];
 
-        const data = fullDataCache[viewedYear];
+        const data = await fetchDataForYear(viewedYear);
+        if(!data) return;
+
         classSelect.innerHTML = '<option value="">ক্লাস বাছাই</option>';
-        if (data && data.mainClassCategories) {
+        if (data.mainClassCategories) {
             (data.mainClassCategories || []).filter(c => c && !c.deletedAt).forEach(c => classSelect.add(new Option(c.name, c.id)));
         }
         
-        classSelect.onchange = async () => {
+        classSelect.onchange = () => {
             const classId = classSelect.value;
             batchSelect.innerHTML = '<option value="">ব্যাচ বাছাই</option>';
             batchSelect.disabled = !classId;
@@ -929,11 +1086,9 @@ function initializeAppLogic() {
             tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center;">${classId ? 'ব্যাচ বাছাই করুন' : 'ক্লাস বাছাই করুন'}</td></tr>`;
             if (!classId) return;
 
-            if (data && data.batchSchedule) {
-                const batches = new Map();
-                (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
-                batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
-            }
+            const batches = new Map();
+            (data.batchSchedule || []).forEach(day => (day.classes || []).filter(c => c && c.classId === classId).forEach(cls => (cls.batches || []).forEach(b => { if (b && !b.deletedAt && !batches.has(b.id)) batches.set(b.id, `${day.dayName} (${b.time})`); })));
+            batches.forEach((name, id) => batchSelect.add(new Option(name, id)));
         };
 
         batchSelect.onchange = async () => {
@@ -1086,94 +1241,119 @@ function initializeAppLogic() {
         hideLoader();
     }
     
-    // --- Lottery Logic ---
+    // --- Lottery Logic (UPDATED) ---
     async function renderLottery() {
         const monthSelector = document.getElementById('lottery-month-selector');
         
         monthSelector.innerHTML = '';
         BENGALI_MONTHS.forEach((month, index) => {
-            const option = new Option(month, month);
-            monthSelector.add(option);
+            monthSelector.add(new Option(month, month));
         });
         monthSelector.value = BENGALI_MONTHS[new Date().getMonth()];
 
-        monthSelector.addEventListener('change', () => {
-            displayBatchesForLottery(monthSelector.value);
-        });
-
+        monthSelector.addEventListener('change', () => displayBatchesForLottery(monthSelector.value));
         displayBatchesForLottery(monthSelector.value);
     }
 
     async function displayBatchesForLottery(month) {
-        const gridContainer = document.getElementById('lottery-batch-grid-container');
-        gridContainer.innerHTML = '<p>ব্যাচগুলোর তথ্য লোড হচ্ছে...</p>';
+        const classesContainer = document.getElementById('lottery-classes-container');
+        classesContainer.innerHTML = '<p>ব্যাচগুলোর তথ্য লোড হচ্ছে...</p>';
         const yearData = await fetchDataForYear(viewedYear);
-        if (!yearData || !yearData.batchSchedule) {
-            gridContainer.innerHTML = '<p>এই শিক্ষাবর্ষে কোনো ব্যাচ পাওয়া যায়নি।</p>';
+        if (!yearData || !yearData.batchSchedule || !yearData.mainClassCategories) {
+            classesContainer.innerHTML = '<p>এই শিক্ষাবর্ষে কোনো ব্যাচ পাওয়া যায়নি।</p>';
             return;
         }
 
-        const allBatches = [];
+        const batchesByClass = {};
         yearData.batchSchedule.forEach(day => {
-            if(!day || !day.classes) return;
-            day.classes.forEach(cls => {
-                const className = (yearData.mainClassCategories.find(c => c.id === cls.classId) || {}).name;
+            (day.classes || []).forEach(cls => {
+                if (!batchesByClass[cls.classId]) {
+                    const className = (yearData.mainClassCategories.find(c => c.id === cls.classId) || {}).name || "Unknown Class";
+                    batchesByClass[cls.classId] = { name: className, batches: [] };
+                }
                 (cls.batches || []).forEach(b => {
                     if (b && !b.deletedAt) {
-                        allBatches.push({ ...b, dayName: day.dayName, className: className });
+                        if (!batchesByClass[cls.classId].batches.some(existing => existing.id === b.id)) {
+                             batchesByClass[cls.classId].batches.push({ ...b, dayName: day.dayName, className: batchesByClass[cls.classId].name });
+                        }
                     }
                 });
             });
         });
 
-        if(allBatches.length === 0) {
-            gridContainer.innerHTML = '<p>কোনো সক্রিয় ব্যাচ নেই।</p>';
-            return;
-        }
-
-        gridContainer.innerHTML = '';
+        classesContainer.innerHTML = '';
         const lotteryResultsSnapshot = await academicYearsRef.child(`${viewedYear}/data/lotteryResults/${month}`).once('value');
         const lotteryResults = lotteryResultsSnapshot.val() || {};
 
-        const uniqueBatches = [...new Map(allBatches.map(item => [item.id, item])).values()];
+        Object.values(batchesByClass).forEach(classGroup => {
+            const details = document.createElement('details');
+            details.className = 'lottery-class-group';
+            details.innerHTML = `<summary>${classGroup.name}</summary><div class="lottery-batch-grid"></div>`;
+            const grid = details.querySelector('.lottery-batch-grid');
+            
+            classGroup.batches.sort((a,b) => a.time.localeCompare(b.time)).forEach(batch => {
+                const card = document.createElement('div');
+                card.className = 'lottery-batch-card';
+                const result = lotteryResults[batch.id];
+                let content = `<h4>${batch.dayName} (${batch.time})`;
 
-        uniqueBatches.forEach(batch => {
-            const card = document.createElement('div');
-            card.className = 'lottery-batch-card';
-            const result = lotteryResults[batch.id];
-
-            let content = `<h4>${batch.className} - ${batch.dayName} (${batch.time})`;
-
-            if (result) {
-                card.classList.add('completed');
-                content += `<span>✔️</span></h4>
-                            <span class="status status-completed">See Winners</span>
-                            <p><strong>বিজয়ীরা:</strong></p>
-                            <ol class="winner-list">
-                                ${result.winners.map(w => `<li>${w.position} Prize: ${w.name} (রোল: ${w.roll})</li>`).join('')}
-                            </ol>`;
-            } else {
-                content += `</h4><span class="status status-ready">Ready to Run</span>
-                            <p>এই ব্যাচের জন্য ${month} মাসের লটারি এখনো অনুষ্ঠিত হয়নি।</p>
-                            <button data-batch-id="${batch.id}" data-month="${month}">Run Lottery</button>`;
-            }
-            card.innerHTML = content;
-            gridContainer.appendChild(card);
-        });
-
-        gridContainer.querySelectorAll('button[data-batch-id]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showLotteryModal(btn.dataset.batchId, btn.dataset.month);
+                if (result) {
+                    card.classList.add('completed');
+                    content += `<span class="status status-completed">Completed</span></h4>
+                                <p>এই ব্যাচের লটারি সম্পন্ন হয়েছে।</p>
+                                <button class="btn-see-winners" data-action="see-winners" data-batch-id="${batch.id}" data-month="${month}">See Winners</button>`;
+                } else {
+                    content += `<span class="status status-ready">Ready</span></h4>
+                                <p>এই ব্যাচের জন্য ${month} মাসের লটারি এখনো অনুষ্ঠিত হয়নি।</p>
+                                <button class="btn-run-lottery" data-action="run" data-batch-id="${batch.id}" data-month="${month}">Run Lottery</button>`;
+                }
+                card.innerHTML = content;
+                grid.appendChild(card);
             });
+            classesContainer.appendChild(details);
         });
-        
-        gridContainer.querySelectorAll('.lottery-batch-card.completed').forEach(card => {
-            card.addEventListener('click', () => {
-                card.querySelector('.winner-list').style.display = card.querySelector('.winner-list').style.display === 'block' ? 'none' : 'block';
-            });
-        });
+
+        classesContainer.addEventListener('click', (e) => handleLotteryAction(e));
     }
+    
+    async function handleLotteryAction(e) {
+        const button = e.target.closest('button[data-action]');
+        if(!button) return;
+        
+        e.stopPropagation();
+        const { action, batchId, month } = button.dataset;
+
+        if (action === 'run') {
+            showLotteryModal(batchId, month);
+        } else if (action === 'see-winners') {
+            showLoader('ফলাফল তৈরি হচ্ছে...');
+            try {
+                const resultSnapshot = await academicYearsRef.child(`${viewedYear}/data/lotteryResults/${month}/${batchId}`).once('value');
+                const resultData = resultSnapshot.val();
+                if (!resultData) throw new Error('ফলাফল পাওয়া যায়নি।');
+                
+                const batchDetails = findBatchById(batchId);
+                const batchInfo = {
+                    className: batchDetails.class.name,
+                    batchTime: `${batchDetails.day.dayName} (${batchDetails.batch.time})`,
+                    month: month
+                };
+                
+                const imageUrl = await generateWinnerImage(batchInfo, resultData.winners, 'open');
+                if(imageUrl) {
+                    const newTab = window.open();
+                    newTab.document.body.innerHTML = `<img src="${imageUrl}" style="width:100%;">`;
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast(error.message, 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+    }
+
 
     async function showLotteryModal(batchId, month) {
         if(document.getElementById('lottery-run-modal')) document.getElementById('lottery-run-modal').remove();
@@ -1237,9 +1417,7 @@ function initializeAppLogic() {
 
         await updateParticipantsUI(false);
 
-        presentOnlyCheckbox.addEventListener('change', async () => {
-            await updateParticipantsUI(presentOnlyCheckbox.checked);
-        });
+        presentOnlyCheckbox.addEventListener('change', async () => await updateParticipantsUI(presentOnlyCheckbox.checked));
 
         startLotteryBtn.addEventListener('click', () => {
             const winnerCount = parseInt(modal.querySelector('#lottery-winner-count').value, 10);
@@ -1253,8 +1431,7 @@ function initializeAppLogic() {
 
         closeModalBtn.onclick = () => modal.remove();
     }
-
-    // MODIFIED LOTTERY ANIMATION FUNCTION
+    
     async function startLotteryAnimation(batchId, month, participants, winnerCount) {
         if(document.getElementById('lottery-animation-screen')) document.getElementById('lottery-animation-screen').remove();
         const animationTemplate = document.getElementById('template-lottery-animation');
@@ -1265,61 +1442,55 @@ function initializeAppLogic() {
         const winnerBox = screen.querySelector('.winner-announcement-box');
         const winnerTitle = screen.querySelector('#winner-title');
         const winnerName = screen.querySelector('#winner-name');
-        const podiumContainer = screen.querySelector('.winners-podium-container');
-        const vipList = screen.querySelector('#vip-winners-list');
+        const winnerRoll = screen.querySelector('#winner-roll');
+        const winnerPlaceholder = screen.querySelector('#winner-title-placeholder');
         const findBtn = screen.querySelector('#find-winner-btn');
         const saveBtn = screen.querySelector('#save-lottery-btn');
+        const downloadJpgBtn = screen.querySelector('#download-winner-jpg-btn');
         const lotterySound = document.getElementById('lottery-sound');
+
+        const batchDetails = findBatchById(batchId);
+        const batchInfo = {
+            className: batchDetails.class.name,
+            batchTime: `${batchDetails.day.dayName} (${batchDetails.batch.time})`,
+            month: month
+        };
+        screen.querySelector('#lottery-context-info').textContent = `${batchInfo.month} মাসের লটারি: ${batchInfo.className}, ${batchInfo.batchTime}`;
 
         screen.classList.add('visible');
 
-        let reelHtml = '';
-        for(let i = 0; i < 50; i++) {
-            reelHtml += `<div>${participants[Math.floor(Math.random() * participants.length)].name}</div>`;
-        }
-        namesReel.innerHTML = reelHtml;
+        namesReel.innerHTML = Array.from({length: 50}, () => `<div>${participants[Math.floor(Math.random() * participants.length)].name}</div>`).join('');
 
         let winners = [];
         let currentParticipants = [...participants];
 
         const lotteryHistorySnapshot = await academicYearsRef.child(`${viewedYear}/data/lotteryResults`).once('value');
-        const lotteryHistory = lotteryHistorySnapshot.val() || {};
-        const pastWinnerIds = new Set();
-        Object.values(lotteryHistory).forEach(monthData => {
-            Object.values(monthData).forEach(batchData => {
-                batchData.winners.forEach(winner => pastWinnerIds.add(winner.id));
-            });
-        });
-
-        function getWeightedRandomWinner() {
+        const pastWinnerIds = new Set(Object.values(lotteryHistorySnapshot.val() || {}).flatMap(monthData => Object.values(monthData).flatMap(batchData => batchData.winners.map(w => w.id))));
+        
+        const getWeightedRandomWinner = () => {
             if (currentParticipants.length === 0) return null;
-            const weights = currentParticipants.map(p => pastWinnerIds.has(p.id) ? 0.8 : 1.0); // 20% luck reduction
+            const weights = currentParticipants.map(p => pastWinnerIds.has(p.id) ? 0.8 : 1.0);
             const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
             let random = Math.random() * totalWeight;
             for (let i = 0; i < currentParticipants.length; i++) {
-                random -= weights[i];
-                if (random < 0) return currentParticipants[i];
+                if ((random -= weights[i]) < 0) return currentParticipants[i];
             }
-            return currentParticipants[currentParticipants.length - 1];
-        }
+            return currentParticipants.at(-1);
+        };
         
-        function updateFindButtonText() {
-            const prizeNumber = getOrdinal(winnerCount - winners.length);
-            findBtn.textContent = `Find ${prizeNumber} Prize Winner`;
-        }
+        const updateFindButtonText = () => findBtn.textContent = `Find ${getOrdinal(winners.length + 1)} Prize Winner`;
         
         findBtn.onclick = () => {
             if (winners.length >= winnerCount) return;
 
             winnerBox.classList.remove('show');
+            winnerPlaceholder.style.display = 'block';
             namesReel.style.animation = 'reel-spin 0.1s linear infinite';
             lotterySound.currentTime = 0;
             lotterySound.play().catch(e => console.log("Audio play failed"));
             findBtn.disabled = true;
 
-            setTimeout(() => {
-                screen.classList.add('doors-closing');
-            }, 8500); // Close doors at 8.5s
+            setTimeout(() => screen.classList.add('doors-closing'), 8000);
 
             setTimeout(() => {
                 lotterySound.pause();
@@ -1332,31 +1503,22 @@ function initializeAppLogic() {
                     saveBtn.style.display = 'inline-block';
                     return;
                 }
-
-                const prizeNumber = winnerCount - winners.length;
-                const prizeText = `${getOrdinal(prizeNumber)} Prize`;
-
-                winners.unshift({ position: prizeText, name: winner.name, roll: winner.roll, id: winner.id });
+                const prizeText = `${getOrdinal(winners.length + 1)} Prize`;
+                winners.push({ position: prizeText, name: winner.name, roll: winner.roll, id: winner.id });
                 currentParticipants = currentParticipants.filter(p => p.id !== winner.id);
                 
-                winnerTitle.textContent = `${prizeText} বিজয়ী`;
-                winnerName.textContent = `${winner.name} (রোল: ${winner.roll})`;
+                winnerTitle.textContent = `The ${prizeText} goes to...`;
+                winnerName.textContent = winner.name;
+                winnerRoll.textContent = `(রোল: ${winner.roll})`;
                 
                 screen.classList.remove('doors-closing');
                 screen.classList.add('doors-opening');
                 
                 setTimeout(() => {
+                    winnerPlaceholder.style.display = 'none';
                     winnerBox.classList.add('show');
                     screen.classList.remove('doors-opening');
                 }, 750);
-
-                if (podiumContainer.style.display !== 'block') {
-                    podiumContainer.style.display = 'block';
-                }
-                const li = document.createElement('li');
-                li.style.animationDelay = `${vipList.children.length * 0.1}s`;
-                li.innerHTML = `👑 ${prizeText}: <strong>${winner.name}</strong>`;
-                vipList.appendChild(li);
                 
                 findBtn.disabled = false;
                 
@@ -1366,29 +1528,66 @@ function initializeAppLogic() {
                 } else {
                     updateFindButtonText();
                 }
-
-            }, 10000); // 10 seconds total
+            }, 10000);
         };
 
         saveBtn.onclick = async () => {
             showLoader('Saving results...');
-            const finalWinnersData = {
-                timestamp: new Date().toISOString(),
-                winners: winners
-            };
+            const finalWinnersData = { timestamp: new Date().toISOString(), winners: winners };
             try {
                 await academicYearsRef.child(`${viewedYear}/data/lotteryResults/${month}/${batchId}`).set(finalWinnersData);
                 showToast('ফলাফল সফলভাবে সেভ হয়েছে!', 'success');
-                screen.remove();
-                displayBatchesForLottery(month);
-            } catch (error) {
-                showToast('Failed to save results.', 'error');
-            } finally {
-                hideLoader();
-            }
+                saveBtn.style.display = 'none';
+                downloadJpgBtn.style.display = 'inline-block';
+                setTimeout(() => {
+                    screen.remove();
+                    displayBatchesForLottery(month);
+                }, 5000);
+            } catch (error) { showToast('Failed to save results.', 'error'); } 
+            finally { hideLoader(); }
         };
 
+        downloadJpgBtn.onclick = async () => await generateWinnerImage(batchInfo, winners, 'download');
+        
         updateFindButtonText();
+    }
+    
+    async function generateWinnerImage(batchInfo, winners, action = 'download') {
+        const container = document.getElementById('winner-export-container');
+        container.innerHTML = `
+            <h2>🏆 ডিজিটাল লটারি বিজয়ী 🏆</h2>
+            <p>${batchInfo.month} মাস - ${viewedYear} | ${batchInfo.className} (${batchInfo.batchTime})</p>
+            <ul>
+                ${winners.map(w => `<li>${w.position}: ${w.name} (রোল: ${w.roll})</li>`).join('')}
+            </ul>
+            <div class="export-footer">
+                <span>© Math Creative Teaching Home 2026</span>
+                <div>
+                    <span>Software by Bindumatra IT</span>
+                    <img src="images/image5.png" alt="Bindumatra IT">
+                </div>
+            </div>`;
+        
+        container.style.display = 'block';
+        try {
+            const canvas = await html2canvas(container, { scale: 2 });
+            const imageUrl = canvas.toDataURL('image/jpeg', 0.95);
+            
+            if (action === 'download') {
+                const link = document.createElement('a');
+                link.download = `Lottery_Winners_${batchInfo.className}_${batchInfo.month}.jpg`;
+                link.href = imageUrl;
+                link.click();
+            } else if (action === 'open') {
+                return imageUrl;
+            }
+        } catch (error) {
+            console.error('Error generating image:', error);
+            showToast('Could not generate winner image.', 'error');
+            return null;
+        } finally {
+            container.style.display = 'none';
+        }
     }
     
     // --- Live Exam Logic ---
@@ -1450,7 +1649,7 @@ function initializeAppLogic() {
         };
         examTypeSelect.dispatchEvent(new Event('change'));
 
-        modal.querySelector('.modal-close-btn').onclick = () => modal.classList.remove('visible');
+        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
         document.getElementById('add-question-btn').onclick = () => addQuestionField();
         document.getElementById('save-exam-btn').onclick = () => saveExam(examId);
 
@@ -1526,7 +1725,7 @@ function initializeAppLogic() {
             const ref = examId ? liveExamsRef.child(examId) : liveExamsRef.push();
             await ref.set(examData);
             showToast('পরীক্ষা সফলভাবে সংরক্ষণ করা হয়েছে!', 'success');
-            document.getElementById('create-exam-modal').classList.remove('visible');
+            document.getElementById('create-exam-modal').remove();
         } catch (error) {
             showToast('পরীক্ষা সংরক্ষণ করতে সমস্যা হয়েছে।', 'error');
         } finally {
@@ -1550,56 +1749,56 @@ function initializeAppLogic() {
         }
     }
 
-    function showExamResults(examId) {
-        liveExamsRef.child(examId).once('value', snapshot => {
-            const exam = snapshot.val();
-            if (!exam) return;
-            
-            const modalTemplate = document.getElementById('template-exam-results-modal');
-            if(!modalTemplate) return;
-            if(document.getElementById('exam-results-modal')) document.getElementById('exam-results-modal').remove();
+    async function showExamResults(examId) {
+        const examSnapshot = await liveExamsRef.child(examId).once('value');
+        const exam = examSnapshot.val();
+        if (!exam) return;
+        
+        const modalTemplate = document.getElementById('template-exam-results-modal');
+        if(!modalTemplate) return;
+        if(document.getElementById('exam-results-modal')) document.getElementById('exam-results-modal').remove();
 
-            document.body.appendChild(modalTemplate.content.cloneNode(true));
-            const resultsModal = document.getElementById('exam-results-modal');
-            
-            resultsModal.querySelector('#results-modal-title').textContent = `${exam.title} - ফলাফল`;
-            const tbody = resultsModal.querySelector('#exam-results-tbody');
-            tbody.innerHTML = '';
-            
-            const results = Object.entries(exam.submissions || {}).map(([studentId, data]) => ({ studentId, ...data }));
-            results.sort((a, b) => b.score - a.score);
+        document.body.appendChild(modalTemplate.content.cloneNode(true));
+        const resultsModal = document.getElementById('exam-results-modal');
+        resultsModal.classList.add('visible');
+        
+        resultsModal.querySelector('#results-modal-title').textContent = `${exam.title} - ফলাফল`;
+        const tbody = resultsModal.querySelector('#exam-results-tbody');
+        tbody.innerHTML = '';
+        
+        const results = Object.entries(exam.submissions || {}).map(([studentId, data]) => ({ studentId, ...data }));
+        results.sort((a, b) => b.score - a.score);
 
-            if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">এখনো কোনো ছাত্রছাত্রী পরীক্ষায় অংশগ্রহণ করেনি।</td></tr>';
-            } else {
-                let rank = 0;
-                let lastScore = -Infinity;
-                results.forEach((result, index) => {
-                    if (result.score !== lastScore) {
-                        rank = index + 1;
-                        lastScore = result.score;
-                    }
-                    const student = (fullDataCache[viewedYear].students || []).find(s => s.id === result.studentId);
-                    const studentBatches = (fullDataCache[viewedYear].batchSchedule || [])
-                        .flatMap(day => (day.classes || []).flatMap(c => c.batches.map(b => ({ ...b, className: fullDataCache[viewedYear].mainClassCategories.find(mc => mc.id === c.classId)?.name, dayName: day.dayName }))))
-                        .filter(b => b.studentIds?.includes(result.studentId))
-                        .map(b => `${b.dayName.substring(0,3)} (${b.time})`)
-                        .join(', ');
+        if (results.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">এখনো কোনো ছাত্রছাত্রী পরীক্ষায় অংশগ্রহণ করেনি।</td></tr>';
+        } else {
+            const yearData = await fetchDataForYear(viewedYear);
+            let rank = 0;
+            let lastScore = -Infinity;
+            results.forEach((result, index) => {
+                if (result.score !== lastScore) {
+                    rank = index + 1;
+                    lastScore = result.score;
+                }
+                const student = (yearData.students || []).find(s => s.id === result.studentId);
+                const studentBatches = (yearData.batchSchedule || [])
+                    .flatMap(day => (day.classes || []).flatMap(c => c.batches.map(b => ({ ...b, className: yearData.mainClassCategories.find(mc => mc.id === c.classId)?.name, dayName: day.dayName }))))
+                    .filter(b => b.studentIds?.includes(result.studentId))
+                    .map(b => `${b.dayName.substring(0,3)} (${b.time})`)
+                    .join(', ');
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${rank}</td>
-                        <td>${student ? student.name : 'Unknown Student'}</td>
-                        <td>${student ? student.roll : 'N/A'}</td>
-                        <td>${studentBatches || 'N/A'}</td>
-                        <td>${result.score.toFixed(2)} / ${exam.totalMarks}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-            resultsModal.querySelector('.modal-close-btn').onclick = () => resultsModal.remove();
-            resultsModal.classList.add('visible');
-        });
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${rank}</td>
+                    <td>${student ? student.name : 'Unknown Student'}</td>
+                    <td>${student ? student.roll : 'N/A'}</td>
+                    <td>${studentBatches || 'N/A'}</td>
+                    <td>${result.score.toFixed(2)} / ${exam.totalMarks}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        resultsModal.querySelector('.modal-close-btn').onclick = () => resultsModal.remove();
     }
 
     initialize();
